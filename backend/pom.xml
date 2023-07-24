@@ -15,6 +15,9 @@
     <description>backend</description>
     <properties>
         <java.version>20</java.version>
+        <sonar.organization>saman1357</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.projectName>saman1357_capstone-myloans</sonar.projectName>
     </properties>
     <dependencies>
         <dependency>
