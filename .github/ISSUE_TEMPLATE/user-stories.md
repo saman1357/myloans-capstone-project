@@ -5,7 +5,7 @@ about: This template provides a basic structure for user story issues.
 ---
 
 # User story
-As a user, I want to see a list of all things (money or other items) that i have lent to or borrowed from others, so that i don't forget them.
+e.g. As a user, I want to see a list of all things (money or other items) that i have lent to or borrowed from others, so that i don't forget them.
 
 # Acceptance criteria
 
