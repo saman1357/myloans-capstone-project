@@ -8,4 +8,8 @@ Possibly features for later:
 connect to other api for currency conversion (e.g. exchange rate €-US$)
 change the language of the app
 
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=saman1357_myloans-capstone-project-backend&metric=coverage)](https://sonarcloud.io/summary/new_code?id=saman1357_myloans-capstone-project-backend) [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=saman1357_myloans-capstone-project-backend&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=saman1357_myloans-capstone-project-backend) [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=saman1357_myloans-capstone-project-backend&metric=bugs)](https://sonarcloud.io/summary/new_code?id=saman1357_myloans-capstone-project-backend) [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=saman1357_myloans-capstone-project-backend&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=saman1357_myloans-capstone-project-backend) [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=saman1357_myloans-capstone-project-backend&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=saman1357_myloans-capstone-project-backend)
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=saman1357_myloans-capstone-project-backend&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=saman1357_myloans-capstone-project-backend)
+
 ![image](https://github.com/saman1357/myloans-capstone-project/assets/134412824/485d3a3d-57df-49f7-a4ec-c0efff31b8cb)
