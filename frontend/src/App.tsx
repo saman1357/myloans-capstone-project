@@ -59,8 +59,8 @@ export default function App() {
                         <hr/>
                     </div>
                     <div className={"lent-table-div"}>
-                        {loans.filter(loan => loan.lenderId === myId).map((loan, i) => {
-                            return <div className={"lent-table-row-div"} key={i}>
+                        {loans.filter(loan => loan.lenderId === myId).map((loan) => {
+                            return <div className={"lent-table-row-div"} key={loan.id}>
                                 <div
                                     className={"borrower-item"}>{persons.find(person => person.id === loan.borrowerId)?.name}</div>
                                 <div className={"amount-item"}>{loan.amount}</div>
@@ -84,8 +84,8 @@ export default function App() {
                         <hr/>
                     </div>
                     <div className={"borrowed-table-div"}>
-                        {loans.filter(loan => loan.borrowerId === myId).map((loan, i) => {
-                            return <div className={"borrowed-table-row-div"} key={i}>
+                        {loans.filter(loan => loan.borrowerId === myId).map((loan) => {
+                            return <div className={"borrowed-table-row-div"} key={loan.id}>
                                 <div
                                     className={"lender-item"}>{persons.find(person => person.id === loan.lenderId)?.name}</div>
                                 <div className={"amount-item"}>{loan.amount}</div>
