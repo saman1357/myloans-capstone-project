@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @AutoConfigureMockMvc
 class MyLoansControllerTest {
@@ -26,7 +25,6 @@ class MyLoansControllerTest {
     MyLoansRepository myLoansRepository;
     @Test
     void expectUserData_whenGetUserDataIsCalled() throws Exception {
-        String userId = "0001";
         UserData testUserData = new UserData("0001",
                 (List.of(
                         new Item("1001", "€ (money)"),
