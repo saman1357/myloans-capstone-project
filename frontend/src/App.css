@@ -1,42 +1,76 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+body {
+    font-family: Arial;
+    margin: 0px;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.app-title{
+    text-align: center;
+    height: 9vh;
+    margin-top: 7px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.lent-div, .borrowed-div{
+    border: #888888 solid 1px;
+    border-radius: 10px;
+    padding: 3px;
+    height: 40vh;
+    margin: 5px;
+    display: grid;
+    grid-template-rows: 10% 75% 10%;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.lent-placeholder-div{
+    height: 100%;
 }
 
-.card {
-  padding: 2em;
+.loan-balance-div{
+    border: #888888 solid 1px;
+    border-radius: 10px;
+    padding: 3px;
+    height: 3vh;
+    margin: 5px;
 }
 
-.read-the-docs {
-  color: #888;
+hr{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.lent-table-div, .borrowed-table-div{
+    overflow-y:auto;
+}
+
+.lent-table-row-div, .borrowed-table-row-div{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 25% 25% 25% 25%;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.borrower-item, .lender-item {
+    grid-column: 1 / span 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.amount-item {
+    grid-column: 2 / span 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.item-item{
+    grid-column: 3 / span 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+}
+.description-item{
+    grid-column: 4 /span 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
 }
