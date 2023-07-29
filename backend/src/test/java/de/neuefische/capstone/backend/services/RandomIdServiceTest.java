@@ -3,6 +3,7 @@ package de.neuefische.capstone.backend.services;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Constructor;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -27,9 +28,10 @@ class RandomIdServiceTest {
         // GIVEN
         Class<RandomIdService> clazz = RandomIdService.class;
 
+        Constructor<RandomIdService> constructor = clazz.getDeclaredConstructor();
+        constructor.setAccessible(true);
+
         // WHEN & THEN
-        Assertions.assertThrows(ReflectiveOperationException.class, () -> {
-            clazz.newInstance();
-        });
+        Assertions.assertThrows(ReflectiveOperationException.class, ()->clazz.newInstance());
     }
 }
