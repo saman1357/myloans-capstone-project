@@ -21,4 +21,15 @@ class RandomIdServiceTest {
         Assertions.assertEquals(String.class, uuidList.get(0).getClass());
         assertEquals(uuidList.size(), uuidSet.size());
     }
+
+    @Test
+    void testUtilityClassConstructorThrowsException() throws ReflectiveOperationException {
+        // GIVEN
+        Class<RandomIdService> clazz = RandomIdService.class;
+
+        // WHEN & THEN
+        Assertions.assertThrows(ReflectiveOperationException.class, () -> {
+            clazz.newInstance();
+        });
+    }
 }
