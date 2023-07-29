@@ -30,8 +30,7 @@ class RandomIdServiceTest {
 
         Constructor<RandomIdService> constructor = clazz.getDeclaredConstructor();
         constructor.setAccessible(true);
-
         // WHEN & THEN
-        Assertions.assertThrows(ReflectiveOperationException.class, ()->clazz.newInstance());
+        Assertions.assertThrows(ReflectiveOperationException.class, ()->constructor.newInstance());
     }
 }
