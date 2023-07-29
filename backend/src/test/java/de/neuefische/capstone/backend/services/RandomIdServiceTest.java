@@ -1,5 +1,6 @@
 package de.neuefische.capstone.backend.services;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -17,6 +18,7 @@ class RandomIdServiceTest {
         //WHEN
         Set<String> uuidSet= new HashSet<>(uuidList);
         //THEN
+        Assertions.assertEquals(String.class, uuidList.get(0).getClass());
         assertEquals(uuidList.size(), uuidSet.size());
     }
 }
