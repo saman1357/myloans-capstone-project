@@ -15,15 +15,15 @@ class RandomIdServiceTest {
     @Test
     void ReturnUniqueStrings_whenUuidIsCalled() {
         //GIVEN
-        List<String> uuidList = List.of(RandomIdService.uuid(), RandomIdService.uuid(), RandomIdService.uuid(), RandomIdService.uuid(),RandomIdService.uuid());
+        List<String> uuidList = List.of(RandomIdService.uuid(), RandomIdService.uuid(), RandomIdService.uuid(), RandomIdService.uuid(), RandomIdService.uuid());
         //WHEN
-        Set<String> uuidSet= new HashSet<>(uuidList);
+        Set<String> uuidSet = new HashSet<>(uuidList);
         //THEN
         Assertions.assertEquals(String.class, uuidList.get(0).getClass());
         assertEquals(uuidList.size(), uuidSet.size());
     }
 
-    @Test
+    /*@Test
     void testUtilityClassConstructorThrowsException() throws ReflectiveOperationException {
         // GIVEN
         Class<RandomIdService> clazz = RandomIdService.class;
@@ -32,5 +32,17 @@ class RandomIdServiceTest {
         constructor.setAccessible(true);
         // WHEN & THEN
         Assertions.assertThrows(ReflectiveOperationException.class, ()->constructor.newInstance());
+    }*/
+
+    @Test
+    void testUtilityClassConstructorThrowsException() throws ReflectiveOperationException {
+        // GIVEN
+        Class<RandomIdService> clazz = RandomIdService.class;
+
+        Constructor<RandomIdService> constructor = clazz.getDeclaredConstructor();
+        constructor.setAccessible(true);
+
+        // WHEN & THEN
+        Assertions.assertThrows(ReflectiveOperationException.class, constructor::newInstance);
     }
 }
