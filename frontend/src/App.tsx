@@ -2,6 +2,7 @@ import './App.css'
 import {useEffect, useState} from "react";
 import {Item, Loan, Person} from "./model/DataModels.ts";
 import axios from "axios";
+import {Link} from "react-router-dom";
 
 export default function App() {
     const [loans, setLoans] = useState<Loan[]>();
@@ -43,6 +44,7 @@ export default function App() {
         }
     }
 
+
     if (!(loans && items && persons)) {
         return <h1>... loading ...</h1>
     }
@@ -51,13 +53,14 @@ export default function App() {
         <>
             <div>
                 <div className={"app-title"}>
-                    <img src={"dist/myLoansTransparent.jpg"} alt={"myLoans Logo"} width={"100"}/>
+                    <img src={"myLoans.png"} alt={"myLoans Logo"} width={"100"}/>
                 </div>
                 <div className={"lent-div"}>
                     <div className={"lent-header-div"}>
-                        lent to:
-                        <hr/>
+                        <div>lent to:</div>
+                        <div><Link to={"/addloan"}><button>Add</button></Link></div>
                     </div>
+                    <hr/>
                     <div className={"lent-table-div"}>
                         {loans.filter(loan => loan.lenderId === myId).map((loan) => {
                             return <div className={"lent-table-row-div"} key={loan.id}>
@@ -73,16 +76,17 @@ export default function App() {
                     </div>
                     <div className={"lent-footer-div"}>
                         <hr/>
-                        sum (for money): {lentSum} {items.find(item => item.id === "1001")?.type.charAt(0)}
+                        sum of monetary lendings: {lentSum} {items.find(item => item.id === "1001")?.type.charAt(0)}
                     </div>
                 </div>
 
 
                 <div className={"borrowed-div"}>
                     <div className={"borrowed-header-div"}>
-                        borrowed from:
-                        <hr/>
+                        <div>borrowed from:</div>
+                        <div><button>Add</button></div>
                     </div>
+                    <hr/>
                     <div className={"borrowed-table-div"}>
                         {loans.filter(loan => loan.borrowerId === myId).map((loan) => {
                             return <div className={"borrowed-table-row-div"} key={loan.id}>
@@ -98,7 +102,7 @@ export default function App() {
                     </div>
                     <div className={"borrowed-footer-div"}>
                         <hr/>
-                        sum (for money): {borrowedSum} {items.find(item => item.id === "1001")?.type.charAt(0)}
+                        sum of monetary borrowings: {borrowedSum} {items.find(item => item.id === "1001")?.type.charAt(0)}
                     </div>
                 </div>
 
