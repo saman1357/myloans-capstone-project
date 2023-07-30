@@ -1,6 +1,7 @@
 body {
     font-family: Arial, Tahoma, sans-serif, serif;
     margin: 0;
+    background-color: #a0bdb3;
 }
 
 .app-title{
@@ -15,12 +16,15 @@ body {
     padding: 3px;
     height: 40vh;
     margin: 5px;
+    background-color: #d9e3df;
     display: grid;
-    grid-template-rows: 10% 75% 10%;
+    grid-template-rows: 7% 5% 73% 10%;
 }
-
-.lent-placeholder-div{
-    height: 100%;
+.lent-header-div, .borrowed-header-div{
+    display: flex;
+    justify-content: space-between;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 .loan-balance-div{
@@ -29,6 +33,7 @@ body {
     padding: 3px;
     height: 3vh;
     margin: 5px;
+    background-color: #d9e3df;
 }
 
 hr{
