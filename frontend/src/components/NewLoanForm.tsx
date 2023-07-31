@@ -7,7 +7,7 @@ type Props = {
     onSave: (newLoan: LoanWithoutId) => void
     myId: string;
 }
-export default function (props: Props) {
+export default function NewLoanForm(props: Props) {
     const urlParams = useParams();
     const [returnDateIsActive, setReturnDateIsActive] = useState<boolean>(false)
     const [newLoan, setNewLoan] = useState<LoanWithoutId>({
@@ -48,9 +48,9 @@ export default function (props: Props) {
         <>
             <form className={"new-loan-form"} onSubmit={handleSubmit}>
                 item to {urlParams.type}:
-                <input type={"radio"} id={"money"} name={"itemId"} value={"1001"} checked={(newLoan.itemId)==="1001"? true : false} onChange={handleChangeInput}/>
+                <input type={"radio"} id={"money"} name={"itemId"} value={"1001"} checked={(newLoan.itemId)==="1001"} onChange={handleChangeInput}/>
                 <label htmlFor={"money"}>money</label>
-                <input type={"radio"} id={"nonmoney"} name={"itemId"} value={"1002"} checked={(newLoan.itemId)==="1002"? true : false} onChange={handleChangeInput}/>
+                <input type={"radio"} id={"nonmoney"} name={"itemId"} value={"1002"} checked={(newLoan.itemId)==="1002"} onChange={handleChangeInput}/>
                 <label htmlFor={"nonmoney"}>nonmoney</label>
                 <br/>
                 <br/>

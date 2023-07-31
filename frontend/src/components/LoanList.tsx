@@ -7,11 +7,11 @@ type Props = {
     persons: Person[],
     myId: string,
 }
-export default function (props: Props){
+export default function LoanList(props: Props){
     const [lentSum, setLentSum] = useState<number>(0);
     const [borrowedSum, setBorrowedSum] = useState<number>(0);
 
-    useEffect(calculateSums, [props.loans]);
+    useEffect(calculateSums, [props]);
 
     function calculateSums() {
         let sum = 0;
