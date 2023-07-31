@@ -52,6 +52,8 @@ hr{
     margin-top: 2px;
     margin-bottom: 2px;
 }
+.loan-table-row-div:hover{
+background-color: #a0bdb3}
 
 .loan-party-item{
     grid-column: 1 / span 1;

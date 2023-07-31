@@ -8,24 +8,26 @@ type Props = {
     myId: string,
 }
 export default function LoanList(props: Props){
-    const [lentSum, setLentSum] = useState<number>(0);
-    const [borrowedSum, setBorrowedSum] = useState<number>(0);
+    const [loanSum, setLoanSum]=useState<{ lent: number, borrowed: number }>({lent: 0,borrowed:0})
+    //const [lentSum, setLentSum] = useState<number>(0);
+    //const [borrowedSum, setBorrowedSum] = useState<number>(0);
 
     useEffect(calculateSums, [props]);
 
+
+
     function calculateSums() {
-        let sum = 0;
+        let lentSum= 0;
+        let borrowedSum=0;
         if (props.loans) {
             props.loans.filter(loan => (loan.itemId === "1001" && loan.lenderId === props.myId)).forEach(loan => {
-                sum += loan.amount;
+                lentSum += loan.amount;
             })
-            setLentSum(sum);
 
-            sum = 0;
             props.loans.filter(loan => (loan.itemId === "1001" && loan.borrowerId === props.myId)).forEach(loan => {
-                sum += loan.amount;
+                borrowedSum += loan.amount;
             })
-            setBorrowedSum(sum);
+            setLoanSum({lent:lentSum, borrowed:borrowedSum});
         }
     }
 
@@ -61,7 +63,7 @@ export default function LoanList(props: Props){
             </div>
             <div className={"loan-footer-div"}>
                 <hr/>
-                sum of monetary {lenderOrBorrower.slice(0,-4)}ings: {eval((loanType+"Sum"))} {props.items.find(item => item.id === "1001")?.type.charAt(0)}
+                sum of monetary {lenderOrBorrower.slice(0,-4)}ings: {loanSum[loanType]} {props.items.find(item => item.id === "1001")?.type.charAt(0)}
             </div>
         </div>
         )
@@ -73,7 +75,7 @@ export default function LoanList(props: Props){
             {loanWindow("borrowed")}
     <div className={"loan-balance-div"}>
         loan balance (for
-        money): {lentSum - borrowedSum} {props.items.find(item => item.id === "1001")?.type.charAt(0)}
+        money): {loanSum.lent - loanSum.borrowed} {props.items.find(item => item.id === "1001")?.type.charAt(0)}
     </div>
 </>
 )

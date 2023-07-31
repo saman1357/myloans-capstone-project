@@ -22,7 +22,11 @@ export default function NewLoanForm(props: Props) {
     const navigate = useNavigate();
 
     let lenderOrBorrower: "lenderId" | "borrowerId";
-    urlParams.type==="lent"? lenderOrBorrower = "borrowerId" : lenderOrBorrower = "lenderId"
+    if(urlParams.type==="lent"){
+        lenderOrBorrower = "borrowerId";
+    }else {
+        lenderOrBorrower = "lenderId";
+    }
 
     function handleReturnDateActivator() {
         setReturnDateIsActive(!returnDateIsActive);
@@ -30,9 +34,13 @@ export default function NewLoanForm(props: Props) {
 
     function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        urlParams.type==="lent"? newLoan.lenderId=props.myId : newLoan.borrowerId=props.myId;
-        props.onSave(newLoan);
-        navigate("/")
+        if(urlParams.type==="lent") {
+            newLoan.lenderId = props.myId
+        }else {
+            newLoan.borrowerId = props.myId;
+        }
+            props.onSave(newLoan);
+            navigate("/")
     }
 
     function handleChangeInput(event: React.ChangeEvent<HTMLInputElement>){
