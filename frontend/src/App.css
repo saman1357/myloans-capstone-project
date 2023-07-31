@@ -10,7 +10,7 @@ body {
     margin-top: 7px;
 }
 
-.lent-div, .borrowed-div{
+.loan-div{
     border: #888888 solid 1px;
     border-radius: 10px;
     padding: 3px;
@@ -20,7 +20,7 @@ body {
     display: grid;
     grid-template-rows: 7% 5% 73% 10%;
 }
-.lent-header-div, .borrowed-header-div{
+.loan-header-div{
     display: flex;
     justify-content: space-between;
     padding-left: 5px;
@@ -41,19 +41,21 @@ hr{
     margin-right: 10px;
 }
 
-.lent-table-div, .borrowed-table-div{
+.loan-table-div{
     overflow-y:auto;
 }
 
-.lent-table-row-div, .borrowed-table-row-div{
+.loan-table-row-div{
     width: 100%;
     display: grid;
     grid-template-columns: 25% 25% 25% 25%;
     margin-top: 2px;
     margin-bottom: 2px;
 }
+.loan-table-row-div:hover{
+background-color: #a0bdb3}
 
-.borrower-item, .lender-item {
+.loan-party-item{
     grid-column: 1 / span 1;
     white-space: nowrap;
     overflow: hidden;

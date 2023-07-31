@@ -9,6 +9,16 @@ export type Loan={
     returnDate: string
 }
 
+export type LoanWithoutId={
+    lenderId: string,
+    borrowerId: string,
+    itemId: string,
+    description: string,
+    amount: number,
+    loanDate: string,
+    returnDate: string
+}
+
 export type Item={
     id: string,
     type: string
