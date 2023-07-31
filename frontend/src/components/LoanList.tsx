@@ -9,8 +9,6 @@ type Props = {
 }
 export default function LoanList(props: Props){
     const [loanSum, setLoanSum]=useState<{ lent: number, borrowed: number }>({lent: 0,borrowed:0})
-    //const [lentSum, setLentSum] = useState<number>(0);
-    //const [borrowedSum, setBorrowedSum] = useState<number>(0);
 
     useEffect(calculateSums, [props]);
 
