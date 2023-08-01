@@ -94,10 +94,9 @@ class MyLoansControllerTest {
 
     @Test
     void expectNoSuchElementException_whenLoanIdNotFound() throws Exception {
-        String invalidLoanId="123";
         String expectedMessage = """
                 {
-                 "message":"Loan with id: 123 not found."
+                 "message":"Loan not found for id: 123"
                 }
                 """;
         UserData testUserData = new UserData("0001",
