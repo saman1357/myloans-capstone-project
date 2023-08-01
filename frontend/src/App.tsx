@@ -5,6 +5,7 @@ import axios from "axios";
 import {Route, Routes} from "react-router-dom";
 import LoanList from "./components/LoanList.tsx";
 import NewLoanForm from "./components/NewLoanForm.tsx";
+import LoanDetails from "./components/LoanDetails.tsx";
 
 export default function App() {
     const [loans, setLoans] = useState<Loan[]>();
@@ -50,6 +51,7 @@ export default function App() {
                 <Routes>
                     <Route path={"/"} element={<LoanList loans={loans} items={items} persons={persons} myId={myId}/>}/>
                     <Route path={"/addloan/:type"} element={<NewLoanForm persons={persons} onSave={handleAddNewLoan} myId={myId}/>}/>
+                    <Route path={"/:id"} element={<LoanDetails loans={loans} items={items} persons={persons} myId={myId}/>}/>
                 </Routes>
             </div>
         </>

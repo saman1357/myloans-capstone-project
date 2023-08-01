@@ -15,13 +15,16 @@ import java.util.Optional;
 public class MyLoansService {
     private final MyLoansRepository myLoansRepository;
     String userId = "0001";
+    String userNotFoundExceptionMessage= "User Data not found for id: ";
+    String loanNotFoundExceptionMessage= "Loan not found for id: ";
+
 
     public UserData getUserData() {
         Optional<UserData> userData = myLoansRepository.findById(userId);
         if (userData.isPresent()) {
             return userData.get();
         }
-        throw new NoSuchElementException("User Data for User with id: " + userId + " not found.");
+        throw new NoSuchElementException(userNotFoundExceptionMessage + userId);
 
     }
 
@@ -33,6 +36,18 @@ public class MyLoansService {
             myLoansRepository.save(userData.get());
             return newLoanWithoutId;
         }
-        throw new NoSuchElementException("User Data for User with id: " + userId + " not found.");
+        throw new NoSuchElementException(userNotFoundExceptionMessage + userId);
+    }
+
+    public Loan getLoanDetails(String loanId) {
+        Optional<UserData> userData = myLoansRepository.findById(userId);
+        if (userData.isPresent()) {
+            Optional<Loan> loan= userData.get().getLoans().stream().filter(l -> l.getId().equals(loanId)).findFirst();
+            if (loan.isPresent()){
+                return loan.get();
+            } else throw new NoSuchElementException(loanNotFoundExceptionMessage+loanId);
+        }
+        throw new NoSuchElementException(userNotFoundExceptionMessage + userId);
+
     }
 }

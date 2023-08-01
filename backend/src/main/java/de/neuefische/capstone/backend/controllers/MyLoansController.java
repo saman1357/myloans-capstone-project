@@ -1,10 +1,15 @@
 package de.neuefische.capstone.backend.controllers;
 
+import de.neuefische.capstone.backend.exceptions.ErrorMessage;
+import de.neuefische.capstone.backend.models.Loan;
 import de.neuefische.capstone.backend.models.LoanWithoutId;
 import de.neuefische.capstone.backend.models.UserData;
 import de.neuefische.capstone.backend.services.MyLoansService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/myloans")
@@ -21,4 +26,17 @@ public class MyLoansController {
         return myLoansService.addLoan(newLoanWithoutId);
 
     }
+
+    @GetMapping("/{id}")
+    public Loan getLoanDetails(@PathVariable String id){
+        return myLoansService.getLoanDetails(id);
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorMessage handleNoSuchElementExceptions(NoSuchElementException exception) {
+        return new ErrorMessage(exception.getMessage());
+    }
+
 }
+

@@ -23,17 +23,6 @@ class RandomIdServiceTest {
         assertEquals(uuidList.size(), uuidSet.size());
     }
 
-    /*@Test
-    void testUtilityClassConstructorThrowsException() throws ReflectiveOperationException {
-        // GIVEN
-        Class<RandomIdService> clazz = RandomIdService.class;
-
-        Constructor<RandomIdService> constructor = clazz.getDeclaredConstructor();
-        constructor.setAccessible(true);
-        // WHEN & THEN
-        Assertions.assertThrows(ReflectiveOperationException.class, ()->constructor.newInstance());
-    }*/
-
     @Test
     void testUtilityClassConstructorThrowsException() throws ReflectiveOperationException {
         // GIVEN
