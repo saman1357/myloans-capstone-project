@@ -42,20 +42,19 @@ export default function LoanList(props: Props){
         return(
             <div className={"loan-div"}>
             <div className={"loan-header-div"}>
-                <div>{loanType} to:</div>
+                <div>{loanType==="lent"? "lent to: " : "borrowed from: "}</div>
                 <div><Link to={"/addloan/"+loanType}><button>Add</button></Link></div>
             </div>
             <hr/>
             <div className={"loan-table-div"}>
                 {props.loans.filter(loan => loan[lenderOrBorrower] === props.myId).map((loan) => {
-                    return <div className={"loan-table-row-div"} key={loan.id}>
-                        <div
-                            className={"loan-party-item"}>{props.persons.find(person => person.id === loan[otherLoanParty])?.name}</div>
+                    return <Link to={"/"+loan.id} key={loan.id}><div className={"loan-table-row-div"}>
+                        <div className={"loan-party-item"}>{props.persons.find(person => person.id === loan[otherLoanParty])?.name}</div>
                         <div className={"amount-item"}>{loan.amount}</div>
                         <div className={"item-item"}>{props.items.find(item => item.id === loan.itemId)?.type}</div>
                         <div className={"description-item"}>{loan.description}</div>
 
-                    </div>
+                    </div></Link>
                 })
                 }
             </div>

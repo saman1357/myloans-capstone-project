@@ -79,5 +79,28 @@ background-color: #a0bdb3}
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
 
+a:active { text-decoration: none; }
+
+
+a{
+    color: black;
+    text-decoration: none;
+}
+
+.loan-details-container{
+    border: #888888 solid 1px;
+    border-radius: 10px;
+    padding: 3px;
+    margin: 5px;
+    background-color: #d9e3df;
+}
+
+.loan-details-header{
+    margin: 15px;
+}
+
+.loan-details{
+    margin: 15px 15px 15px 100px;
 }
