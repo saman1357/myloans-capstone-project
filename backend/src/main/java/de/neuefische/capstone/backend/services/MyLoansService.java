@@ -7,6 +7,7 @@ import de.neuefische.capstone.backend.repositories.MyLoansRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -50,4 +51,31 @@ public class MyLoansService {
         throw new NoSuchElementException(userNotFoundExceptionMessage + userId);
 
     }
+
+    public LoanWithoutId updateLoan(LoanWithoutId updatedLoanWithoutId, String loanId) {
+        Optional<UserData> userData = myLoansRepository.findById(userId);
+        Loan updatedLoan = new Loan(updatedLoanWithoutId);
+        updatedLoan.setId(loanId);
+        if (userData.isPresent()) {
+            if (updateLoanById(userData.get().getLoans(), updatedLoan, loanId)==-1){
+                throw new NoSuchElementException(loanNotFoundExceptionMessage + loanId);
+            }
+            myLoansRepository.save(userData.get());
+            return updatedLoanWithoutId;
+        }
+        throw new NoSuchElementException(userNotFoundExceptionMessage + userId);
+    }
+
+    private int updateLoanById(List<Loan> loans, Loan updatedLoan, String loanId){
+        int index=0;
+        for (Loan loan: loans) {
+            if (loan.getId().equals(loanId)){
+                loans.set(index, updatedLoan);
+                return index;
+            }
+            index+=1;
+        }
+        return -1;
+    }
+
 }
