@@ -1,20 +1,20 @@
-import {useNavigate, useParams} from "react-router-dom";
 import {Item, Loan, LoanWithoutId, Person} from "../model/DataModels.ts";
+import {useNavigate, useParams} from "react-router-dom";
 import React, {FormEvent, useEffect, useState} from "react";
 
 type Props = {
     loans: Loan[],
     items: Item[],
     persons: Person[]
-    onUpdate: (newLoan: LoanWithoutId, loanId: string) => void
+    onSubmit: (submittedLoanWithoutId: LoanWithoutId, loanId: string, isNewLoan: boolean) => void
     myId: string;
-
 }
-export default function EditLoanForm(props: Props) {
+
+export default function LoanForm(props:Props){
     const urlParams = useParams();
-    const loan: Loan | undefined = props.loans.find(loan => loan.id === urlParams.id)
+    const loan = props.loans.find(loan => loan.id === urlParams.id);
     const [returnDateIsActive, setReturnDateIsActive] = useState<boolean>(false)
-    const [updatedLoan, setUpdatedLoan] = useState<LoanWithoutId>({
+    const [loanState, setUpdatedLoan] = useState<LoanWithoutId>({
         lenderId: "",
         borrowerId: "",
         itemId: "",
@@ -24,33 +24,37 @@ export default function EditLoanForm(props: Props) {
         returnDate: ""
     })
     const navigate = useNavigate();
-    let loanId:string;
-    let lenderOrBorrower: "lenderId" | "borrowerId";
+    let lenderOrBorrower="";
+    let type=urlParams.type;
+    useEffect(initialState, []);
 
-    useEffect(initialStateOfUpdatedLoan, []);
-
-    if (urlParams.id) {
-        loanId = urlParams.id;
-    }else {
-        return <div>No id given.</div>
-    }
-
-    if(!loan){
-        return <div>loan with id:
-            <br/>
-            {loanId}
-            <br/>
-            not found.</div>
-    }
-    if (loan.lenderId === props.myId) {
-        lenderOrBorrower = "borrowerId";
+    if(urlParams.id){
+        //loan = props.loans.find(loan => loan.id === urlParams.id);
+        if(!loan){
+            return <div>loan with id:
+                <br/>
+                {urlParams.id}
+                <br/>
+                not found.</div>
+        }
+        if (loan.lenderId === props.myId) {
+            lenderOrBorrower = "borrowerId";
+            type="lent";
+        } else {
+            lenderOrBorrower = "lenderId";
+            type="borrowed";
+        }
+    } else if(urlParams.type==="lent"){
+        lenderOrBorrower="borrowerId";
+    } else if(urlParams.type==="borrowed"){
+        lenderOrBorrower="lenderId";
     } else {
-        lenderOrBorrower = "lenderId";
+        return <div>something went wrong!</div>
     }
-    function initialStateOfUpdatedLoan() {
-        if (loan) {
+    function initialState(){
+        if (urlParams.id && loan){
             setUpdatedLoan({
-                ...updatedLoan,
+                ...loanState,
                 lenderId: loan.lenderId,
                 borrowerId: loan.borrowerId,
                 itemId: loan.itemId,
@@ -59,59 +63,61 @@ export default function EditLoanForm(props: Props) {
                 loanDate: loan.loanDate,
                 returnDate: loan.returnDate
             })
-
-            if (loan.returnDate !== "") {
-                setReturnDateIsActive(true)
+            if (loan.returnDate!==""){
+                setReturnDateIsActive(true);
             }
-
         }
+
     }
 
-
-    function handleReturnDateActivator() {
+    function handleReturnDateActivator(){
         setReturnDateIsActive(!returnDateIsActive);
     }
 
     function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         if(lenderOrBorrower==="borrowerId") {
-            updatedLoan.lenderId = props.myId
+            loanState.lenderId = props.myId
         }else {
-            updatedLoan.borrowerId = props.myId;
+            loanState.borrowerId = props.myId;
         }
-        props.onUpdate(updatedLoan, loanId);
-        navigate("/"+loanId)
+        if (urlParams.id) {
+            props.onSubmit(loanState, urlParams.id, false);
+            navigate("/" + urlParams.id);
+        } else{
+            props.onSubmit(loanState, "new id", true);
+            navigate("/");
+        }
     }
 
     function handleChangeInput(event: React.ChangeEvent<HTMLInputElement>){
-        setUpdatedLoan({...updatedLoan, [event.target.name] :event.target.value});
-        console.log(event.target.name+": "+event.target.value);
+        setUpdatedLoan({...loanState, [event.target.name] :event.target.value});
     }
+
     function handleChangeSelect(event: React.ChangeEvent<HTMLSelectElement>){
-        setUpdatedLoan({...updatedLoan, [event.target.name] :event.target.value});
-        console.log(event.target.name+": "+event.target.value);
+        setUpdatedLoan({...loanState, [event.target.name] :event.target.value});
     }
 
     return (
         <>
             <form className={"new-loan-form"} onSubmit={handleSubmit}>
-                item to {urlParams.type}:
-                <input type={"radio"} id={"money"} name={"itemId"} value={"1001"} checked={(updatedLoan.itemId)==="1001"} onChange={handleChangeInput}/>
+                item {type}:
+                <input type={"radio"} id={"money"} name={"itemId"} value={"1001"} checked={(loanState.itemId)==="1001"} onChange={handleChangeInput}/>
                 <label htmlFor={"money"}>money</label>
-                <input type={"radio"} id={"nonmoney"} name={"itemId"} value={"1002"} checked={(updatedLoan.itemId)==="1002"} onChange={handleChangeInput}/>
+                <input type={"radio"} id={"nonmoney"} name={"itemId"} value={"1002"} checked={(loanState.itemId)==="1002"} onChange={handleChangeInput}/>
                 <label htmlFor={"nonmoney"}>nonmoney</label>
                 <br/>
                 <br/>
                 <label htmlFor={"description"}>description: </label>
-                <input type={"text"} id={"description"} name={"description"} value={updatedLoan.description} onChange={handleChangeInput}/>
+                <input type={"text"} id={"description"} name={"description"} value={loanState.description} onChange={handleChangeInput}/>
                 <br/>
                 <br/>
                 <label htmlFor={"amount"}>amount: </label>
-                <input type={"text"} id={"amount"} name={"amount"} value={updatedLoan.amount} onChange={handleChangeInput}/>
+                <input type={"text"} id={"amount"} name={"amount"} value={loanState.amount} onChange={handleChangeInput}/>
                 <br/>
                 <br/>
                 <label htmlFor={"person"}>{lenderOrBorrower.slice(0,-2)} </label>
-                <select id={lenderOrBorrower} name={lenderOrBorrower} value={updatedLoan.borrowerId} onChange={handleChangeSelect}>
+                <select id={lenderOrBorrower} name={lenderOrBorrower} value={loanState.borrowerId} onChange={handleChangeSelect}>
                     <option value={"0"}>{"select "+lenderOrBorrower.slice(0,-2)}</option>
                     {props.persons.map(person => {
                         return (<option key={person.id} value={person.id}>{person.name}</option>)
@@ -122,7 +128,7 @@ export default function EditLoanForm(props: Props) {
                 <br/>
                 <br/>
                 <label htmlFor={"loan-date"}>loan date: </label>
-                <input type={"date"} id={"loanDate"} name={"loanDate"} value={updatedLoan.loanDate} onChange={handleChangeInput}/>
+                <input type={"date"} id={"loanDate"} name={"loanDate"} value={loanState.loanDate} onChange={handleChangeInput}/>
                 <br/>
                 <br/>
                 <label htmlFor={"activate-return-date"}>activate return date: </label>
@@ -130,11 +136,15 @@ export default function EditLoanForm(props: Props) {
                        onClick={handleReturnDateActivator}/>
                 <br/>
                 <label htmlFor={"return-date"}>return date: </label>
-                <input type={"date"} id={"returnDate"} name={"returnDate"} value={updatedLoan.returnDate} onChange={handleChangeInput} disabled={!returnDateIsActive}/>
+                <input type={"date"} id={"returnDate"} name={"returnDate"} value={loanState.returnDate} onChange={handleChangeInput} disabled={!returnDateIsActive}/>
                 <br/>
                 <br/>
                 <button type={"submit"}>save</button>
             </form>
         </>
     )
+
+
+
+
 }
