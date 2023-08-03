@@ -27,6 +27,12 @@ public class MyLoansController {
 
     }
 
+    @PutMapping("/{id}")
+    public LoanWithoutId updateLoan(@RequestBody LoanWithoutId updatedLoanWithoutId, @PathVariable String id){
+        return myLoansService.updateLoan(updatedLoanWithoutId, id);
+
+    }
+
     @GetMapping("/{id}")
     public Loan getLoanDetails(@PathVariable String id){
         return myLoansService.getLoanDetails(id);

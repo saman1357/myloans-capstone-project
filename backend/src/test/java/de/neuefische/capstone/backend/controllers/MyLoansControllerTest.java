@@ -203,4 +203,62 @@ class MyLoansControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json(expectedMessage));
     }
+
+    @Test
+    @DirtiesContext
+    void expectUpdatedLoan_whenUpdateLoan() throws Exception {
+        UserData userDataToUpdate = new UserData("0001",
+                new ArrayList<>(List.of(
+                        new Item("1001", "€ (money)"),
+                        new Item("1002", "Book"))),
+                new ArrayList<>(List.of(
+                        new Person("2001", "Hanna"),
+                        new Person("2002", "Mona"))),
+                new ArrayList<>(List.of(
+                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")))
+        );
+        LoanWithoutId updatedLoanWithoutId = new LoanWithoutId("2002", "0001", "1001", "Handy", 200, "06.06.2023", "12.12.2023");
+
+        myLoansRepository.save(userDataToUpdate);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String updatedLoanWithoutIdJson = objectMapper.writeValueAsString(updatedLoanWithoutId);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/myloans/3002")
+                        .contentType(MediaType.APPLICATION_JSON).content(updatedLoanWithoutIdJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(updatedLoanWithoutIdJson));
+
+    }
+
+    @Test
+    @DirtiesContext
+    void expectUserIdNotFoundException_whenUpdateLoanWithWrongUserId() throws Exception {
+        String expectedMessage = """
+                {
+                 "message":"User Data not found for id: 0001"
+                }
+                """;
+        String loanId = "3001";
+        LoanWithoutId updatedLoanWithoutId = new LoanWithoutId("0001", "2001", "1002", "Pippi Langstrumpf", 1, "01.01.2023", "");
+        ObjectMapper objectMapper = new ObjectMapper();
+        String updatedLoanWithoutIdJson = objectMapper.writeValueAsString(updatedLoanWithoutId);
+        UserData testUserData = new UserData("123",
+                (List.of(
+                        new Item("1001", "€ (money)"),
+                        new Item("1002", "Book"))),
+                List.of(
+                        new Person("2001", "Hanna"),
+                        new Person("2002", "Mona")),
+                List.of(
+                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
+        );
+        myLoansRepository.save(testUserData);
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/myloans/" + loanId)
+                        .contentType(MediaType.APPLICATION_JSON).content(updatedLoanWithoutIdJson))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().json(expectedMessage));
+    }
+
 }
