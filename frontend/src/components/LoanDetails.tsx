@@ -6,12 +6,22 @@ type Props = {
     loans: Loan[],
     items: Item[],
     persons: Person[]
+    onDelete: (loanId:string)=>void
 }
 
 export default function LoanDetails(props: Props) {
     const urlParams = useParams();
     const loan: Loan | undefined = props.loans.find(loan => loan.id === urlParams.id)
     let lent = false;
+
+    function handleDeleteButton(){
+        if (urlParams.id) {
+            props.onDelete(urlParams.id);
+        } else {
+            throw new Error('no id given!');
+        }
+
+    }
     if (!loan) {
         return <div>loan with id:
             <br/>
@@ -34,6 +44,7 @@ export default function LoanDetails(props: Props) {
                 <div className={"loan-details"}>until {loan.returnDate ? loan.returnDate : "undefined"}</div>
             </div>
             <Link to={"/updateloan/"+urlParams.id}><button>Edit</button></Link>
+            <button onClick={handleDeleteButton}>Delete</button>
         </div>
     )
 }

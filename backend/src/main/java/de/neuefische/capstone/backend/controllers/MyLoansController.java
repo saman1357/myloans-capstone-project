@@ -38,6 +38,12 @@ public class MyLoansController {
         return myLoansService.getLoanDetails(id);
     }
 
+    @ DeleteMapping("/{id}")
+    public boolean deleteLoan(@PathVariable String id){
+        return myLoansService.deleteLoan(id);
+
+    }
+
     @ExceptionHandler(NoSuchElementException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorMessage handleNoSuchElementExceptions(NoSuchElementException exception) {
