@@ -234,4 +234,47 @@ class MyLoansServiceTest {
 
     }
 
+    @Test
+    void expectLoanIdNotFoundException_whenDeleteLoanWithWrongId() {
+        //GIVEN
+        String userId = "0001";
+        String loanIdToDelete="123";
+        String expectedMessage = "Loan not found for id: 123";
+        //LoanWithoutId updatedLoanWithoutId= new LoanWithoutId("2002", "0001", "1001", "Handy", 200, "06.06.2023", "12.12.2023");
+        UserData userDataBeforeDeleteLoan = new UserData("0001",
+                new ArrayList<>(List.of(
+                        new Item("1001", "€ (money)"),
+                        new Item("1002", "Book"))),
+                new ArrayList<>(List.of(
+                        new Person("2001", "Hanna"),
+                        new Person("2002", "Mona"))),
+                new ArrayList<>(List.of(
+                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")
+
+                ))
+        );
+        UserData userDataAfterDeleteLoan = new UserData("0001",
+                new ArrayList<>(List.of(
+                        new Item("1001", "€ (money)"),
+                        new Item("1002", "Book"))),
+                new ArrayList<>(List.of(
+                        new Person("2001", "Hanna"),
+                        new Person("2002", "Mona"))),
+                new ArrayList<>(List.of(
+                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", "")))
+        );
+        //WHEN
+        when(myLoansRepository.findById(userId)).thenReturn(Optional.of(userDataBeforeDeleteLoan));
+        when(myLoansRepository.save(userDataAfterDeleteLoan)).thenReturn(userDataAfterDeleteLoan);
+        NoSuchElementException exception = assertThrows(NoSuchElementException.class,
+                () -> myLoansService.deleteLoan(loanIdToDelete));
+
+
+        //THEN
+        verify(myLoansRepository).findById(userId);
+        assertEquals(expectedMessage, exception.getMessage());
+    }
+
+
 }

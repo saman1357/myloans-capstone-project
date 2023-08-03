@@ -301,4 +301,33 @@ class MyLoansControllerTest {
 
     }
 
+    @Test
+    @DirtiesContext
+    void expectUserIdNotFoundException_whenDeleteLoanWithWrongUserId() throws Exception {
+        String expectedMessage = """
+                {
+                 "message":"User Data not found for id: 0001"
+                }
+                """;
+        String loanId = "3001";
+        //LoanWithoutId updatedLoanWithoutId = new LoanWithoutId("0001", "2001", "1002", "Pippi Langstrumpf", 1, "01.01.2023", "");
+        //ObjectMapper objectMapper = new ObjectMapper();
+        //String updatedLoanWithoutIdJson = objectMapper.writeValueAsString(updatedLoanWithoutId);
+        UserData testUserData = new UserData("123",
+                (List.of(
+                        new Item("1001", "€ (money)"),
+                        new Item("1002", "Book"))),
+                List.of(
+                        new Person("2001", "Hanna"),
+                        new Person("2002", "Mona")),
+                List.of(
+                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
+        );
+        myLoansRepository.save(testUserData);
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/myloans/" + loanId))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().json(expectedMessage));
+    }
+
 }
