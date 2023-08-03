@@ -14,7 +14,7 @@ export default function LoanForm(props:Props){
     const urlParams = useParams();
     const loan = props.loans.find(loan => loan.id === urlParams.id);
     const [returnDateIsActive, setReturnDateIsActive] = useState<boolean>(false)
-    const [loanState, setloanState] = useState<LoanWithoutId>({
+    const [loanState, setLoanState] = useState<LoanWithoutId>({
         lenderId: "",
         borrowerId: "",
         itemId: "",
@@ -53,8 +53,8 @@ export default function LoanForm(props:Props){
     }
     function initialState(){
         if (urlParams.id && loan){
-            setloanState({
-                ...loanState,
+            setLoanState((prevState)=>({
+                ...prevState,
                 lenderId: loan.lenderId,
                 borrowerId: loan.borrowerId,
                 itemId: loan.itemId,
@@ -62,7 +62,8 @@ export default function LoanForm(props:Props){
                 amount: loan.amount,
                 loanDate: loan.loanDate,
                 returnDate: loan.returnDate
-            })
+            }))
+
             if (loan.returnDate!==""){
                 setReturnDateIsActive(true);
             }
@@ -91,11 +92,11 @@ export default function LoanForm(props:Props){
     }
 
     function handleChangeInput(event: React.ChangeEvent<HTMLInputElement>){
-        setloanState({...loanState, [event.target.name] :event.target.value});
+        setLoanState({...loanState, [event.target.name] :event.target.value});
     }
 
     function handleChangeSelect(event: React.ChangeEvent<HTMLSelectElement>){
-        setloanState({...loanState, [event.target.name] :event.target.value});
+        setLoanState({...loanState, [event.target.name] :event.target.value});
     }
 
     return (
