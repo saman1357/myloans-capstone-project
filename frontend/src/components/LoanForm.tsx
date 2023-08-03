@@ -26,7 +26,7 @@ export default function LoanForm(props:Props){
     const navigate = useNavigate();
     let lenderOrBorrower="";
     let type=urlParams.type;
-    useEffect(initialState, []);
+    useEffect(initialState, [urlParams.id, loan]);
 
     if(urlParams.id){
         //loan = props.loans.find(loan => loan.id === urlParams.id);
