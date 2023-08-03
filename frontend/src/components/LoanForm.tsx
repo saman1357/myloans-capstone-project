@@ -144,8 +144,4 @@ export default function LoanForm(props:Props){
             </form>
         </>
     )
-
-
-
-
 }

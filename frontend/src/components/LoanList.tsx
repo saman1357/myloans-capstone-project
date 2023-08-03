@@ -76,5 +76,4 @@ export default function LoanList(props: Props){
     </div>
 </>
 )
-
 }
