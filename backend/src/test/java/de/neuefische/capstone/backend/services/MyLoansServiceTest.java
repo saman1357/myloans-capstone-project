@@ -184,9 +184,8 @@ class MyLoansServiceTest {
         //WHEN
         when(myLoansRepository.findById(userId)).thenReturn(Optional.of(userDataToUpdate));
         when(myLoansRepository.save(userDataToUpdate)).thenReturn(userDataUpdated);
-        NoSuchElementException exception = assertThrows(NoSuchElementException.class, () -> {
-            myLoansService.updateLoan(updatedLoanWithoutId, loanIdToUpdate);
-        });
+        NoSuchElementException exception = assertThrows(NoSuchElementException.class,
+                () -> myLoansService.updateLoan(updatedLoanWithoutId, loanIdToUpdate));
 
 
         //THEN
@@ -231,7 +230,7 @@ class MyLoansServiceTest {
         //THEN
         verify(myLoansRepository).findById(userId);
         verify(myLoansRepository).save(userDataToUpdate);
-        assertEquals(true, successfulDeleted);
+        assertTrue(successfulDeleted);
 
     }
 
