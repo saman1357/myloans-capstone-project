@@ -240,7 +240,6 @@ class MyLoansServiceTest {
         String userId = "0001";
         String loanIdToDelete="123";
         String expectedMessage = "Loan not found for id: 123";
-        //LoanWithoutId updatedLoanWithoutId= new LoanWithoutId("2002", "0001", "1001", "Handy", 200, "06.06.2023", "12.12.2023");
         UserData userDataBeforeDeleteLoan = new UserData("0001",
                 new ArrayList<>(List.of(
                         new Item("1001", "€ (money)"),

@@ -310,9 +310,7 @@ class MyLoansControllerTest {
                 }
                 """;
         String loanId = "3001";
-        //LoanWithoutId updatedLoanWithoutId = new LoanWithoutId("0001", "2001", "1002", "Pippi Langstrumpf", 1, "01.01.2023", "");
-        //ObjectMapper objectMapper = new ObjectMapper();
-        //String updatedLoanWithoutIdJson = objectMapper.writeValueAsString(updatedLoanWithoutId);
+
         UserData testUserData = new UserData("123",
                 (List.of(
                         new Item("1001", "€ (money)"),
