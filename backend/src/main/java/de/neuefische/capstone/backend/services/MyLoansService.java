@@ -57,20 +57,21 @@ public class MyLoansService {
         Loan updatedLoan = new Loan(updatedLoanWithoutId);
         updatedLoan.setId(loanId);
         if (userData.isPresent()) {
-            if (updateLoanById(userData.get().getLoans(), updatedLoan, loanId)==-1){
+            int index=getIndexByLoanId(userData.get().getLoans(), loanId);
+            if (index==-1){
                 throw new NoSuchElementException(loanNotFoundExceptionMessage + loanId);
             }
+            userData.get().getLoans().set(index, updatedLoan);
             myLoansRepository.save(userData.get());
             return updatedLoanWithoutId;
         }
         throw new NoSuchElementException(userNotFoundExceptionMessage + userId);
     }
 
-    private int updateLoanById(List<Loan> loans, Loan updatedLoan, String loanId){
+    private int getIndexByLoanId(List<Loan> loans, String loanId){
         int index=0;
         for (Loan loan: loans) {
             if (loan.getId().equals(loanId)){
-                loans.set(index, updatedLoan);
                 return index;
             }
             index+=1;
@@ -78,4 +79,17 @@ public class MyLoansService {
         return -1;
     }
 
+    public boolean deleteLoan (String loanId){
+        Optional<UserData> userData = myLoansRepository.findById(userId);
+        if (userData.isPresent()) {
+            int index=getIndexByLoanId(userData.get().getLoans(), loanId);
+            if (index==-1){
+                throw new NoSuchElementException(loanNotFoundExceptionMessage + loanId);
+            }
+            userData.get().getLoans().remove(index);
+            myLoansRepository.save(userData.get());
+            return true;
+        }
+        throw new NoSuchElementException(userNotFoundExceptionMessage + userId);
+    }
 }

@@ -261,4 +261,71 @@ class MyLoansControllerTest {
                 .andExpect(MockMvcResultMatchers.content().json(expectedMessage));
     }
 
+    @Test
+    @DirtiesContext
+    void expectLoanRemovedFromList_whenDeleteLoan() throws Exception {
+        UserData userDataToUpdate = new UserData("0001",
+                new ArrayList<>(List.of(
+                        new Item("1001", "€ (money)"),
+                        new Item("1002", "Book"))),
+                new ArrayList<>(List.of(
+                        new Person("2001", "Hanna"),
+                        new Person("2002", "Mona"))),
+                new ArrayList<>(List.of(
+                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")))
+        );
+        UserData updatedUserData = new UserData("0001",
+                new ArrayList<>(List.of(
+                        new Item("1001", "€ (money)"),
+                        new Item("1002", "Book"))),
+                new ArrayList<>(List.of(
+                        new Person("2001", "Hanna"),
+                        new Person("2002", "Mona"))),
+                new ArrayList<>(List.of(
+                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", "")))
+        );
+        String loanIdToDelete="3002";
+
+        myLoansRepository.save(userDataToUpdate);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String updatedUserDataJson = objectMapper.writeValueAsString(updatedUserData);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/myloans/"+loanIdToDelete))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/myloans"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(updatedUserDataJson));
+
+
+    }
+
+    @Test
+    @DirtiesContext
+    void expectUserIdNotFoundException_whenDeleteLoanWithWrongUserId() throws Exception {
+        String expectedMessage = """
+                {
+                 "message":"User Data not found for id: 0001"
+                }
+                """;
+        String loanId = "3001";
+
+        UserData testUserData = new UserData("123",
+                (List.of(
+                        new Item("1001", "€ (money)"),
+                        new Item("1002", "Book"))),
+                List.of(
+                        new Person("2001", "Hanna"),
+                        new Person("2002", "Mona")),
+                List.of(
+                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
+        );
+        myLoansRepository.save(testUserData);
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/myloans/" + loanId))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().json(expectedMessage));
+    }
+
 }

@@ -2,7 +2,7 @@ import './App.css'
 import {useEffect, useState} from "react";
 import {Item, Loan, LoanWithoutId, Person} from "./model/DataModels.ts";
 import axios from "axios";
-import {Route, Routes} from "react-router-dom";
+import {Route, Routes, useNavigate} from "react-router-dom";
 import LoanList from "./components/LoanList.tsx";
 import LoanDetails from "./components/LoanDetails.tsx";
 import LoanForm from "./components/LoanForm.tsx";
@@ -11,6 +11,7 @@ export default function App() {
     const [loans, setLoans] = useState<Loan[]>();
     const [items, setItems] = useState<Item[]>();
     const [persons, setPersons] = useState<Person[]>();
+    const navigate = useNavigate();
 
     const myId = "0001";
 
@@ -53,6 +54,15 @@ export default function App() {
             });
     }
 
+    function handleDeleteLoan(loanId:string){
+        axios.delete("/api/myloans/" + loanId)
+            .then(() => getMyLoansData())
+            .catch(function (error) {
+                console.error(error);
+            });
+        navigate("/");
+    }
+
 
     if (!(loans && items && persons)) {
         return <h1>... loading ...</h1>
@@ -69,11 +79,10 @@ export default function App() {
                     <Route path={"/addloan/:type"}
                            element={<LoanForm loans={loans} items={items} persons={persons} onSubmit={handleSubmitLoanForm} myId={myId}/>}/>
                     <Route path={"/:id"}
-                           element={<LoanDetails loans={loans} items={items} persons={persons} myId={myId}/>}/>
+                           element={<LoanDetails loans={loans} items={items} persons={persons} myId={myId} onDelete={handleDeleteLoan}/>}/>
                     <Route path={"/updateloan/:id"} element={<LoanForm loans={loans} items={items} persons={persons} onSubmit={handleUpdateLoan} myId={myId}/>}/>
                 </Routes>
             </div>
         </>
     )
 }
-
