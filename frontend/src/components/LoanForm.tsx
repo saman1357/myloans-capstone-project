@@ -26,7 +26,7 @@ export default function LoanForm(props:Props){
         returnDate: ""
     })
     const navigate = useNavigate();
-    useEffect(initialState, [urlParams.id, loan]);
+    useEffect(initialState, [props.myId, urlParams.type, urlParams.id, loan]);
 
     function initialState(){
         if (urlParams.id && loan){
