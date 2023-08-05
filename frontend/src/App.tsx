@@ -9,7 +9,6 @@ import LoanForm from "./components/LoanForm.tsx";
 import PersonForm from "./components/PersonForm.tsx";
 
 export default function App() {
-    //axios.defaults.baseURL = 'http://localhost:5173';
     const [loans, setLoans] = useState<Loan[]>();
     const [items, setItems] = useState<Item[]>();
     const [persons, setPersons] = useState<Person[]>();
