@@ -1,5 +1,5 @@
 import {Item, Loan, LoanWithoutId, Person} from "../model/DataModels.ts";
-import {useNavigate, useParams} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import React, {FormEvent, useEffect, useState} from "react";
 
 type Props = {
@@ -14,43 +14,20 @@ export default function LoanForm(props:Props){
     const urlParams = useParams();
     const loan = props.loans.find(loan => loan.id === urlParams.id);
     const [returnDateIsActive, setReturnDateIsActive] = useState<boolean>(false)
+    const [lenderOrBorrower, setLenderOrBorrower]=useState<"lenderId" | "borrowerId">("lenderId");
+    const [type, setType]=useState(urlParams.type)
     const [loanState, setLoanState] = useState<LoanWithoutId>({
         lenderId: "",
         borrowerId: "",
         itemId: "",
         description: "",
         amount: 0,
-        loanDate: "",
+        loanDate: new Date().toJSON().slice(0, 10),
         returnDate: ""
     })
     const navigate = useNavigate();
-    let lenderOrBorrower="";
-    let type=urlParams.type;
     useEffect(initialState, [urlParams.id, loan]);
 
-    if(urlParams.id){
-        //loan = props.loans.find(loan => loan.id === urlParams.id);
-        if(!loan){
-            return <div>loan with id:
-                <br/>
-                {urlParams.id}
-                <br/>
-                not found.</div>
-        }
-        if (loan.lenderId === props.myId) {
-            lenderOrBorrower = "borrowerId";
-            type="lent";
-        } else {
-            lenderOrBorrower = "lenderId";
-            type="borrowed";
-        }
-    } else if(urlParams.type==="lent"){
-        lenderOrBorrower="borrowerId";
-    } else if(urlParams.type==="borrowed"){
-        lenderOrBorrower="lenderId";
-    } else {
-        return <div>something went wrong!</div>
-    }
     function initialState(){
         if (urlParams.id && loan){
             setLoanState((prevState)=>({
@@ -67,6 +44,25 @@ export default function LoanForm(props:Props){
             if (loan.returnDate!==""){
                 setReturnDateIsActive(true);
             }
+            if (loan.lenderId === props.myId) {
+                setLenderOrBorrower("borrowerId");
+                setType("lent");
+            } else {
+                setLenderOrBorrower("lenderId");
+                setType("borrowed");
+            }
+        } else if(urlParams.type==="lent"){
+            setType("lent");
+            setLoanState((prevState)=>({
+                ...prevState, lenderId: props.myId}));
+            setLenderOrBorrower("borrowerId");
+        } else if (urlParams.type==="borrowed"){
+            setType("borrowed");
+            setLoanState((prevState)=>({
+                ...prevState, borrowerId: props.myId}));
+            setLenderOrBorrower("lenderId");
+        } else {
+            throw new Error('Something went wrong! It seems that either no ID was given or it was not specified whether you are lending or borrowing.');
         }
 
     }
@@ -101,7 +97,7 @@ export default function LoanForm(props:Props){
 
     return (
         <>
-            <form className={"new-loan-form"} onSubmit={handleSubmit}>
+            <form className={"loan-form"} onSubmit={handleSubmit}>
                 item {type}:
                 <input type={"radio"} id={"money"} name={"itemId"} value={"1001"} checked={(loanState.itemId)==="1001"} onChange={handleChangeInput}/>
                 <label htmlFor={"money"}>money</label>
@@ -118,14 +114,15 @@ export default function LoanForm(props:Props){
                 <br/>
                 <br/>
                 <label htmlFor={"person"}>{lenderOrBorrower.slice(0,-2)} </label>
-                <select id={lenderOrBorrower} name={lenderOrBorrower} value={loanState.borrowerId} onChange={handleChangeSelect}>
-                    <option value={"0"}>{"select "+lenderOrBorrower.slice(0,-2)}</option>
+                <select id={lenderOrBorrower} name={lenderOrBorrower} value={loanState[lenderOrBorrower]} onChange={handleChangeSelect}>
+                    <option value={"-1"}>{"select "+lenderOrBorrower.slice(0,-2)}</option>
                     {props.persons.map(person => {
                         return (<option key={person.id} value={person.id}>{person.name}</option>)
                     })}
                 </select>
                 <br/>
-                <button>add/edit person(s)</button>
+                <Link to={(urlParams.id? ("/updateloan/"+urlParams.id) : ("/addloan/"+type))+"/person/"+loanState[lenderOrBorrower]}><button>edit person</button></Link>
+                <Link to={(urlParams.id? ("/updateloan/"+urlParams.id) : ("/addloan/"+type))+"/person/add"}><button>add person</button></Link>
                 <br/>
                 <br/>
                 <label htmlFor={"loan-date"}>loan date: </label>

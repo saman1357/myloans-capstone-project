@@ -29,6 +29,10 @@ export type Person={
     name: string
 }
 
+export type PersonWithoutId={
+    name: string
+}
+
 export type UserData={
     id: string,
     items: Item,

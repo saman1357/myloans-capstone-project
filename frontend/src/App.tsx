@@ -1,13 +1,15 @@
 import './App.css'
 import {useEffect, useState} from "react";
-import {Item, Loan, LoanWithoutId, Person} from "./model/DataModels.ts";
+import {Item, Loan, LoanWithoutId, Person, PersonWithoutId} from "./model/DataModels.ts";
 import axios from "axios";
 import {Route, Routes, useNavigate} from "react-router-dom";
 import LoanList from "./components/LoanList.tsx";
 import LoanDetails from "./components/LoanDetails.tsx";
 import LoanForm from "./components/LoanForm.tsx";
+import PersonForm from "./components/PersonForm.tsx";
 
 export default function App() {
+    //axios.defaults.baseURL = 'http://localhost:5173';
     const [loans, setLoans] = useState<Loan[]>();
     const [items, setItems] = useState<Item[]>();
     const [persons, setPersons] = useState<Person[]>();
@@ -19,7 +21,7 @@ export default function App() {
 
 
     function getMyLoansData() {
-        axios.get("api/myloans")
+        axios.get("/api/myloans")
             .then(response => {
                 setLoans(response.data.loans);
                 setItems(response.data.items);
@@ -63,6 +65,29 @@ export default function App() {
         navigate("/");
     }
 
+    function handleSubmitPersonForm(personWithoutId: PersonWithoutId, personId: string, isNewPerson: boolean) {
+        if (isNewPerson) {
+            handleAddNewPerson(personWithoutId);
+        } else {
+            handleUpdatePerson(personWithoutId, personId);
+        }
+    }
+
+    function handleAddNewPerson(newPersonWithoutId: PersonWithoutId) {
+        axios.post("/api/myloans/person", newPersonWithoutId)
+            .then(() => getMyLoansData())
+            .catch(function (error) {
+                console.error(error);
+            });
+    }
+
+    function handleUpdatePerson(updatedPersonWithoutId: PersonWithoutId, personId: string) {
+        axios.put("/api/myloans/person/" + personId, updatedPersonWithoutId)
+            .then(() => getMyLoansData())
+            .catch(function (error) {
+                console.error(error);
+            });
+    }
 
     if (!(loans && items && persons)) {
         return <h1>... loading ...</h1>
@@ -80,7 +105,11 @@ export default function App() {
                            element={<LoanForm loans={loans} items={items} persons={persons} onSubmit={handleSubmitLoanForm} myId={myId}/>}/>
                     <Route path={"/:id"}
                            element={<LoanDetails loans={loans} items={items} persons={persons} myId={myId} onDelete={handleDeleteLoan}/>}/>
-                    <Route path={"/updateloan/:id"} element={<LoanForm loans={loans} items={items} persons={persons} onSubmit={handleUpdateLoan} myId={myId}/>}/>
+                    <Route path={"/updateloan/:id"} element={<LoanForm loans={loans} items={items} persons={persons} onSubmit={handleSubmitLoanForm} myId={myId}/>}/>
+                    <Route path={"/updateloan/:id/person/add"} element={<PersonForm persons={persons} onSubmit={handleSubmitPersonForm} myId={myId}/>}/>
+                    <Route path={"/addloan/:type/person/add"} element={<PersonForm persons={persons} onSubmit={handleSubmitPersonForm} myId={myId}/>}/>
+                    <Route path={"/updateloan/:id/person/:pid"} element={<PersonForm persons={persons} onSubmit={handleSubmitPersonForm} myId={myId}/>}/>
+                    <Route path={"/addloan/:type/person/:pid"} element={<PersonForm persons={persons} onSubmit={handleSubmitPersonForm} myId={myId}/>}/>
                 </Routes>
             </div>
         </>

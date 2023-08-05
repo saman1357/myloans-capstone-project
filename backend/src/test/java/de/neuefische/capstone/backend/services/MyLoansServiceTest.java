@@ -275,5 +275,44 @@ class MyLoansServiceTest {
         assertEquals(expectedMessage, exception.getMessage());
     }
 
+    @Test
+    void expectNewPerson_whenAddNewPerson() {
+        //GIVEN
+        String userId = "0001";
+        PersonWithoutId newPersonWithoutId= new PersonWithoutId("Mona");
+        UserData userDataToUpdate = new UserData("0001",
+                new ArrayList<>(List.of(
+                        new Item("1001", "€ (money)"),
+                        new Item("1002", "Book"))),
+                new ArrayList<>(List.of(
+                        new Person("2001", "Hanna"))),
+                new ArrayList<>(List.of(
+                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002","2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")
+                ))
+        );
+        UserData userDataUpdated = new UserData("0001",
+                new ArrayList<>(List.of(
+                        new Item("1001", "€ (money)"),
+                        new Item("1002", "Book"))),
+                new ArrayList<>(List.of(
+                        new Person("2001", "Hanna"),
+                        new Person("2002", "Mona"))),
+                new ArrayList<>(List.of(
+                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("new uuid", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")))
+        );
+        //WHEN
+        when(myLoansRepository.findById(userId)).thenReturn(Optional.of(userDataToUpdate));
+        when(myLoansRepository.save(userDataToUpdate)).thenReturn(userDataUpdated);
+        PersonWithoutId actualPerson=myLoansService.addPerson(newPersonWithoutId);
+
+
+        //THEN
+        verify(myLoansRepository).findById(userId);
+        verify(myLoansRepository).save(userDataToUpdate);
+        assertEquals(newPersonWithoutId, actualPerson);
+
+    }
 
 }
