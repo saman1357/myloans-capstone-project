@@ -1,8 +1,6 @@
 package de.neuefische.capstone.backend.services;
 
-import de.neuefische.capstone.backend.models.Loan;
-import de.neuefische.capstone.backend.models.LoanWithoutId;
-import de.neuefische.capstone.backend.models.UserData;
+import de.neuefische.capstone.backend.models.*;
 import de.neuefische.capstone.backend.repositories.MyLoansRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,8 +14,8 @@ import java.util.Optional;
 public class MyLoansService {
     private final MyLoansRepository myLoansRepository;
     String userId = "0001";
-    String userNotFoundExceptionMessage= "User Data not found for id: ";
-    String loanNotFoundExceptionMessage= "Loan not found for id: ";
+    String userNotFoundExceptionMessage = "User Data not found for id: ";
+    String loanNotFoundExceptionMessage = "Loan not found for id: ";
 
 
     public UserData getUserData() {
@@ -43,10 +41,10 @@ public class MyLoansService {
     public Loan getLoanDetails(String loanId) {
         Optional<UserData> userData = myLoansRepository.findById(userId);
         if (userData.isPresent()) {
-            Optional<Loan> loan= userData.get().getLoans().stream().filter(l -> l.getId().equals(loanId)).findFirst();
-            if (loan.isPresent()){
+            Optional<Loan> loan = userData.get().getLoans().stream().filter(l -> l.getId().equals(loanId)).findFirst();
+            if (loan.isPresent()) {
                 return loan.get();
-            } else throw new NoSuchElementException(loanNotFoundExceptionMessage+loanId);
+            } else throw new NoSuchElementException(loanNotFoundExceptionMessage + loanId);
         }
         throw new NoSuchElementException(userNotFoundExceptionMessage + userId);
 
@@ -57,8 +55,8 @@ public class MyLoansService {
         Loan updatedLoan = new Loan(updatedLoanWithoutId);
         updatedLoan.setId(loanId);
         if (userData.isPresent()) {
-            int index=getIndexByLoanId(userData.get().getLoans(), loanId);
-            if (index==-1){
+            int index = getIndexByLoanId(userData.get().getLoans(), loanId);
+            if (index == -1) {
                 throw new NoSuchElementException(loanNotFoundExceptionMessage + loanId);
             }
             userData.get().getLoans().set(index, updatedLoan);
@@ -68,27 +66,38 @@ public class MyLoansService {
         throw new NoSuchElementException(userNotFoundExceptionMessage + userId);
     }
 
-    private int getIndexByLoanId(List<Loan> loans, String loanId){
-        int index=0;
-        for (Loan loan: loans) {
-            if (loan.getId().equals(loanId)){
+    private int getIndexByLoanId(List<Loan> loans, String loanId) {
+        int index = 0;
+        for (Loan loan : loans) {
+            if (loan.getId().equals(loanId)) {
                 return index;
             }
-            index+=1;
+            index += 1;
         }
         return -1;
     }
 
-    public boolean deleteLoan (String loanId){
+    public boolean deleteLoan(String loanId) {
         Optional<UserData> userData = myLoansRepository.findById(userId);
         if (userData.isPresent()) {
-            int index=getIndexByLoanId(userData.get().getLoans(), loanId);
-            if (index==-1){
+            int index = getIndexByLoanId(userData.get().getLoans(), loanId);
+            if (index == -1) {
                 throw new NoSuchElementException(loanNotFoundExceptionMessage + loanId);
             }
             userData.get().getLoans().remove(index);
             myLoansRepository.save(userData.get());
             return true;
+        }
+        throw new NoSuchElementException(userNotFoundExceptionMessage + userId);
+    }
+
+    public PersonWithoutId addPerson(PersonWithoutId newPersonWithoutId) {
+        Optional<UserData> userData = myLoansRepository.findById(userId);
+        Person newPerson = new Person(newPersonWithoutId);
+        if (userData.isPresent()) {
+            userData.get().getPersons().add(newPerson);
+            myLoansRepository.save(userData.get());
+            return newPersonWithoutId;
         }
         throw new NoSuchElementException(userNotFoundExceptionMessage + userId);
     }
