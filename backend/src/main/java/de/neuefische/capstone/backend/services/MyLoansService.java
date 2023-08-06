@@ -16,6 +16,7 @@ public class MyLoansService {
     String userId = "0001";
     String userNotFoundExceptionMessage = "User Data not found for id: ";
     String loanNotFoundExceptionMessage = "Loan not found for id: ";
+    String personNotFoundExceptionMessage = "Person not found for id: ";
 
 
     public UserData getUserData() {
@@ -66,17 +67,6 @@ public class MyLoansService {
         throw new NoSuchElementException(userNotFoundExceptionMessage + userId);
     }
 
-    private int getIndexByLoanId(List<Loan> loans, String loanId) {
-        int index = 0;
-        for (Loan loan : loans) {
-            if (loan.getId().equals(loanId)) {
-                return index;
-            }
-            index += 1;
-        }
-        return -1;
-    }
-
     public boolean deleteLoan(String loanId) {
         Optional<UserData> userData = myLoansRepository.findById(userId);
         if (userData.isPresent()) {
@@ -101,4 +91,43 @@ public class MyLoansService {
         }
         throw new NoSuchElementException(userNotFoundExceptionMessage + userId);
     }
+
+    public PersonWithoutId updatePerson(PersonWithoutId updatedPersonWithoutId, String personId) {
+        Optional<UserData> userData = myLoansRepository.findById(userId);
+        Person updatedPerson = new Person(updatedPersonWithoutId);
+        updatedPerson.setId(personId);
+        if (userData.isPresent()) {
+            int index = getIndexByPersonId(userData.get().getPersons(), personId);
+            if (index == -1) {
+                throw new NoSuchElementException(personNotFoundExceptionMessage + personId);
+            }
+            userData.get().getPersons().set(index, updatedPerson);
+            myLoansRepository.save(userData.get());
+            return updatedPersonWithoutId;
+        }
+        throw new NoSuchElementException(userNotFoundExceptionMessage + userId);
+    }
+
+    private int getIndexByLoanId(List<Loan> loans, String loanId) {
+        int index = 0;
+        for (Loan loan : loans) {
+            if (loan.getId().equals(loanId)) {
+                return index;
+            }
+            index += 1;
+        }
+        return -1;
+    }
+
+    private int getIndexByPersonId(List<Person> persons, String personId) {
+        int index = 0;
+        for (Person person : persons) {
+            if (person.getId().equals(personId)) {
+                return index;
+            }
+            index += 1;
+        }
+        return -1;
+    }
+
 }

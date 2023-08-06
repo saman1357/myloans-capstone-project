@@ -49,6 +49,12 @@ public class MyLoansController {
         return myLoansService.addPerson(newPersonWithoutId);
     }
 
+    @PutMapping("/person/{id}")
+    public PersonWithoutId updatePerson(@RequestBody PersonWithoutId updatedPersonWithoutId, @PathVariable String id) {
+        return myLoansService.updatePerson(updatedPersonWithoutId, id);
+
+    }
+
     @ExceptionHandler(NoSuchElementException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorMessage handleNoSuchElementExceptions(NoSuchElementException exception) {
