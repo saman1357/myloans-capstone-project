@@ -29,7 +29,7 @@ export default function LoanForm(props: Props) {
     const location = useLocation();
     const navigateState = location.state || {};
     const stateData = navigateState.stateData;
-    useEffect(initialState, [props.myId, urlParams.type, urlParams.id, loan]);
+    useEffect(initialState, [props.myId, urlParams.type, urlParams.id, loan, stateData]);
 
     function initialState() {
         console.log("stateData = "+stateData);
@@ -89,7 +89,7 @@ export default function LoanForm(props: Props) {
     }
 
     function handleEditPersons() {
-        let editPersonLink = "";
+        let editPersonLink : string;
         if (urlParams.id) {
             editPersonLink = "/updateloan/" + urlParams.id + "/person/";
         } else {

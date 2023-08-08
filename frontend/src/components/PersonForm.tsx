@@ -18,7 +18,7 @@ export default function PersonForm(props: Props) {
     const location=useLocation();
     const navigateState=location.state || {};
     const [stateData]=useState<LoanWithoutId>(navigateState.loanState);
-    useEffect(initialState, [person, urlParams.pid]);
+    useEffect(initialState, [person, urlParams.pid, urlParams.id]);
 
     function initialState() {
         if (urlParams.pid && person) {
