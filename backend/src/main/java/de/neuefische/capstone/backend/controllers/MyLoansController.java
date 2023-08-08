@@ -52,7 +52,11 @@ public class MyLoansController {
     @PutMapping("/person/{id}")
     public PersonWithoutId updatePerson(@RequestBody PersonWithoutId updatedPersonWithoutId, @PathVariable String id) {
         return myLoansService.updatePerson(updatedPersonWithoutId, id);
+    }
 
+    @DeleteMapping("/person/{id}")
+    public boolean deletePerson(@PathVariable String id) {
+        return myLoansService.deletePerson(id);
     }
 
     @ExceptionHandler(NoSuchElementException.class)
