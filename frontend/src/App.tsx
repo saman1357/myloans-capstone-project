@@ -55,7 +55,7 @@ export default function App() {
             });
     }
 
-    function handleDeleteLoan(loanId:string){
+    function handleDeleteLoan(loanId: string) {
         axios.delete("/api/myloans/" + loanId)
             .then(() => getMyLoansData())
             .catch(function (error) {
@@ -64,11 +64,21 @@ export default function App() {
         navigate("/");
     }
 
-    function handleSubmitPersonForm(personWithoutId: PersonWithoutId, personId: string, isNewPerson: boolean) {
-        if (isNewPerson) {
-            handleAddNewPerson(personWithoutId);
-        } else {
-            handleUpdatePerson(personWithoutId, personId);
+    function handleSubmitPersonForm(person: Person, action: string) {
+        const personWithoutId : PersonWithoutId={name:person.name}
+        switch (action){
+            case "add":{
+                handleAddNewPerson(personWithoutId);
+                return;
+            }
+            case "update":{
+                handleUpdatePerson(personWithoutId, person.id);
+                return;
+            }
+            case "delete":{
+                handleDeletePerson(person.id);
+                return;
+            }
         }
     }
 
@@ -88,6 +98,14 @@ export default function App() {
             });
     }
 
+    function handleDeletePerson(personId: string){
+        axios.delete("/api/myloans/person/"+personId)
+            .then(() => getMyLoansData())
+            .catch(function (error) {
+                console.error(error);
+            });
+    }
+
     if (!(loans && items && persons)) {
         return <h1>... loading ...</h1>
     }
@@ -96,20 +114,33 @@ export default function App() {
         <>
             <div>
                 <div className={"app-title"}>
-                    <img src={"myLoans.png"} alt={"myLoans Logo"} width={"100"}/>
+                    <div></div>
+                    <img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/>
+                    <div></div>
                 </div>
-                <Routes>
-                    <Route path={"/"} element={<LoanList loans={loans} items={items} persons={persons} myId={myId}/>}/>
-                    <Route path={"/addloan/:type"}
-                           element={<LoanForm loans={loans} items={items} persons={persons} onSubmit={handleSubmitLoanForm} myId={myId}/>}/>
-                    <Route path={"/:id"}
-                           element={<LoanDetails loans={loans} items={items} persons={persons} myId={myId} onDelete={handleDeleteLoan}/>}/>
-                    <Route path={"/updateloan/:id"} element={<LoanForm loans={loans} items={items} persons={persons} onSubmit={handleSubmitLoanForm} myId={myId}/>}/>
-                    <Route path={"/updateloan/:id/person/add"} element={<PersonForm persons={persons} onSubmit={handleSubmitPersonForm} myId={myId}/>}/>
-                    <Route path={"/addloan/:type/person/add"} element={<PersonForm persons={persons} onSubmit={handleSubmitPersonForm} myId={myId}/>}/>
-                    <Route path={"/updateloan/:id/person/:pid"} element={<PersonForm persons={persons} onSubmit={handleSubmitPersonForm} myId={myId}/>}/>
-                    <Route path={"/addloan/:type/person/:pid"} element={<PersonForm persons={persons} onSubmit={handleSubmitPersonForm} myId={myId}/>}/>
-                </Routes>
+                <div className={"app-body"}>
+                    <Routes>
+                        <Route path={"/"}
+                               element={<LoanList loans={loans} items={items} persons={persons} myId={myId}/>}/>
+                        <Route path={"/addloan/:type"}
+                               element={<LoanForm loans={loans} items={items} persons={persons}
+                                                  onSubmit={handleSubmitLoanForm} myId={myId}/>}/>
+                        <Route path={"/:id"}
+                               element={<LoanDetails loans={loans} items={items} persons={persons} myId={myId}
+                                                     onDelete={handleDeleteLoan}/>}/>
+                        <Route path={"/updateloan/:id"} element={<LoanForm loans={loans} items={items} persons={persons}
+                                                                           onSubmit={handleSubmitLoanForm}
+                                                                           myId={myId}/>}/>
+                        <Route path={"/updateloan/:id/person/add"}
+                               element={<PersonForm persons={persons} onSubmit={handleSubmitPersonForm} myId={myId}/>}/>
+                        <Route path={"/addloan/:type/person/add"}
+                               element={<PersonForm persons={persons} onSubmit={handleSubmitPersonForm} myId={myId}/>}/>
+                        <Route path={"/updateloan/:id/person/:pid"}
+                               element={<PersonForm persons={persons} onSubmit={handleSubmitPersonForm} myId={myId}/>}/>
+                        <Route path={"/addloan/:type/person/:pid"}
+                               element={<PersonForm persons={persons} onSubmit={handleSubmitPersonForm} myId={myId}/>}/>
+                    </Routes>
+                </div>
             </div>
         </>
     )

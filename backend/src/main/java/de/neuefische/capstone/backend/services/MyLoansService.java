@@ -108,6 +108,20 @@ public class MyLoansService {
         throw new NoSuchElementException(userNotFoundExceptionMessage + userId);
     }
 
+    public boolean deletePerson(String personId) {
+        Optional<UserData> userData = myLoansRepository.findById(userId);
+        if (userData.isPresent()) {
+            int index = getIndexByPersonId(userData.get().getPersons(), personId);
+            if (index == -1) {
+                throw new NoSuchElementException(personNotFoundExceptionMessage + personId);
+            }
+            userData.get().getPersons().remove(index);
+            myLoansRepository.save(userData.get());
+            return true;
+        }
+        throw new NoSuchElementException(userNotFoundExceptionMessage + userId);
+    }
+
     private int getIndexByLoanId(List<Loan> loans, String loanId) {
         int index = 0;
         for (Loan loan : loans) {

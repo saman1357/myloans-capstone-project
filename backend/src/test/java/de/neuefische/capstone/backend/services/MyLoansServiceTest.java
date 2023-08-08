@@ -359,4 +359,91 @@ class MyLoansServiceTest {
 
     }
 
+    @Test
+    void expectTrue_whenDeletePerson() {
+        //GIVEN
+        String userId = "0001";
+        String personIdToDelete="2002";
+        UserData userDataToUpdate = new UserData("0001",
+                new ArrayList<>(List.of(
+                        new Item("1001", "€ (money)"),
+                        new Item("1002", "Book"))),
+                new ArrayList<>(List.of(
+                        new Person("2001", "Hanna"),
+                        new Person("2002", "Mona"))),
+                new ArrayList<>(List.of(
+                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")
+
+                ))
+        );
+        UserData userDataUpdated = new UserData("0001",
+                new ArrayList<>(List.of(
+                        new Item("1001", "€ (money)"),
+                        new Item("1002", "Book"))),
+                new ArrayList<>(List.of(
+                        new Person("2001", "Hanna")
+                        )),
+                new ArrayList<>(List.of(
+                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")
+                        ))
+        );
+        //WHEN
+        when(myLoansRepository.findById(userId)).thenReturn(Optional.of(userDataToUpdate));
+        when(myLoansRepository.save(userDataToUpdate)).thenReturn(userDataUpdated);
+        boolean successfulDeleted=myLoansService.deletePerson(personIdToDelete);
+
+
+        //THEN
+        verify(myLoansRepository).findById(userId);
+        verify(myLoansRepository).save(userDataToUpdate);
+        assertTrue(successfulDeleted);
+
+    }
+
+    @Test
+    void expectPersonIdNotFoundException_whenDeletePersonWithWrongId() {
+        //GIVEN
+        String userId = "0001";
+        String personIdToDelete="123";
+        String expectedMessage = "Person not found for id: 123";
+        UserData userDataBeforeDeletePerson = new UserData("0001",
+                new ArrayList<>(List.of(
+                        new Item("1001", "€ (money)"),
+                        new Item("1002", "Book"))),
+                new ArrayList<>(List.of(
+                        new Person("2001", "Hanna"),
+                        new Person("2002", "Mona"))),
+                new ArrayList<>(List.of(
+                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")
+
+                ))
+        );
+        UserData userDataAfterDeletePerson = new UserData("0001",
+                new ArrayList<>(List.of(
+                        new Item("1001", "€ (money)"),
+                        new Item("1002", "Book"))),
+                new ArrayList<>(List.of(
+                        new Person("2001", "Hanna")
+                       )),
+                new ArrayList<>(List.of(
+                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")
+                        ))
+        );
+        //WHEN
+        when(myLoansRepository.findById(userId)).thenReturn(Optional.of(userDataBeforeDeletePerson));
+        when(myLoansRepository.save(userDataAfterDeletePerson)).thenReturn(userDataAfterDeletePerson);
+        NoSuchElementException exception = assertThrows(NoSuchElementException.class,
+                () -> myLoansService.deletePerson(personIdToDelete));
+
+
+        //THEN
+        verify(myLoansRepository).findById(userId);
+        assertEquals(expectedMessage, exception.getMessage());
+    }
+
+
 }
