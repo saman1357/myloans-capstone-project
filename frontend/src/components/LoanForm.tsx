@@ -32,7 +32,6 @@ export default function LoanForm(props: Props) {
     useEffect(initialState, [props.myId, urlParams.type, urlParams.id, loan, stateData]);
 
     function initialState() {
-        console.log("stateData = "+stateData);
         if (stateData) {
             setLoanState((prevState) => ({
                 ...prevState,
