@@ -12,7 +12,7 @@ export default function LoanList(props: Props){
     const [filter, setFilter]=useState("-1");
     const [filteredLoans, setFilteredLoans]=useState(props.loans);
 
-    useEffect(filterAndCalculation, [props, filter]);
+    useEffect(filterAndCalculation, [props, filter, filteredLoans]);
 
 
 
