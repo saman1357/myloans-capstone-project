@@ -40,7 +40,6 @@ export default function PersonForm(props: Props) {
     }
 
     function handleBack(){
-        console.log("stateData = "+stateData+" stateData.description = "+stateData.description);
         navigate(backLink, {state: {stateData}});
     }
 
