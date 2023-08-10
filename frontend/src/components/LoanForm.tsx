@@ -126,8 +126,22 @@ export default function LoanForm(props: Props) {
         setLoanState({...loanState, [event.target.name]: event.target.value});
     }
 
+    function handleBack(){
+        if (urlParams.id) {
+            navigate("/"+urlParams.id);
+        } else {
+            navigate("/");
+        }
+    }
+
     return (
         <>
+            <div className={"app-title"}>
+                <div className={"back-div"} onClick={handleBack}><h1>⇦</h1></div>
+                <img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/>
+                <div></div>
+            </div>
+
             <form className={"loan-form"} onSubmit={handleSubmit}>
                 item {type}:
                 <input type={"radio"} id={"money"} name={"itemId"} value={"1001"}

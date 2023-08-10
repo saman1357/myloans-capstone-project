@@ -5,19 +5,24 @@ body {
 }
 
 .app-title{
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 15% 70% 15%;
     align-items: center;
+    justify-items: center;
     text-align: left;
-    height: 9vh;
+    height: 12vh;
     margin-top: 7px;
+}
+
+.back-div{
+    padding-left: 10px;
 }
 
 .loan-div{
     border: #888888 solid 1px;
     border-radius: 10px;
     padding: 3px;
-    height: 38.5vh;
+    height: 37vh;
     margin: 5px;
     background-color: #d9e3df;
     display: grid;
@@ -66,7 +71,7 @@ background-color: #a0bdb3}
     margin: 5px;
     background-color: #d9e3df;
     display: grid;
-    grid-template-rows: 7% 5% 73% 10%;
+    grid-template-rows: 7% 5% 83%;
 }
 
 .person-header-div{

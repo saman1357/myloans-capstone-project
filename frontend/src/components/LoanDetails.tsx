@@ -32,6 +32,11 @@ export default function LoanDetails(props: Props) {
     if (loan.lenderId === props.myId) lent = true;
     return (
         <div>
+            <div className={"app-title"}>
+                <div className={"back-div"}><Link to={"/"}><h1>⇦</h1></Link></div>
+                <img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/>
+                <div></div>
+            </div>
             <div className={"loan-details-container"}>
                 <div className={"loan-details-header"}>{lent ? "lent" : "borrowed"}</div>
                 <div className={"loan-details"}>{loan.amount}</div>

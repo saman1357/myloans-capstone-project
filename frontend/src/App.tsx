@@ -113,11 +113,6 @@ export default function App() {
     return (
         <>
             <div>
-                <div className={"app-title"}>
-                    <div></div>
-                    <img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/>
-                    <div></div>
-                </div>
                 <div className={"app-body"}>
                     <Routes>
                         <Route path={"/"}

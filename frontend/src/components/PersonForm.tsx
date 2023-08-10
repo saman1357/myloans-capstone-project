@@ -67,9 +67,13 @@ export default function PersonForm(props: Props) {
 
     return (
         <>
+            <div className={"app-title"}>
+                <div className={"back-div"} onClick={handleBack}><h1>⇦</h1></div>
+                <img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/>
+                <div></div>
+            </div>
+
             <div className={"person-form-title"}>
-                <div onClick={handleBack}> ⬅</div>
-                <br/>
                 {(action === "update") ? "update person" : "add new person"}
             </div>
             <br/>
