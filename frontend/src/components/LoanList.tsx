@@ -13,15 +13,19 @@ export default function LoanList(props: Props) {
     const [filter, setFilter] = useState("-1");
     const [filteredLoans, setFilteredLoans] = useState(props.loans);
 
-    useEffect(filterAndCalculation, [props, filter]);
+    useEffect(calculation, [filteredLoans, props.myId]);
+    useEffect(filterLoans, [filter, props.loans])
 
 
-    function filterAndCalculation() {
+    function filterLoans() {
         if (filter === "-1") {
             setFilteredLoans(props.loans);
         } else {
             setFilteredLoans(props.loans.filter(loan => (loan.lenderId === filter || loan.borrowerId === filter)));
         }
+    }
+
+    function calculation() {
         let lentSum = 0;
         let borrowedSum = 0;
         if (filteredLoans) {
