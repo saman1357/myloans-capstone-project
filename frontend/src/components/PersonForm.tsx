@@ -14,10 +14,10 @@ export default function PersonForm(props: Props) {
     const person = props.persons.find(person => person.id === urlParams.pid);
     const [action, setAction] = useState<"add" | "update" | "delete">("add");
     const navigate = useNavigate();
-    const [backLink, setBackLink]=useState("/");
-    const location=useLocation();
-    const navigateState=location.state || {};
-    const [stateData]=useState<LoanWithoutId>(navigateState.loanState);
+    const [backLink, setBackLink] = useState("/");
+    const location = useLocation();
+    const navigateState = location.state || {};
+    const [stateData] = useState<LoanWithoutId>(navigateState.loanState);
     useEffect(initialState, [person, urlParams.pid, urlParams.id, urlParams.type]);
 
     function initialState() {
@@ -28,9 +28,9 @@ export default function PersonForm(props: Props) {
                 id: urlParams.pid
             })
         }
-        if (urlParams.id){
-            setBackLink(("/updateloan/")+urlParams.id);
-        } else if(urlParams.type){
+        if (urlParams.id) {
+            setBackLink(("/updateloan/") + urlParams.id);
+        } else if (urlParams.type) {
             setBackLink("/addloan/" + urlParams.type);
         }
     }
@@ -39,7 +39,7 @@ export default function PersonForm(props: Props) {
         setPersonState((prevState) => ({...prevState, name: event.target.value}));
     }
 
-    function handleBack(){
+    function handleBack() {
         navigate(backLink, {state: {stateData}});
     }
 
@@ -74,21 +74,23 @@ export default function PersonForm(props: Props) {
             </div>
 
             <div className={"person-form-title"}>
-                {(action === "update") ? "update person" : "add new person"}
+                <h3>{(action === "update") ? "update person" : "add new person"}</h3>
             </div>
-            <br/>
             <form className={"person-form"} onSubmit={handleSubmit}>
-                <label htmlFor={"person-name"}>Full name of the Person: </label>
+                <label htmlFor={"person-name"}>full name of the Person: </label>
                 <br/>
                 <input type={"text"} id={"person-name"} name={"person-name"} value={personState.name}
                        onChange={handleChangeInput}/>
+                <br/>
                 <button>save</button>
 
 
                 <div className={"person-div"}>
                     <div className={"person-header-div"}>
                         <div>persons:</div>
-                        <button type={"button"} onClick={handleAddButton}>Add</button>
+                        <div className={"person-button-item"}>
+                            <button type={"button"} onClick={handleAddButton}>Add</button>
+                        </div>
                     </div>
                     <hr/>
                     <div className={"person-table-div"}>

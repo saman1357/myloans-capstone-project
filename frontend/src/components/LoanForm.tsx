@@ -88,7 +88,7 @@ export default function LoanForm(props: Props) {
     }
 
     function handleEditPersons() {
-        let editPersonLink : string;
+        let editPersonLink: string;
         if (urlParams.id) {
             editPersonLink = "/updateloan/" + urlParams.id + "/person/";
         } else {
@@ -126,9 +126,9 @@ export default function LoanForm(props: Props) {
         setLoanState({...loanState, [event.target.name]: event.target.value});
     }
 
-    function handleBack(){
+    function handleBack() {
         if (urlParams.id) {
-            navigate("/"+urlParams.id);
+            navigate("/" + urlParams.id);
         } else {
             navigate("/");
         }
@@ -143,52 +143,64 @@ export default function LoanForm(props: Props) {
             </div>
 
             <form className={"loan-form"} onSubmit={handleSubmit}>
-                item {type}:
-                <input type={"radio"} id={"money"} name={"itemId"} value={"1001"}
-                       checked={(loanState.itemId) === "1001"} onChange={handleChangeInput}/>
-                <label htmlFor={"money"}>money</label>
-                <input type={"radio"} id={"nonmoney"} name={"itemId"} value={"1002"}
-                       checked={(loanState.itemId) === "1002"} onChange={handleChangeInput}/>
-                <label htmlFor={"nonmoney"}>nonmoney</label>
-                <br/>
-                <br/>
-                <label htmlFor={"description"}>description: </label>
-                <input type={"text"} id={"description"} name={"description"} value={loanState.description}
-                       onChange={handleChangeInput}/>
-                <br/>
-                <br/>
-                <label htmlFor={"amount"}>amount: </label>
-                <input type={"text"} id={"amount"} name={"amount"} value={loanState.amount}
-                       onChange={handleChangeInput}/>
-                <br/>
-                <br/>
-                <label htmlFor={"person"}>{lenderOrBorrower.slice(0, -2)} </label>
-                <select id={lenderOrBorrower} name={lenderOrBorrower} value={loanState[lenderOrBorrower]}
-                        onChange={handleChangeSelect}>
-                    <option value={"-1"}>{"select " + lenderOrBorrower.slice(0, -2)}</option>
-                    {props.persons.map(person => {
-                        return (<option key={person.id} value={person.id}>{person.name}</option>)
-                    })}
-                </select>
-                <br/>
-                <button type={"button"} onClick={handleEditPersons}>add/edit persons</button>
-                <br/>
-                <br/>
-                <label htmlFor={"loan-date"}>loan date: </label>
-                <input type={"date"} id={"loanDate"} name={"loanDate"} value={loanState.loanDate}
-                       onChange={handleChangeInput}/>
-                <br/>
-                <br/>
-                <label htmlFor={"activate-return-date"}>activate return date: </label>
-                <input type={"checkbox"} id={"activate-return-date"} name={"activate-return-date"}
-                       onClick={handleReturnDateActivator}/>
-                <br/>
-                <label htmlFor={"return-date"}>return date: </label>
-                <input type={"date"} id={"returnDate"} name={"returnDate"} value={loanState.returnDate}
-                       onChange={handleChangeInput} disabled={!returnDateIsActive}/>
-                <br/>
-                <br/>
-                <button type={"submit"}>save</button>
+                <h3>{urlParams.id? "update loan" : "add new loan"}</h3>
+                <div className={"form-details"}>
+                    item {type}:
+                    <div>
+                        <input type={"radio"} id={"money"} name={"itemId"} value={"1001"}
+                               checked={(loanState.itemId) === "1001"} onChange={handleChangeInput}/>
+                        <label htmlFor={"money"}>money</label>
+                        <input type={"radio"} id={"nonmoney"} name={"itemId"} value={"1002"}
+                               checked={(loanState.itemId) === "1002"} onChange={handleChangeInput}/>
+                        <label htmlFor={"nonmoney"}>nonmoney</label>
+                    </div>
+                </div>
+
+                <div className={"form-details"}>
+                    <label htmlFor={"description"}>description: </label>
+                    <input type={"text"} id={"description"} name={"description"} value={loanState.description}
+                           onChange={handleChangeInput}/>
+                </div>
+
+                <div className={"form-details"}>
+                    <label htmlFor={"amount"}>amount: </label>
+                    <input type={"text"} id={"amount"} name={"amount"} value={loanState.amount}
+                           onChange={handleChangeInput}/>
+                </div>
+
+                <div className={"form-details"}>
+                    <label htmlFor={"person"}>{lenderOrBorrower.slice(0, -2)} </label>
+                    <div className={"test"}>
+                        <select id="lenderOrBorrower" name={lenderOrBorrower} value={loanState[lenderOrBorrower]}
+                                onChange={handleChangeSelect}>
+                            <option value={"-1"}>{"select " + lenderOrBorrower.slice(0, -2)}</option>
+                            {props.persons.map(person => {
+                                return (<option key={person.id} value={person.id}>{person.name}</option>)
+                            })}
+                        </select>
+                        <button type={"button"} id={"edit-persons-button"} onClick={handleEditPersons}>edit persons list</button>
+                    </div>
+                </div>
+
+                <div className={"form-details"}>
+                    <label htmlFor={"loan-date"}>loan date: </label>
+                    <input type={"date"} id={"loanDate"} name={"loanDate"} value={loanState.loanDate}
+                           onChange={handleChangeInput}/>
+                </div>
+
+                <div className={"form-details"}>
+                    <label htmlFor={"activate-return-date"}>activate return date: </label>
+                    <input type={"checkbox"} id={"activate-return-date"} name={"activate-return-date"}
+                           onClick={handleReturnDateActivator}/>
+                </div>
+
+                <div className={"form-details"}>
+                    <label htmlFor={"return-date"}>return date: </label>
+                    <input type={"date"} id={"returnDate"} name={"returnDate"} value={loanState.returnDate}
+                           onChange={handleChangeInput} disabled={!returnDateIsActive}/>
+                </div>
+
+                <button id={"loan-form-button"} type={"submit"}>save</button>
             </form>
         </>
     )

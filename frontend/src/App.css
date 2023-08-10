@@ -4,7 +4,7 @@ body {
     background-color: #a0bdb3;
 }
 
-.app-title{
+.app-title {
     display: grid;
     grid-template-columns: 15% 70% 15%;
     align-items: center;
@@ -14,11 +14,11 @@ body {
     margin-top: 7px;
 }
 
-.back-div{
+.back-div {
     padding-left: 10px;
 }
 
-.loan-div{
+.loan-div {
     border: #888888 solid 1px;
     border-radius: 10px;
     padding: 3px;
@@ -28,14 +28,15 @@ body {
     display: grid;
     grid-template-rows: 7% 5% 73% 10%;
 }
-.loan-header-div{
+
+.loan-header-div {
     display: flex;
     justify-content: space-between;
     padding-left: 5px;
     padding-right: 5px;
 }
 
-.loan-balance-div{
+.loan-balance-div {
     border: #888888 solid 1px;
     border-radius: 10px;
     padding: 3px;
@@ -44,48 +45,41 @@ body {
     background-color: #d9e3df;
 }
 
-hr{
+hr {
     margin-left: 10px;
     margin-right: 10px;
 }
 
-.loan-table-div{
-    overflow-y:auto;
+.loan-table-div {
+    overflow-y: auto;
 }
 
-.loan-table-row-div{
+.loan-table-row-div {
     width: 100%;
     display: grid;
     grid-template-columns: 25% 25% 25% 25%;
     margin-top: 2px;
     margin-bottom: 2px;
 }
-.loan-table-row-div:hover{
-background-color: #a0bdb3}
 
-.person-div{
+.loan-table-row-div:hover {
+    background-color: #a0bdb3
+}
+
+.person-div {
     border: #888888 solid 1px;
     border-radius: 10px;
     padding: 3px;
-    height: 65vh;
-    margin: 5px;
+    height: 60vh;
+    margin-bottom: 5px;
+    margin-top: 5px;
     background-color: #d9e3df;
     display: grid;
     grid-template-rows: 7% 5% 83%;
+    text-align: left;
 }
 
-.person-header-div{
-    display: flex;
-    justify-content: space-between;
-    padding-left: 5px;
-    padding-right: 5px;
-}
-
-.person-table-div{
-    overflow-y:auto;
-}
-
-.person-table-row-div{
+.person-header-div {
     width: 100%;
     display: grid;
     grid-template-columns: 75% 25%;
@@ -93,7 +87,19 @@ background-color: #a0bdb3}
     margin-bottom: 2px;
 }
 
-.person-table-row-div-colored{
+.person-table-div {
+    overflow-y: auto;
+}
+
+.person-table-row-div {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 75% 25%;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.person-table-row-div-colored {
     width: 100%;
     display: grid;
     grid-template-columns: 75% 25%;
@@ -102,46 +108,91 @@ background-color: #a0bdb3}
     background-color: #a0bdb3;
 }
 
-.person-button-item{
+.person-button-item {
     text-align: right;
     padding-right: 5px;
 }
 
-.loan-party-item{
+.loan-party-item {
     grid-column: 1 / span 1;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
 .amount-item {
     grid-column: 2 / span 1;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.item-item{
+
+.item-item {
     grid-column: 3 / span 1;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 
 }
-.description-item{
+
+.description-item {
     grid-column: 4 /span 1;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-a:active { text-decoration: none; }
+a:active {
+    text-decoration: none;
+}
 
 
-a{
+a {
     color: black;
     text-decoration: none;
 }
 
-.loan-details-container{
+.loan-form {
+    border: #888888 solid 1px;
+    border-radius: 10px;
+    padding: 3px;
+    margin: 5px;
+    background-color: #d9e3df;
+    text-align: center;
+}
+
+.form-details {
+    margin: 25px 15px 25px 15px;
+    display: grid;
+    grid-template-columns: 30% 70%;
+    text-align: left;
+}
+
+#lenderOrBorrower {
+    width: 100%;
+    margin-bottom: 3px;
+}
+
+#activate-return-date {
+    width: 13px;
+}
+
+#loan-form-button {
+    width: 75%;
+    height: 30px;
+    border-radius: 8px;
+    box-shadow: 4px 4px 10px #888888;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+}
+
+button {
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px #888888;
+    min-width: 55px;
+}
+
+.loan-details-container {
     border: #888888 solid 1px;
     border-radius: 10px;
     padding: 3px;
@@ -149,25 +200,50 @@ a{
     background-color: #d9e3df;
 }
 
-.loan-details-header{
+.loan-details-header {
     margin: 15px;
 }
 
-.loan-details{
-    margin: 15px 15px 15px 100px;
+.loan-details-body {
+    display: grid;
+    grid-template-columns: 30% 70%;
 }
 
-.menu-button{
+.loan-details {
+    margin: 15px 10px 15px 10px;
+}
+
+.loan-details-label {
+    margin: 15px 10px 15px 10px;
+    color: #809a8f;
+}
+
+.person-form {
+    border: #888888 solid 1px;
+    border-radius: 10px;
+    margin: 5px;
+    padding: 7px;
+    background-color: #d9e3df;
+    text-align: center;
+}
+
+.person-form-title{
+    text-align: center;
+}
+#person-name{
+    width: 70%;
+}
+
+.menu-button {
     background-color: #a0bdb3;
     border: 0;
 }
 
 .dropdown {
     display: none;
-
 }
 
-.dropdown.show{
+.dropdown.show {
     position: absolute;
     display: block;
     z-index: 100;
