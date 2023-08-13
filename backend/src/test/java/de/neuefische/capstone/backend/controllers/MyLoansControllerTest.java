@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -15,6 +16,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -26,6 +29,7 @@ class MyLoansControllerTest {
 
     @Test
     @DirtiesContext
+    @WithMockUser()
     void expectUserData_whenGetUserDataIsCalled() throws Exception {
         UserData testUserData = new UserData("0001",
                 (List.of(
@@ -41,13 +45,15 @@ class MyLoansControllerTest {
         myLoansRepository.save(testUserData);
         ObjectMapper objectMapper = new ObjectMapper();
         String expected = objectMapper.writeValueAsString(testUserData);
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/myloans"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/myloans")
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(expected));
     }
 
     @Test
     @DirtiesContext
+    @WithMockUser
     void expectUserIdNotFoundException_whenGetUserDataWithWrongId() throws Exception {
         String expectedMessage = """
                 {
@@ -66,13 +72,15 @@ class MyLoansControllerTest {
                         new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
         );
         myLoansRepository.save(testUserData);
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/myloans"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/myloans")
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json(expectedMessage));
     }
 
     @Test
     @DirtiesContext
+    @WithMockUser
     void expectNewLoan_whenAddNewLoan() throws Exception {
         UserData userDataToUpdate = new UserData("0001",
                 new ArrayList<>(List.of(
@@ -91,7 +99,8 @@ class MyLoansControllerTest {
         String newLoanWithoutIdJson = objectMapper.writeValueAsString(newLoanWithoutId);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/myloans")
-                        .contentType(MediaType.APPLICATION_JSON).content(newLoanWithoutIdJson))
+                        .contentType(MediaType.APPLICATION_JSON).content(newLoanWithoutIdJson)
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(newLoanWithoutIdJson));
 
@@ -99,6 +108,7 @@ class MyLoansControllerTest {
 
     @Test
     @DirtiesContext
+    @WithMockUser
     void expectUserIdNotFoundException_whenAddNewLoanWithWrongUserId() throws Exception {
         String expectedMessage = """
                 {
@@ -122,7 +132,8 @@ class MyLoansControllerTest {
         String newLoanWithoutIdJson = objectMapper.writeValueAsString(newLoanWithoutId);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/myloans")
-                        .contentType(MediaType.APPLICATION_JSON).content(newLoanWithoutIdJson))
+                        .contentType(MediaType.APPLICATION_JSON).content(newLoanWithoutIdJson)
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json(expectedMessage));
 
@@ -130,6 +141,7 @@ class MyLoansControllerTest {
 
     @Test
     @DirtiesContext
+    @WithMockUser
     void expectLoan_whenGetLoanDetailsIsCalled() throws Exception {
         String loanId = "3001";
         Loan expectedLoan = new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", "");
@@ -147,13 +159,15 @@ class MyLoansControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String expectedJson = objectMapper.writeValueAsString(expectedLoan);
         myLoansRepository.save(testUserData);
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/myloans/" + loanId))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/myloans/" + loanId)
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(expectedJson));
     }
 
     @Test
     @DirtiesContext
+    @WithMockUser
     void expectUserIdNotFoundException_whenGetLoanDetailsWithWrongUserId() throws Exception {
         String expectedMessage = """
                 {
@@ -174,13 +188,15 @@ class MyLoansControllerTest {
                         new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
         );
         myLoansRepository.save(testUserData);
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/myloans/" + loanId))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/myloans/" + loanId)
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json(expectedMessage));
     }
 
     @Test
     @DirtiesContext
+    @WithMockUser
     void expectLoanIdNotFoundException_whenGetLoanDetailsWithWrongId() throws Exception {
         String expectedMessage = """
                 {
@@ -199,13 +215,15 @@ class MyLoansControllerTest {
                         new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
         );
         myLoansRepository.save(testUserData);
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/myloans/123"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/myloans/123")
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json(expectedMessage));
     }
 
     @Test
     @DirtiesContext
+    @WithMockUser
     void expectUpdatedLoan_whenUpdateLoan() throws Exception {
         UserData userDataToUpdate = new UserData("0001",
                 new ArrayList<>(List.of(
@@ -225,7 +243,8 @@ class MyLoansControllerTest {
         String updatedLoanWithoutIdJson = objectMapper.writeValueAsString(updatedLoanWithoutId);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/api/myloans/3002")
-                        .contentType(MediaType.APPLICATION_JSON).content(updatedLoanWithoutIdJson))
+                        .contentType(MediaType.APPLICATION_JSON).content(updatedLoanWithoutIdJson)
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(updatedLoanWithoutIdJson));
 
@@ -233,6 +252,7 @@ class MyLoansControllerTest {
 
     @Test
     @DirtiesContext
+    @WithMockUser
     void expectUserIdNotFoundException_whenUpdateLoanWithWrongUserId() throws Exception {
         String expectedMessage = """
                 {
@@ -256,13 +276,15 @@ class MyLoansControllerTest {
         );
         myLoansRepository.save(testUserData);
         mockMvc.perform(MockMvcRequestBuilders.put("/api/myloans/" + loanId)
-                        .contentType(MediaType.APPLICATION_JSON).content(updatedLoanWithoutIdJson))
+                        .contentType(MediaType.APPLICATION_JSON).content(updatedLoanWithoutIdJson)
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json(expectedMessage));
     }
 
     @Test
     @DirtiesContext
+    @WithMockUser
     void expectLoanRemovedFromList_whenDeleteLoan() throws Exception {
         UserData userDataToUpdate = new UserData("0001",
                 new ArrayList<>(List.of(
@@ -291,10 +313,12 @@ class MyLoansControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String updatedUserDataJson = objectMapper.writeValueAsString(updatedUserData);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/myloans/"+loanIdToDelete))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/myloans/"+loanIdToDelete)
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/myloans"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/myloans")
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(updatedUserDataJson));
 
@@ -303,6 +327,7 @@ class MyLoansControllerTest {
 
     @Test
     @DirtiesContext
+    @WithMockUser
     void expectUserIdNotFoundException_whenDeleteLoanWithWrongUserId() throws Exception {
         String expectedMessage = """
                 {
@@ -323,13 +348,15 @@ class MyLoansControllerTest {
                         new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
         );
         myLoansRepository.save(testUserData);
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/myloans/" + loanId))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/myloans/" + loanId)
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json(expectedMessage));
     }
 
     @Test
     @DirtiesContext
+    @WithMockUser
     void expectNewPerson_whenAddNewPerson() throws Exception {
         UserData userDataToUpdate = new UserData("0001",
                 new ArrayList<>(List.of(
@@ -348,7 +375,8 @@ class MyLoansControllerTest {
         String newPersonWithoutIdJson = objectMapper.writeValueAsString(newPersonWithoutId);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/myloans/person")
-                        .contentType(MediaType.APPLICATION_JSON).content(newPersonWithoutIdJson))
+                        .contentType(MediaType.APPLICATION_JSON).content(newPersonWithoutIdJson)
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(newPersonWithoutIdJson));
 
@@ -356,6 +384,7 @@ class MyLoansControllerTest {
 
     @Test
     @DirtiesContext
+    @WithMockUser
     void expectUserIdNotFoundException_whenAddPersonWithWrongUserId() throws Exception {
         String expectedMessage = """
                 {
@@ -378,13 +407,15 @@ class MyLoansControllerTest {
         );
         myLoansRepository.save(testUserData);
         mockMvc.perform(MockMvcRequestBuilders.post("/api/myloans/person")
-                .contentType(MediaType.APPLICATION_JSON).content(newPersonWithoutIdJson))
+                .contentType(MediaType.APPLICATION_JSON).content(newPersonWithoutIdJson)
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json(expectedMessage));
     }
 
     @Test
     @DirtiesContext
+    @WithMockUser
     void expectUpdatedPerson_whenUpdatePerson() throws Exception {
         UserData userDataToUpdate = new UserData("0001",
                 new ArrayList<>(List.of(
@@ -404,7 +435,8 @@ class MyLoansControllerTest {
         String updatedPersonWithoutIdJson = objectMapper.writeValueAsString(updatedPersonWithoutId);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/api/myloans/person/2002")
-                        .contentType(MediaType.APPLICATION_JSON).content(updatedPersonWithoutIdJson))
+                        .contentType(MediaType.APPLICATION_JSON).content(updatedPersonWithoutIdJson)
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(updatedPersonWithoutIdJson));
 
@@ -412,6 +444,7 @@ class MyLoansControllerTest {
 
     @Test
     @DirtiesContext
+    @WithMockUser
     void expectUserIdNotFoundException_whenUpdatePersonWithWrongUserId() throws Exception {
         String expectedMessage = """
                 {
@@ -435,13 +468,15 @@ class MyLoansControllerTest {
         );
         myLoansRepository.save(testUserData);
         mockMvc.perform(MockMvcRequestBuilders.put("/api/myloans/person/" + personId)
-                        .contentType(MediaType.APPLICATION_JSON).content(updatedPersonWithoutIdJson))
+                        .contentType(MediaType.APPLICATION_JSON).content(updatedPersonWithoutIdJson)
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json(expectedMessage));
     }
 
     @Test
     @DirtiesContext
+    @WithMockUser
     void expectPersonIdNotFoundException_whenUpdatePersonWithWrongPersonId() throws Exception {
         String expectedMessage = """
                 {
@@ -465,13 +500,15 @@ class MyLoansControllerTest {
         );
         myLoansRepository.save(testUserData);
         mockMvc.perform(MockMvcRequestBuilders.put("/api/myloans/person/" + personId)
-                        .contentType(MediaType.APPLICATION_JSON).content(updatedPersonWithoutIdJson))
+                        .contentType(MediaType.APPLICATION_JSON).content(updatedPersonWithoutIdJson)
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json(expectedMessage));
     }
 
     @Test
     @DirtiesContext
+    @WithMockUser
     void expectPersonRemovedFromList_whenDeletePerson() throws Exception {
         UserData userDataToUpdate = new UserData("0001",
                 new ArrayList<>(List.of(
@@ -502,10 +539,12 @@ class MyLoansControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String updatedUserDataJson = objectMapper.writeValueAsString(updatedUserData);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/myloans/person/"+personIdToDelete))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/myloans/person/"+personIdToDelete)
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/myloans"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/myloans")
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(updatedUserDataJson));
 
@@ -514,6 +553,7 @@ class MyLoansControllerTest {
 
     @Test
     @DirtiesContext
+    @WithMockUser
     void expectUserIdNotFoundException_whenDeletePersonWithWrongUserId() throws Exception {
         String expectedMessage = """
                 {
@@ -534,7 +574,8 @@ class MyLoansControllerTest {
                         new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
         );
         myLoansRepository.save(testUserData);
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/myloans/person/" + personId))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/myloans/person/" + personId)
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json(expectedMessage));
     }
