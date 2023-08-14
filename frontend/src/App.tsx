@@ -147,13 +147,20 @@ export default function App() {
                     <Routes>
                         <Route element={<ProtectedRoutes user={user}/>}>
                             <Route path={"/"} element={<LoanList loans={loans} items={items} persons={persons} myId={myId} user={user} onLogout={logout}/>}/>
-                            <Route path={"/addloan/:type"} element={<LoanForm loans={loans} items={items} persons={persons} user={user} onSubmit={handleSubmitLoanForm} myId={myId}/>}/>
-                            <Route path={"/:id"} element={<LoanDetails loans={loans} items={items} persons={persons} myId={myId} user={user} onDelete={handleDeleteLoan}/>}/>
-                            <Route path={"/updateloan/:id"} element={<LoanForm loans={loans} items={items} persons={persons} user={user} onSubmit={handleSubmitLoanForm} myId={myId}/>}/>
-                            <Route path={"/updateloan/:id/person/add"} element={<PersonForm persons={persons} onSubmit={handleSubmitPersonForm} user={user} myId={myId}/>}/>
-                            <Route path={"/addloan/:type/person/add"} element={<PersonForm persons={persons} onSubmit={handleSubmitPersonForm} user={user} myId={myId}/>}/>
-                            <Route path={"/updateloan/:id/person/:pid"} element={<PersonForm persons={persons} onSubmit={handleSubmitPersonForm} user={user} myId={myId}/>}/>
-                            <Route path={"/addloan/:type/person/:pid"} element={<PersonForm persons={persons} onSubmit={handleSubmitPersonForm} user={user} myId={myId}/>}/>
+                            <Route path={"/addloan/:type"} element=
+                                {<LoanForm loans={loans} items={items} persons={persons} user={user} onSubmit={handleSubmitLoanForm} myId={myId}/>}/>
+                            <Route path={"/:id"} element=
+                                {<LoanDetails loans={loans} items={items} persons={persons} myId={myId} user={user} onDelete={handleDeleteLoan}/>}/>
+                            <Route path={"/updateloan/:id"} element=
+                                {<LoanForm loans={loans} items={items} persons={persons} user={user} onSubmit={handleSubmitLoanForm} myId={myId}/>}/>
+                            <Route path={"/updateloan/:id/person/add"} element=
+                                {<PersonForm persons={persons} onSubmit={handleSubmitPersonForm} user={user} myId={myId}/>}/>
+                            <Route path={"/addloan/:type/person/add"} element=
+                                {<PersonForm persons={persons} onSubmit={handleSubmitPersonForm} user={user} myId={myId}/>}/>
+                            <Route path={"/updateloan/:id/person/:pid"} element=
+                                {<PersonForm persons={persons} onSubmit={handleSubmitPersonForm} user={user} myId={myId}/>}/>
+                            <Route path={"/addloan/:type/person/:pid"} element=
+                                {<PersonForm persons={persons} onSubmit={handleSubmitPersonForm} user={user} myId={myId}/>}/>
                         </Route>
                         <Route path={"/login"} element={<LoginForm onLogin={login}/>}/>
                     </Routes>
