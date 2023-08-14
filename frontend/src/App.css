@@ -6,10 +6,10 @@ body {
 
 .app-title {
     display: grid;
-    grid-template-columns: 15% 70% 15%;
+    grid-template-columns: 25% 50% 25%;
     align-items: center;
     justify-items: center;
-    text-align: left;
+    text-align: center;
     height: 12vh;
     margin-top: 7px;
 }

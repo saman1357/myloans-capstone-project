@@ -5,9 +5,10 @@ import React, {FormEvent, useEffect, useState} from "react";
 type Props = {
     loans: Loan[],
     items: Item[],
-    persons: Person[]
-    onSubmit: (submittedLoanWithoutId: LoanWithoutId, loanId: string, isNewLoan: boolean) => void
-    myId: string;
+    persons: Person[],
+    onSubmit: (submittedLoanWithoutId: LoanWithoutId, loanId: string, isNewLoan: boolean) => void,
+    myId: string,
+    user?: string
 }
 
 export default function LoanForm(props: Props) {
@@ -139,7 +140,7 @@ export default function LoanForm(props: Props) {
             <div className={"app-title"}>
                 <div className={"back-div"} onClick={handleBack}><h1>⇦</h1></div>
                 <img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/>
-                <div></div>
+                <div>{props.user}</div>
             </div>
 
             <form className={"loan-form"} onSubmit={handleSubmit}>
