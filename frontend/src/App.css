@@ -142,12 +142,12 @@ hr {
     text-overflow: ellipsis;
 }
 
-a:active {
+.loan-table-div a:active {
     text-decoration: none;
 }
 
 
-a {
+.loan-table-div a {
     color: black;
     text-decoration: none;
 }
@@ -252,4 +252,23 @@ button {
     box-shadow: 4px 4px #888888;
     padding: 5px;
     border-radius: 7px;
+}
+
+.login-div {
+    border: #888888 solid 1px;
+    border-radius: 10px;
+    padding: 3px;
+    height: 27vh;
+    margin: 5px;
+    background-color: #d9e3df;
+    display: grid;
+    grid-template-rows: 7% 5% 73% 10%;
+}
+
+#login-title{
+    text-align: center;
+}
+
+#username-input, #password-input, #password2-input{
+    margin-bottom: 5px;
 }

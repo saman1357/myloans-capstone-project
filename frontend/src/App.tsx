@@ -1,6 +1,6 @@
 import './App.css'
 import {useEffect, useState} from "react";
-import {Item, Loan, LoanWithoutId, Person, PersonWithoutId} from "./model/DataModels.ts";
+import {Item, Loan, LoanWithoutId, Person, PersonWithoutId, UserWithoutId} from "./model/DataModels.ts";
 import axios from "axios";
 import {Route, Routes, useNavigate} from "react-router-dom";
 import LoanList from "./components/LoanList.tsx";
@@ -9,6 +9,7 @@ import LoanForm from "./components/LoanForm.tsx";
 import PersonForm from "./components/PersonForm.tsx";
 import LoginForm from "./components/LoginForm.tsx";
 import ProtectedRoutes from "./components/ProtectedRoutes.tsx";
+import SignUpForm from "./components/SignUpForm.tsx";
 
 export default function App() {
     const [loans, setLoans] = useState<Loan[]>();
@@ -109,7 +110,7 @@ export default function App() {
             });
     }
 
-    function login(username: string, password: string) {
+    function handleLogin(username: string, password: string) {
         axios.post("/api/user/login", null, {auth: {username, password}})
             .then((response) => {
                 setUser(response.data)
@@ -136,8 +137,17 @@ export default function App() {
             });
     }
 
+    function handleSignUp(username: string, password: string){
+        const userWithoutId : UserWithoutId ={username, password};
+        axios.post("/api/user/sign-up", userWithoutId)
+            .then(() => handleLogin(username, password))
+            .catch(function (error) {
+                console.error(error);
+            });
+    }
+
     if (!(loans && items && persons)) {
-        return <LoginForm onLogin={login}/>
+        return <LoginForm onLogin={handleLogin}/>
     }
 
     return (
@@ -162,7 +172,8 @@ export default function App() {
                             <Route path={"/addloan/:type/person/:pid"} element=
                                 {<PersonForm persons={persons} onSubmit={handleSubmitPersonForm} user={user} myId={myId}/>}/>
                         </Route>
-                        <Route path={"/login"} element={<LoginForm onLogin={login}/>}/>
+                        <Route path={"/login"} element={<LoginForm onLogin={handleLogin}/>}/>
+                        <Route path={"/sign-up"} element={<SignUpForm onSignUp={handleSignUp}/>}/>
                     </Routes>
                 </div>
             </div>

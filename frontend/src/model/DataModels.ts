@@ -39,3 +39,8 @@ export type UserData={
     persons: Person[],
     loans: Loan[]
 }
+
+export type UserWithoutId={
+    username: string,
+    password: string
+}
