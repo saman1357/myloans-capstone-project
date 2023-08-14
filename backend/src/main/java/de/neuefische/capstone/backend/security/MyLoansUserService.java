@@ -10,8 +10,9 @@ import org.springframework.stereotype.Service;
 public class MyLoansUserService {
     private final MyLoansUserRepository myLoansUserRepository;
     private final Argon2PasswordEncoder encoder = Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8();
-    public String singUp(MyLoansUserWithoutId newUserWithoutId){
-        MyLoansUser newUser=new MyLoansUser(RandomIdService.uuid(), newUserWithoutId.getUsername(), encoder.encode(newUserWithoutId.getPassword()));
+
+    public String signUp(MyLoansUserWithoutId newUserWithoutId) {
+        MyLoansUser newUser = new MyLoansUser(RandomIdService.uuid(), newUserWithoutId.getUsername(), encoder.encode(newUserWithoutId.getPassword()));
         myLoansUserRepository.save(newUser);
         return newUserWithoutId.getUsername();
     }

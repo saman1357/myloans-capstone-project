@@ -21,6 +21,6 @@ public class MyLoansUserController {
 
     @PostMapping("/sign-up")
     public String signUp(@RequestBody MyLoansUserWithoutId myLoansUserWithoutId){
-        return myLoansUserService.singUp(myLoansUserWithoutId);
+        return myLoansUserService.signUp(myLoansUserWithoutId);
     }
 }
