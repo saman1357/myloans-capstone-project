@@ -1,10 +1,6 @@
 package de.neuefische.capstone.backend.security;
 
-import de.neuefische.capstone.backend.models.*;
-import de.neuefische.capstone.backend.repositories.MyLoansRepository;
-import de.neuefische.capstone.backend.services.MyLoansService;
 import org.junit.jupiter.api.Test;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
