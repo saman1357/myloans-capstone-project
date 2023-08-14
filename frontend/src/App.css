@@ -142,12 +142,12 @@ hr {
     text-overflow: ellipsis;
 }
 
-.loan-table-div a:active {
+.loan-table-div a:active, .back-div a:active {
     text-decoration: none;
 }
 
 
-.loan-table-div a {
+.loan-table-div a, .back-div a {
     color: black;
     text-decoration: none;
 }

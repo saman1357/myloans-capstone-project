@@ -164,13 +164,13 @@ export default function App() {
                             <Route path={"/updateloan/:id"} element=
                                 {<LoanForm loans={loans} items={items} persons={persons} user={user} onSubmit={handleSubmitLoanForm} myId={myId}/>}/>
                             <Route path={"/updateloan/:id/person/add"} element=
-                                {<PersonForm persons={persons} onSubmit={handleSubmitPersonForm} user={user} myId={myId}/>}/>
+                                {<PersonForm loans={loans} persons={persons} onSubmit={handleSubmitPersonForm} user={user} myId={myId}/>}/>
                             <Route path={"/addloan/:type/person/add"} element=
-                                {<PersonForm persons={persons} onSubmit={handleSubmitPersonForm} user={user} myId={myId}/>}/>
+                                {<PersonForm loans={loans} persons={persons} onSubmit={handleSubmitPersonForm} user={user} myId={myId}/>}/>
                             <Route path={"/updateloan/:id/person/:pid"} element=
-                                {<PersonForm persons={persons} onSubmit={handleSubmitPersonForm} user={user} myId={myId}/>}/>
+                                {<PersonForm loans={loans} persons={persons} onSubmit={handleSubmitPersonForm} user={user} myId={myId}/>}/>
                             <Route path={"/addloan/:type/person/:pid"} element=
-                                {<PersonForm persons={persons} onSubmit={handleSubmitPersonForm} user={user} myId={myId}/>}/>
+                                {<PersonForm loans={loans} persons={persons} onSubmit={handleSubmitPersonForm} user={user} myId={myId}/>}/>
                         </Route>
                         <Route path={"/login"} element={<LoginForm onLogin={handleLogin}/>}/>
                         <Route path={"/sign-up"} element={<SignUpForm onSignUp={handleSignUp}/>}/>
