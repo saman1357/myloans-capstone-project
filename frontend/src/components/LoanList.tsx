@@ -7,6 +7,8 @@ type Props = {
     items: Item[],
     persons: Person[],
     myId: string,
+    user?: string,
+    onLogout: ()=>void
 }
 export default function LoanList(props: Props) {
     const [loanSum, setLoanSum] = useState<{ lent: number, borrowed: number }>({lent: 0, borrowed: 0})
@@ -94,7 +96,11 @@ export default function LoanList(props: Props) {
                 <div className={"app-title"}>
                     <div className={"back-div"}></div>
                     <img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/>
-                    <div></div>
+                    <div>
+                        {props.user}
+                        <br/>
+                        <button onClick={props.onLogout}>logout</button>
+                    </div>
                 </div>
                 <div>
                     <label htmlFor={"person-filter"}>filter: </label>

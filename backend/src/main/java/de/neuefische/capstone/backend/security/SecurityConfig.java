@@ -29,15 +29,15 @@ public class SecurityConfig {
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .csrfTokenRequestHandler(requestHandler))
                 .httpBasic(Customizer.withDefaults())
-                //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
-                //.and()
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .authorizeHttpRequests(httpRequests -> httpRequests
-                                .requestMatchers("/api/myloans").authenticated() //later authenticated
+                                .requestMatchers("/api/myloans").authenticated()
+                                .requestMatchers("/api/myloans/**").authenticated()
                                 .requestMatchers("/api/user/**").permitAll()
                                 .anyRequest().permitAll()
                 )
+                .logout(logout -> logout.logoutUrl("/api/user/logout").logoutSuccessUrl("/api/user/me"))
                 .build();
     }
 }

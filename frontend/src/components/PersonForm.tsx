@@ -5,7 +5,8 @@ import React, {FormEvent, useEffect, useState} from "react";
 type Props = {
     persons: Person[],
     onSubmit: (person: Person, action: string) => void,
-    myId: string
+    myId: string,
+    user?: string
 }
 
 export default function PersonForm(props: Props) {
@@ -70,7 +71,7 @@ export default function PersonForm(props: Props) {
             <div className={"app-title"}>
                 <div className={"back-div"} onClick={handleBack}><h1>⇦</h1></div>
                 <img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/>
-                <div></div>
+                <div>{props.user}</div>
             </div>
 
             <div className={"person-form-title"}>
