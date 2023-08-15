@@ -33,18 +33,7 @@ export default function LoanForm(props: Props) {
     useEffect(initialState, [props.myId, urlParams.type, urlParams.id, loan, stateData]);
 
     function initialState() {
-        if (stateData) {
-            setLoanState((prevState) => ({
-                ...prevState,
-                lenderId: stateData.lenderId,
-                borrowerId: stateData.borrowerId,
-                itemId: stateData.itemId,
-                description: stateData.description,
-                amount: stateData.amount,
-                loanDate: stateData.loanDate,
-                returnDate: stateData.returnDate
-            }))
-        } else if (urlParams.id && loan) {
+        if (urlParams.id && loan) {
             setLoanState((prevState) => ({
                 ...prevState,
                 lenderId: loan.lenderId,
@@ -80,6 +69,18 @@ export default function LoanForm(props: Props) {
             setLenderOrBorrower("lenderId");
         } else {
             throw new Error('Something went wrong! It seems that either no ID was given or it was not specified whether you are lending or borrowing.');
+        }
+        if (stateData) {
+            setLoanState((prevState) => ({
+                ...prevState,
+                lenderId: stateData.lenderId,
+                borrowerId: stateData.borrowerId,
+                itemId: stateData.itemId,
+                description: stateData.description,
+                amount: stateData.amount,
+                loanDate: stateData.loanDate,
+                returnDate: stateData.returnDate
+            }))
         }
 
     }
@@ -144,7 +145,7 @@ export default function LoanForm(props: Props) {
             </div>
 
             <form className={"loan-form"} onSubmit={handleSubmit}>
-                <h3>{urlParams.id? "update loan" : "add new loan"}</h3>
+                <h3>{urlParams.id ? "update loan" : "add new loan"}</h3>
                 <div className={"form-details"}>
                     item {type}:
                     <div>
@@ -179,7 +180,9 @@ export default function LoanForm(props: Props) {
                                 return (<option key={person.id} value={person.id}>{person.name}</option>)
                             })}
                         </select>
-                        <button type={"button"} id={"edit-persons-button"} onClick={handleEditPersons}>edit persons list</button>
+                        <button type={"button"} id={"edit-persons-button"} onClick={handleEditPersons}>edit persons
+                            list
+                        </button>
                     </div>
                 </div>
 

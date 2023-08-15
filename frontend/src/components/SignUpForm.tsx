@@ -2,15 +2,16 @@ import {FormEvent, useState} from "react";
 import {Link} from "react-router-dom";
 
 type Props = {
-    onLogin: (username: string, password: string) => void;
+    onSignUp: (username: string, password: string) => void;
 }
-export default function LoginForm(props: Props) {
+export default function SignUpForm(props: Props) {
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+    const [password2, setPassword2] = useState<string>("");
 
-    function onLogin(event: FormEvent) {
+    function onSignUp(event: FormEvent) {
         event.preventDefault();
-        props.onLogin(username, password)
+        props.onSignUp(username, password)
     }
 
     return (
@@ -21,7 +22,7 @@ export default function LoginForm(props: Props) {
                 <div></div>
             </div>
             <div className={"login-div"}>
-                <form onSubmit={onLogin}>
+                <form onSubmit={onSignUp}>
                     <p id={"login-title"}>Login</p>
                     <input id={"username-input"} value={username} onChange={event => setUsername(event.target.value)}
                            placeholder={"username"}/>
@@ -29,11 +30,14 @@ export default function LoginForm(props: Props) {
                     <input id={"password-input"} value={password} onChange={event => setPassword(event.target.value)} placeholder={"password"}
                            type={"password"}/>
                     <br/>
-                    <button>Login</button>
+                    <input id={"password2-input"} value={password2} onChange={event => setPassword2(event.target.value)} placeholder={"confirm password"}
+                           type={"password"}/>
+                    <br/>
+                    <button>sign up</button>
                     <br/>
                     <br/>
                     <br/>
-                    <p>Still not registered? <Link to={"/sign-up"}>Sign up</Link> to use myLoans!</p>
+                    <p>Already signed up? <Link to={"/login"}>Login</Link> to use myLoans!</p>
                 </form>
             </div>
         </div>

@@ -1,9 +1,10 @@
-import {LoanWithoutId, Person} from "../model/DataModels.ts";
+import {Loan, LoanWithoutId, Person} from "../model/DataModels.ts";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 import React, {FormEvent, useEffect, useState} from "react";
 
 type Props = {
     persons: Person[],
+    loans: Loan[],
     onSubmit: (person: Person, action: string) => void,
     myId: string,
     user?: string
@@ -55,10 +56,17 @@ export default function PersonForm(props: Props) {
     }
 
     function handleDeletePerson(name: string, id: string) {
-        setPersonState({name: name, id: id})
-        setAction("delete");
-        props.onSubmit({name: name, id: id}, "delete");
-        initialState()
+        let possible=true;
+        props.loans.forEach(loan => {if(loan.lenderId===id || loan.borrowerId===id) possible=false;})
+        if (possible) {
+            setPersonState({name: name, id: id})
+            setAction("delete");
+            props.onSubmit({name: name, id: id}, "delete");
+            initialState()
+        } else {
+            console.log("Not possible to delete. Person is the other party in at least one loan.");
+            return <div>not possible</div>
+        }
     }
 
     function handleAddButton() {
