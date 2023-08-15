@@ -181,14 +181,12 @@ hr {
     width: 75%;
     height: 30px;
     border-radius: 8px;
-    box-shadow: 4px 4px 10px #888888;
     margin-bottom: 15px;
     font-size: 1.1em;
 }
 
 button {
     border-radius: 5px;
-    box-shadow: 2px 2px 5px #888888;
     min-width: 55px;
 }
 
@@ -232,26 +230,6 @@ button {
 }
 #person-name{
     width: 70%;
-}
-
-.menu-button {
-    background-color: #a0bdb3;
-    border: 0;
-}
-
-.dropdown {
-    display: none;
-}
-
-.dropdown.show {
-    position: absolute;
-    display: block;
-    z-index: 100;
-    background-color: #f5faf9;
-    border: 1px solid black;
-    box-shadow: 4px 4px #888888;
-    padding: 5px;
-    border-radius: 7px;
 }
 
 .login-div {
