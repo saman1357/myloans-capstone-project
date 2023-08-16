@@ -1,5 +1,6 @@
 package de.neuefische.capstone.backend.security;
 
+import de.neuefische.capstone.backend.repositories.MyLoansRepository;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -7,7 +8,9 @@ import static org.mockito.Mockito.*;
 
 class MyLoansUserServiceTest {
     MyLoansUserRepository myLoansUserRepository = mock(MyLoansUserRepository.class);
-    MyLoansUserService myLoansUserService = new MyLoansUserService(myLoansUserRepository);
+    MyLoansRepository myLoansRepository = mock(MyLoansRepository.class);
+
+    MyLoansUserService myLoansUserService = new MyLoansUserService(myLoansUserRepository, myLoansRepository);
 
     @Test
     void expectUsername_WhenSignUp() {
