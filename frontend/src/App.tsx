@@ -26,8 +26,6 @@ export default function App() {
     const [user, setUser] = useState<UserWithoutPassword>({id: "", username: "anonymousUser"});
     const navigate = useNavigate();
 
-    //const myId = "0001";
-
     useEffect(()=> {
         me()
     }, []);
@@ -35,7 +33,6 @@ export default function App() {
     useEffect(()=>{
         if (user.username !== undefined && user.username !== 'anonymousUser') {
             getMyLoansData();
-            navigate("/")
         }
     }, [user])
 
@@ -45,7 +42,7 @@ export default function App() {
                 setLoans(response.data.loans);
                 setItems(response.data.items);
                 setPersons(response.data.persons);
-                //navigate("/")
+                navigate("/")
             })
             .catch(function (error) {
                 console.log(error)
@@ -138,8 +135,7 @@ export default function App() {
 
     function logout() {
         axios.post("/api/user/logout")
-            .then((response) => {
-                console.log(response.data);
+            .then(() => {
                 setUser({id: "", username: "anonymousUser"});
                 navigate("/");
             });

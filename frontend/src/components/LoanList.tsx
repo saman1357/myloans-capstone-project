@@ -89,10 +89,7 @@ export default function LoanList(props: Props) {
             </div>
         )
     }
-    //console.log("username: "+props.user?.username);
-    //console.log("useriD: "+props.user?.id);
-    //console.log("filteredloans: "+filteredLoans);
-    //console.log("filteredloans[0].description: "+filteredLoans[0].description);
+
     if (filteredLoans) {
         return (
             <>
