@@ -4,6 +4,7 @@ import {Link} from "react-router-dom";
 type Props = {
     onLogin: (username: string, password: string) => void,
 }
+
 export default function LoginForm(props: Props) {
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
