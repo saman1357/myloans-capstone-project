@@ -15,7 +15,7 @@ export default function LoanList(props: Props) {
     const [filter, setFilter] = useState("-1");
     const [filteredLoans, setFilteredLoans] = useState(props.loans);
 
-    useEffect(calculation, [filteredLoans, props.myId]);
+    useEffect(calculation, [filteredLoans, props.user?.id]);
     useEffect(filterLoans, [filter, props.loans])
 
 
@@ -31,11 +31,11 @@ export default function LoanList(props: Props) {
         let lentSum = 0;
         let borrowedSum = 0;
         if (filteredLoans) {
-            filteredLoans.filter(loan => (loan.itemId === "1001" && loan.lenderId === props.myId)).forEach(loan => {
+            filteredLoans.filter(loan => (loan.itemId === "1001" && loan.lenderId === props.user?.id)).forEach(loan => {
                 lentSum += loan.amount;
             })
 
-            filteredLoans.filter(loan => (loan.itemId === "1001" && loan.borrowerId === props.myId)).forEach(loan => {
+            filteredLoans.filter(loan => (loan.itemId === "1001" && loan.borrowerId === props.user?.id)).forEach(loan => {
                 borrowedSum += loan.amount;
             })
             setLoanSum({lent: lentSum, borrowed: borrowedSum});
@@ -66,7 +66,7 @@ export default function LoanList(props: Props) {
                 </div>
                 <hr/>
                 <div className={"loan-table-div"}>
-                    {filteredLoans.filter(loan => loan[lenderOrBorrower] === props.myId).map((loan) => {
+                    {filteredLoans.filter(loan => loan[lenderOrBorrower] === props.user?.id).map((loan) => {
                         return <Link to={"/" + loan.id} key={loan.id}>
                             <div className={"loan-table-row-div"}>
                                 <div
@@ -89,10 +89,14 @@ export default function LoanList(props: Props) {
             </div>
         )
     }
-
+    //console.log("username: "+props.user?.username);
+    //console.log("useriD: "+props.user?.id);
+    //console.log("filteredloans: "+filteredLoans);
+    //console.log("filteredloans[0].description: "+filteredLoans[0].description);
     if (filteredLoans) {
         return (
             <>
+                {/*console.log("filteredLoans=true")*/}
                 <div className={"app-title"}>
                     <div className={"back-div"}></div>
                     <img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/>

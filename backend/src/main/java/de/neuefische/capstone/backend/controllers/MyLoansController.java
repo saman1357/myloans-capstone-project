@@ -18,45 +18,45 @@ import java.util.NoSuchElementException;
 public class MyLoansController {
     private final MyLoansService myLoansService;
 
-    @GetMapping
-    public UserData getUserData() {
-        return myLoansService.getUserData();
+    @GetMapping("/user/{userId}/loans")
+    public UserData getUserData(@PathVariable String userId) {
+        return myLoansService.getUserData(userId);
     }
 
-    @PostMapping
-    public LoanWithoutId addLoan(@RequestBody LoanWithoutId newLoanWithoutId) {
-        return myLoansService.addLoan(newLoanWithoutId);
+    @PostMapping("user/{userId}/loans")
+    public LoanWithoutId addLoan(@RequestBody LoanWithoutId newLoanWithoutId, @PathVariable String userId) {
+        return myLoansService.addLoan(newLoanWithoutId, userId);
     }
 
-    @PutMapping("/{id}")
-    public LoanWithoutId updateLoan(@RequestBody LoanWithoutId updatedLoanWithoutId, @PathVariable String id) {
-        return myLoansService.updateLoan(updatedLoanWithoutId, id);
+    @PutMapping("/user/{userId}/loans/{id}")
+    public LoanWithoutId updateLoan(@RequestBody LoanWithoutId updatedLoanWithoutId, @PathVariable String userId, @PathVariable String id) {
+        return myLoansService.updateLoan(updatedLoanWithoutId, id, userId);
 
     }
 
-    @GetMapping("/{id}")
-    public Loan getLoanDetails(@PathVariable String id) {
-        return myLoansService.getLoanDetails(id);
+    @GetMapping("/user/{userId}/loans/{id}")
+    public Loan getLoanDetails(@PathVariable String userId, @PathVariable String id) {
+        return myLoansService.getLoanDetails(id, userId);
     }
 
-    @DeleteMapping("/{id}")
-    public boolean deleteLoan(@PathVariable String id) {
-        return myLoansService.deleteLoan(id);
+    @DeleteMapping("/user/{userId}/loans/{id}")
+    public boolean deleteLoan(@PathVariable String userId, @PathVariable String id) {
+        return myLoansService.deleteLoan(id, userId);
     }
 
-    @PostMapping("/person")
-    public PersonWithoutId addPerson(@RequestBody PersonWithoutId newPersonWithoutId) {
-        return myLoansService.addPerson(newPersonWithoutId);
+    @PostMapping("/user/{userId}/persons")
+    public PersonWithoutId addPerson(@RequestBody PersonWithoutId newPersonWithoutId, @PathVariable String userId) {
+        return myLoansService.addPerson(newPersonWithoutId, userId);
     }
 
-    @PutMapping("/person/{id}")
-    public PersonWithoutId updatePerson(@RequestBody PersonWithoutId updatedPersonWithoutId, @PathVariable String id) {
-        return myLoansService.updatePerson(updatedPersonWithoutId, id);
+    @PutMapping("/user/{userId}/persons/{id}")
+    public PersonWithoutId updatePerson(@RequestBody PersonWithoutId updatedPersonWithoutId,@PathVariable String userId, @PathVariable String id) {
+        return myLoansService.updatePerson(updatedPersonWithoutId, id, userId);
     }
 
-    @DeleteMapping("/person/{id}")
-    public boolean deletePerson(@PathVariable String id) {
-        return myLoansService.deletePerson(id);
+    @DeleteMapping("/user/{userId}/persons/{id}")
+    public boolean deletePerson(@PathVariable String userId, @PathVariable String id) {
+        return myLoansService.deletePerson(id, userId);
     }
 
     @ExceptionHandler(NoSuchElementException.class)

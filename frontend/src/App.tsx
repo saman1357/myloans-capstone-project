@@ -40,7 +40,7 @@ export default function App() {
     }, [user])
 
     function getMyLoansData() {
-        axios.get("/api/myloans")
+        axios.get("/api/myloans/user/"+user.id+"/loans")
             .then(response => {
                 setLoans(response.data.loans);
                 setItems(response.data.items);
@@ -61,7 +61,7 @@ export default function App() {
     }
 
     function handleAddNewLoan(newLoan: LoanWithoutId) {
-        axios.post("/api/myloans", newLoan)
+        axios.post("/api/myloans/user/"+user.id+"/loans", newLoan)
             .then(() => getMyLoansData())
             .catch(function (error) {
                 console.error(error);
@@ -69,7 +69,7 @@ export default function App() {
     }
 
     function handleUpdateLoan(updatedLoan: LoanWithoutId, loanId: string) {
-        axios.put("/api/myloans/" + loanId, updatedLoan)
+        axios.put("/api/myloans/user/"+user.id+"/loans/" + loanId, updatedLoan)
             .then(() => getMyLoansData())
             .catch(function (error) {
                 console.error(error);
@@ -77,7 +77,7 @@ export default function App() {
     }
 
     function handleDeleteLoan(loanId: string) {
-        axios.delete("/api/myloans/" + loanId)
+        axios.delete("/api/myloans/user/"+user.id+"/loans/" + loanId)
             .then(() => getMyLoansData())
             .catch(function (error) {
                 console.error(error);
@@ -104,7 +104,7 @@ export default function App() {
     }
 
     function handleAddNewPerson(newPersonWithoutId: PersonWithoutId) {
-        axios.post("/api/myloans/person", newPersonWithoutId)
+        axios.post("/api/myloans/user/"+user.id+"/persons", newPersonWithoutId)
             .then(() => getMyLoansData())
             .catch(function (error) {
                 console.error(error);
@@ -112,7 +112,7 @@ export default function App() {
     }
 
     function handleUpdatePerson(updatedPersonWithoutId: PersonWithoutId, personId: string) {
-        axios.put("/api/myloans/person/" + personId, updatedPersonWithoutId)
+        axios.put("/api/myloans/user/"+user.id+"/persons/" + personId, updatedPersonWithoutId)
             .then(() => getMyLoansData())
             .catch(function (error) {
                 console.error(error);
@@ -120,7 +120,7 @@ export default function App() {
     }
 
     function handleDeletePerson(personId: string) {
-        axios.delete("/api/myloans/person/" + personId)
+        axios.delete("/api/myloans/user/"+user.id+"/persons/" + personId)
             .then(() => getMyLoansData())
             .catch(function (error) {
                 console.error(error);
@@ -155,14 +155,16 @@ export default function App() {
     function handleSignUp(username: string, password: string) {
         const userWithoutId: UserWithoutId = {username, password};
         axios.post("/api/user/sign-up", userWithoutId)
-            .then(() => handleLogin(username, password))
+            .then(() => {
+                handleLogin(username, password)
+            })
             .catch(function (error) {
                 console.error(error);
             });
     }
 
     if (!(loans && items && persons)) {
-        return <LoginForm onLogin={handleLogin} user={user}/>
+        return <LoginForm onLogin={handleLogin}/>
     }
 
     return (
@@ -196,7 +198,7 @@ export default function App() {
                                 {<PersonForm loans={loans} persons={persons} onSubmit={handleSubmitPersonForm}
                                              user={user} myId={user.id}/>}/>
                         </Route>
-                        <Route path={"/login"} element={<LoginForm onLogin={handleLogin} user={user}/>}/>
+                        <Route path={"/login"} element={<LoginForm onLogin={handleLogin}/>}/>
                         <Route path={"/sign-up"} element={<SignUpForm onSignUp={handleSignUp}/>}/>
                     </Routes>
                 </div>

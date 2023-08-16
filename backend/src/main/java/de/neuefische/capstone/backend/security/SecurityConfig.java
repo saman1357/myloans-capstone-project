@@ -32,7 +32,6 @@ public class SecurityConfig {
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .authorizeHttpRequests(httpRequests -> httpRequests
-                                .requestMatchers("/api/myloans").authenticated()
                                 .requestMatchers("/api/myloans/**").authenticated()
                                 .requestMatchers("/api/user/**").permitAll()
                                 .anyRequest().permitAll()

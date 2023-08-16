@@ -34,7 +34,7 @@ class MyLoansServiceTest {
         );
         //WHEN
         when(myLoansRepository.findById(userId)).thenReturn(Optional.of(expected));
-        UserData actual=myLoansService.getUserData();
+        UserData actual=myLoansService.getUserData(userId);
         //THEN
         verify(myLoansRepository).findById(userId);
         assertEquals(expected, actual);
@@ -71,7 +71,7 @@ class MyLoansServiceTest {
         //WHEN
         when(myLoansRepository.findById(userId)).thenReturn(Optional.of(userDataToUpdate));
         when(myLoansRepository.save(userDataToUpdate)).thenReturn(userDataUpdated);
-        LoanWithoutId actualLoan=myLoansService.addLoan(newLoanWithoutId);
+        LoanWithoutId actualLoan=myLoansService.addLoan(newLoanWithoutId, userId);
 
 
         //THEN
@@ -100,7 +100,7 @@ class MyLoansServiceTest {
         );
         //WHEN
         when(myLoansRepository.findById(userId)).thenReturn(Optional.of(expectedUserData));
-        Loan actual=myLoansService.getLoanDetails(loanId);
+        Loan actual=myLoansService.getLoanDetails(loanId, userId);
         //THEN
         verify(myLoansRepository).findById(userId);
         assertEquals(expectedLoan, actual);
@@ -140,7 +140,7 @@ class MyLoansServiceTest {
         //WHEN
         when(myLoansRepository.findById(userId)).thenReturn(Optional.of(userDataToUpdate));
         when(myLoansRepository.save(userDataToUpdate)).thenReturn(userDataUpdated);
-        LoanWithoutId actualLoan=myLoansService.updateLoan(updatedLoanWithoutId, loanIdToUpdate);
+        LoanWithoutId actualLoan=myLoansService.updateLoan(updatedLoanWithoutId, loanIdToUpdate, userId);
 
 
         //THEN
@@ -185,7 +185,7 @@ class MyLoansServiceTest {
         when(myLoansRepository.findById(userId)).thenReturn(Optional.of(userDataToUpdate));
         when(myLoansRepository.save(userDataToUpdate)).thenReturn(userDataUpdated);
         NoSuchElementException exception = assertThrows(NoSuchElementException.class,
-                () -> myLoansService.updateLoan(updatedLoanWithoutId, loanIdToUpdate));
+                () -> myLoansService.updateLoan(updatedLoanWithoutId, loanIdToUpdate, userId));
 
 
         //THEN
@@ -224,7 +224,7 @@ class MyLoansServiceTest {
         //WHEN
         when(myLoansRepository.findById(userId)).thenReturn(Optional.of(userDataToUpdate));
         when(myLoansRepository.save(userDataToUpdate)).thenReturn(userDataUpdated);
-        boolean successfulDeleted=myLoansService.deleteLoan(loanIdToDelete);
+        boolean successfulDeleted=myLoansService.deleteLoan(loanIdToDelete, userId);
 
 
         //THEN
@@ -267,7 +267,7 @@ class MyLoansServiceTest {
         when(myLoansRepository.findById(userId)).thenReturn(Optional.of(userDataBeforeDeleteLoan));
         when(myLoansRepository.save(userDataAfterDeleteLoan)).thenReturn(userDataAfterDeleteLoan);
         NoSuchElementException exception = assertThrows(NoSuchElementException.class,
-                () -> myLoansService.deleteLoan(loanIdToDelete));
+                () -> myLoansService.deleteLoan(loanIdToDelete, userId));
 
 
         //THEN
@@ -305,7 +305,7 @@ class MyLoansServiceTest {
         //WHEN
         when(myLoansRepository.findById(userId)).thenReturn(Optional.of(userDataToUpdate));
         when(myLoansRepository.save(userDataToUpdate)).thenReturn(userDataUpdated);
-        PersonWithoutId actualPerson=myLoansService.addPerson(newPersonWithoutId);
+        PersonWithoutId actualPerson=myLoansService.addPerson(newPersonWithoutId, userId);
 
 
         //THEN
@@ -349,7 +349,7 @@ class MyLoansServiceTest {
         //WHEN
         when(myLoansRepository.findById(userId)).thenReturn(Optional.of(userDataToUpdate));
         when(myLoansRepository.save(userDataToUpdate)).thenReturn(userDataUpdated);
-        PersonWithoutId actualPerson=myLoansService.updatePerson(updatedPersonWithoutId, personIdToUpdate);
+        PersonWithoutId actualPerson=myLoansService.updatePerson(updatedPersonWithoutId, personIdToUpdate, userId);
 
 
         //THEN
@@ -392,7 +392,7 @@ class MyLoansServiceTest {
         //WHEN
         when(myLoansRepository.findById(userId)).thenReturn(Optional.of(userDataToUpdate));
         when(myLoansRepository.save(userDataToUpdate)).thenReturn(userDataUpdated);
-        boolean successfulDeleted=myLoansService.deletePerson(personIdToDelete);
+        boolean successfulDeleted=myLoansService.deletePerson(personIdToDelete, userId);
 
 
         //THEN
@@ -437,7 +437,7 @@ class MyLoansServiceTest {
         when(myLoansRepository.findById(userId)).thenReturn(Optional.of(userDataBeforeDeletePerson));
         when(myLoansRepository.save(userDataAfterDeletePerson)).thenReturn(userDataAfterDeletePerson);
         NoSuchElementException exception = assertThrows(NoSuchElementException.class,
-                () -> myLoansService.deletePerson(personIdToDelete));
+                () -> myLoansService.deletePerson(personIdToDelete, userId));
 
 
         //THEN

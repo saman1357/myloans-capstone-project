@@ -1,10 +1,8 @@
 import {FormEvent, useState} from "react";
 import {Link} from "react-router-dom";
-import {UserWithoutPassword} from "../model/DataModels.ts";
 
 type Props = {
     onLogin: (username: string, password: string) => void,
-    user: UserWithoutPassword
 }
 export default function LoginForm(props: Props) {
     const [username, setUsername] = useState<string>("");

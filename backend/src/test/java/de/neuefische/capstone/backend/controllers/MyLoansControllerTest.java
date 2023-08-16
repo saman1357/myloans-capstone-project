@@ -45,7 +45,7 @@ class MyLoansControllerTest {
         myLoansRepository.save(testUserData);
         ObjectMapper objectMapper = new ObjectMapper();
         String expected = objectMapper.writeValueAsString(testUserData);
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/myloans")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/myloans/user/0001/loans")
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(expected));
@@ -72,7 +72,7 @@ class MyLoansControllerTest {
                         new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
         );
         myLoansRepository.save(testUserData);
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/myloans")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/myloans/user/0001/loans")
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json(expectedMessage));
@@ -98,7 +98,7 @@ class MyLoansControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String newLoanWithoutIdJson = objectMapper.writeValueAsString(newLoanWithoutId);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/myloans")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/myloans/user/0001/loans")
                         .contentType(MediaType.APPLICATION_JSON).content(newLoanWithoutIdJson)
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -131,7 +131,7 @@ class MyLoansControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String newLoanWithoutIdJson = objectMapper.writeValueAsString(newLoanWithoutId);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/myloans")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/myloans/user/0001/loans")
                         .contentType(MediaType.APPLICATION_JSON).content(newLoanWithoutIdJson)
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
@@ -159,7 +159,7 @@ class MyLoansControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String expectedJson = objectMapper.writeValueAsString(expectedLoan);
         myLoansRepository.save(testUserData);
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/myloans/" + loanId)
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/myloans/user/0001/loans/" + loanId)
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(expectedJson));
@@ -188,7 +188,7 @@ class MyLoansControllerTest {
                         new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
         );
         myLoansRepository.save(testUserData);
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/myloans/" + loanId)
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/myloans/user/0001/loans/" + loanId)
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json(expectedMessage));
@@ -215,7 +215,7 @@ class MyLoansControllerTest {
                         new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
         );
         myLoansRepository.save(testUserData);
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/myloans/123")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/myloans/user/0001/loans/123")
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json(expectedMessage));
@@ -242,7 +242,7 @@ class MyLoansControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String updatedLoanWithoutIdJson = objectMapper.writeValueAsString(updatedLoanWithoutId);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/myloans/3002")
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/myloans/user/0001/loans/3002")
                         .contentType(MediaType.APPLICATION_JSON).content(updatedLoanWithoutIdJson)
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -275,7 +275,7 @@ class MyLoansControllerTest {
                         new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
         );
         myLoansRepository.save(testUserData);
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/myloans/" + loanId)
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/myloans/user/0001/loans/" + loanId)
                         .contentType(MediaType.APPLICATION_JSON).content(updatedLoanWithoutIdJson)
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
@@ -313,11 +313,11 @@ class MyLoansControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String updatedUserDataJson = objectMapper.writeValueAsString(updatedUserData);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/myloans/"+loanIdToDelete)
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/myloans/user/0001/loans/"+loanIdToDelete)
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/myloans")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/myloans/user/0001/loans")
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(updatedUserDataJson));
@@ -348,7 +348,7 @@ class MyLoansControllerTest {
                         new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
         );
         myLoansRepository.save(testUserData);
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/myloans/" + loanId)
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/myloans/user/0001/loans/" + loanId)
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json(expectedMessage));
@@ -374,7 +374,7 @@ class MyLoansControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String newPersonWithoutIdJson = objectMapper.writeValueAsString(newPersonWithoutId);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/myloans/person")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/myloans/user/0001/persons")
                         .contentType(MediaType.APPLICATION_JSON).content(newPersonWithoutIdJson)
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -406,7 +406,7 @@ class MyLoansControllerTest {
                         new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
         );
         myLoansRepository.save(testUserData);
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/myloans/person")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/myloans/user/0001/persons")
                 .contentType(MediaType.APPLICATION_JSON).content(newPersonWithoutIdJson)
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
@@ -434,7 +434,7 @@ class MyLoansControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String updatedPersonWithoutIdJson = objectMapper.writeValueAsString(updatedPersonWithoutId);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/myloans/person/2002")
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/myloans/user/0001/persons/2002")
                         .contentType(MediaType.APPLICATION_JSON).content(updatedPersonWithoutIdJson)
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -467,7 +467,7 @@ class MyLoansControllerTest {
                         new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
         );
         myLoansRepository.save(testUserData);
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/myloans/person/" + personId)
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/myloans/user/0001/persons/" + personId)
                         .contentType(MediaType.APPLICATION_JSON).content(updatedPersonWithoutIdJson)
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
@@ -499,7 +499,7 @@ class MyLoansControllerTest {
                         new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
         );
         myLoansRepository.save(testUserData);
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/myloans/person/" + personId)
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/myloans/user/0001/persons/" + personId)
                         .contentType(MediaType.APPLICATION_JSON).content(updatedPersonWithoutIdJson)
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
@@ -539,11 +539,11 @@ class MyLoansControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String updatedUserDataJson = objectMapper.writeValueAsString(updatedUserData);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/myloans/person/"+personIdToDelete)
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/myloans/user/0001/persons/"+personIdToDelete)
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/myloans")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/myloans/user/0001/loans")
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(updatedUserDataJson));
@@ -574,7 +574,7 @@ class MyLoansControllerTest {
                         new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
         );
         myLoansRepository.save(testUserData);
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/myloans/person/" + personId)
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/myloans/user/0001/persons/" + personId)
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json(expectedMessage));
