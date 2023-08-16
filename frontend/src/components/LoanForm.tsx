@@ -1,4 +1,4 @@
-import {Item, Loan, LoanWithoutId, Person} from "../model/DataModels.ts";
+import {Item, Loan, LoanWithoutId, Person, UserWithoutPassword} from "../model/DataModels.ts";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 import React, {FormEvent, useEffect, useState} from "react";
 
@@ -8,7 +8,7 @@ type Props = {
     persons: Person[],
     onSubmit: (submittedLoanWithoutId: LoanWithoutId, loanId: string, isNewLoan: boolean) => void,
     myId: string,
-    user?: string
+    user?: UserWithoutPassword
 }
 
 export default function LoanForm(props: Props) {
@@ -141,7 +141,7 @@ export default function LoanForm(props: Props) {
             <div className={"app-title"}>
                 <div className={"back-div"} onClick={handleBack}><h1>⇦</h1></div>
                 <img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/>
-                <div>{props.user}</div>
+                <div>{props.user?.username}</div>
             </div>
 
             <form className={"loan-form"} onSubmit={handleSubmit}>

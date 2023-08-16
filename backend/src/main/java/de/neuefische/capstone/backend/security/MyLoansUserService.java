@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class MyLoansUserService {
@@ -15,5 +17,13 @@ public class MyLoansUserService {
         MyLoansUser newUser = new MyLoansUser(RandomIdService.uuid(), newUserWithoutId.getUsername(), encoder.encode(newUserWithoutId.getPassword()));
         myLoansUserRepository.save(newUser);
         return newUserWithoutId.getUsername();
+    }
+
+    public String getIdByUsername(String username){
+        Optional<MyLoansUser> myLoansUser = myLoansUserRepository.findByUsername(username);
+        if (myLoansUser.isPresent()) {
+            return myLoansUser.get().id();
+        }
+        return null;
     }
 }

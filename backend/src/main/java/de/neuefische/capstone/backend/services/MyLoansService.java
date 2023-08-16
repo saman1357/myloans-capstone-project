@@ -25,7 +25,6 @@ public class MyLoansService {
             return userData.get();
         }
         throw new NoSuchElementException(userNotFoundExceptionMessage + userId);
-
     }
 
     public LoanWithoutId addLoan(LoanWithoutId newLoanWithoutId) {

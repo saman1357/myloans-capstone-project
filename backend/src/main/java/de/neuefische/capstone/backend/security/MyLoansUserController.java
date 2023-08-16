@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.*;
 public class MyLoansUserController {
     private final MyLoansUserService myLoansUserService;
     @GetMapping("/me")
-    public String getUserInfo() {
-        return SecurityContextHolder.getContext().getAuthentication().getName();
+    public MyLoansUserWithoutPassword getUserInfo() {
+        String username= SecurityContextHolder.getContext().getAuthentication().getName();
+        String userId=myLoansUserService.getIdByUsername(username);
+        return new MyLoansUserWithoutPassword(userId, username);
     }
 
     @PostMapping("login")

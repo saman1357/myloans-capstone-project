@@ -1,5 +1,5 @@
 import {Link, useParams} from "react-router-dom";
-import {Item, Loan, Person} from "../model/DataModels.ts";
+import {Item, Loan, Person, UserWithoutPassword} from "../model/DataModels.ts";
 
 type Props = {
     myId: string,
@@ -7,7 +7,7 @@ type Props = {
     items: Item[],
     persons: Person[],
     onDelete: (loanId: string) => void,
-    user?: string
+    user?: UserWithoutPassword
 }
 
 export default function LoanDetails(props: Props) {
@@ -37,7 +37,7 @@ export default function LoanDetails(props: Props) {
             <div className={"app-title"}>
                 <div className={"back-div"}><Link to={"/"}><h1>⇦</h1></Link></div>
                 <img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/>
-                <div>{props.user}</div>
+                <div>{props.user?.username}</div>
             </div>
             <div className={"loan-details-container"}>
                 <div className={"loan-details-header"}><h3>I{lent ? " lent" : " borrowed"}</h3></div>

@@ -1,5 +1,5 @@
 import {Link} from "react-router-dom";
-import {Item, Loan, Person} from "../model/DataModels.ts";
+import {Item, Loan, Person, UserWithoutPassword} from "../model/DataModels.ts";
 import React, {useEffect, useState} from "react";
 
 type Props = {
@@ -7,7 +7,7 @@ type Props = {
     items: Item[],
     persons: Person[],
     myId: string,
-    user?: string,
+    user?: UserWithoutPassword,
     onLogout: ()=>void
 }
 export default function LoanList(props: Props) {
@@ -97,7 +97,7 @@ export default function LoanList(props: Props) {
                     <div className={"back-div"}></div>
                     <img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/>
                     <div>
-                        {props.user}
+                        {props.user?.username}
                         <br/>
                         <button onClick={props.onLogout}>logout</button>
                     </div>
