@@ -1,13 +1,15 @@
-import {Loan, LoanWithoutId, Person} from "../model/DataModels.ts";
+import {Loan, LoanWithoutId, Person, UserWithoutPassword} from "../model/DataModels.ts";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 import React, {FormEvent, useEffect, useState} from "react";
+import {toast, ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css'
 
 type Props = {
     persons: Person[],
     loans: Loan[],
     onSubmit: (person: Person, action: string) => void,
     myId: string,
-    user?: string
+    user?: UserWithoutPassword
 }
 
 export default function PersonForm(props: Props) {
@@ -56,16 +58,17 @@ export default function PersonForm(props: Props) {
     }
 
     function handleDeletePerson(name: string, id: string) {
-        let possible=true;
-        props.loans.forEach(loan => {if(loan.lenderId===id || loan.borrowerId===id) possible=false;})
+        let possible = true;
+        props.loans.forEach(loan => {
+            if (loan.lenderId === id || loan.borrowerId === id) possible = false;
+        })
         if (possible) {
             setPersonState({name: name, id: id})
             setAction("delete");
             props.onSubmit({name: name, id: id}, "delete");
             initialState()
         } else {
-            console.log("Not possible to delete. Person is the other party in at least one loan.");
-            return <div>not possible</div>
+            toast.warn("Not possible to delete. Person is the other party in at least one loan.");
         }
     }
 
@@ -76,10 +79,22 @@ export default function PersonForm(props: Props) {
 
     return (
         <>
+            <ToastContainer
+                position="top-center"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
             <div className={"app-title"}>
                 <div className={"back-div"} onClick={handleBack}><h1>⇦</h1></div>
                 <img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/>
-                <div>{props.user}</div>
+                <div>{props.user?.username}</div>
             </div>
 
             <div className={"person-form-title"}>

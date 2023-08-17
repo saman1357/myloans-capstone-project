@@ -1,6 +1,14 @@
 import './App.css'
 import {useEffect, useState} from "react";
-import {Item, Loan, LoanWithoutId, Person, PersonWithoutId, UserWithoutId} from "./model/DataModels.ts";
+import {
+    Item,
+    Loan,
+    LoanWithoutId,
+    Person,
+    PersonWithoutId,
+    UserWithoutId,
+    UserWithoutPassword
+} from "./model/DataModels.ts";
 import axios from "axios";
 import {Route, Routes, useNavigate} from "react-router-dom";
 import LoanList from "./components/LoanList.tsx";
@@ -15,20 +23,26 @@ export default function App() {
     const [loans, setLoans] = useState<Loan[]>();
     const [items, setItems] = useState<Item[]>();
     const [persons, setPersons] = useState<Person[]>();
-    const [user, setUser] = useState<string>();
+    const [user, setUser] = useState<UserWithoutPassword>({id: "", username: "anonymousUser"});
     const navigate = useNavigate();
 
-    const myId = "0001";
+    useEffect(()=> {
+        me()
+    }, []);
 
-    useEffect(me, [user]);
-
+    useEffect(()=>{
+        if (user.username !== undefined && user.username !== 'anonymousUser') {
+            getMyLoansData();
+        }
+    }, [user])
 
     function getMyLoansData() {
-        axios.get("/api/myloans")
+        axios.get("/api/myloans/user/"+user.id+"/loans")
             .then(response => {
                 setLoans(response.data.loans);
                 setItems(response.data.items);
                 setPersons(response.data.persons);
+                navigate("/")
             })
             .catch(function (error) {
                 console.log(error)
@@ -44,7 +58,7 @@ export default function App() {
     }
 
     function handleAddNewLoan(newLoan: LoanWithoutId) {
-        axios.post("/api/myloans", newLoan)
+        axios.post("/api/myloans/user/"+user.id+"/loans", newLoan)
             .then(() => getMyLoansData())
             .catch(function (error) {
                 console.error(error);
@@ -52,7 +66,7 @@ export default function App() {
     }
 
     function handleUpdateLoan(updatedLoan: LoanWithoutId, loanId: string) {
-        axios.put("/api/myloans/" + loanId, updatedLoan)
+        axios.put("/api/myloans/user/"+user.id+"/loans/" + loanId, updatedLoan)
             .then(() => getMyLoansData())
             .catch(function (error) {
                 console.error(error);
@@ -60,7 +74,7 @@ export default function App() {
     }
 
     function handleDeleteLoan(loanId: string) {
-        axios.delete("/api/myloans/" + loanId)
+        axios.delete("/api/myloans/user/"+user.id+"/loans/" + loanId)
             .then(() => getMyLoansData())
             .catch(function (error) {
                 console.error(error);
@@ -87,7 +101,7 @@ export default function App() {
     }
 
     function handleAddNewPerson(newPersonWithoutId: PersonWithoutId) {
-        axios.post("/api/myloans/person", newPersonWithoutId)
+        axios.post("/api/myloans/user/"+user.id+"/persons", newPersonWithoutId)
             .then(() => getMyLoansData())
             .catch(function (error) {
                 console.error(error);
@@ -95,7 +109,7 @@ export default function App() {
     }
 
     function handleUpdatePerson(updatedPersonWithoutId: PersonWithoutId, personId: string) {
-        axios.put("/api/myloans/person/" + personId, updatedPersonWithoutId)
+        axios.put("/api/myloans/user/"+user.id+"/persons/" + personId, updatedPersonWithoutId)
             .then(() => getMyLoansData())
             .catch(function (error) {
                 console.error(error);
@@ -103,7 +117,7 @@ export default function App() {
     }
 
     function handleDeletePerson(personId: string) {
-        axios.delete("/api/myloans/person/" + personId)
+        axios.delete("/api/myloans/user/"+user.id+"/persons/" + personId)
             .then(() => getMyLoansData())
             .catch(function (error) {
                 console.error(error);
@@ -113,16 +127,16 @@ export default function App() {
     function handleLogin(username: string, password: string) {
         axios.post("/api/user/login", null, {auth: {username, password}})
             .then((response) => {
-                setUser(response.data)
+                setUser(prevState => ({...prevState, username: response.data.username}));
+                me();
                 navigate("/");
             });
     }
 
     function logout() {
         axios.post("/api/user/logout")
-            .then((response) => {
-                console.log(response.data);
-                setUser('anonymousUser');
+            .then(() => {
+                setUser({id: "", username: "anonymousUser"});
                 navigate("/");
             });
     }
@@ -130,17 +144,16 @@ export default function App() {
     function me() {
         axios.get("/api/user/me")
             .then(response => {
-                setUser(response.data);
-                if (user!==undefined && user!=='anonymousUser'){
-                    getMyLoansData();
-                }
+                setUser(prevState => ({...prevState, id: response.data.id, username: response.data.username}));
             });
     }
 
-    function handleSignUp(username: string, password: string){
-        const userWithoutId : UserWithoutId ={username, password};
+    function handleSignUp(username: string, password: string) {
+        const userWithoutId: UserWithoutId = {username, password};
         axios.post("/api/user/sign-up", userWithoutId)
-            .then(() => handleLogin(username, password))
+            .then(() => {
+                handleLogin(username, password)
+            })
             .catch(function (error) {
                 console.error(error);
             });
@@ -156,21 +169,30 @@ export default function App() {
                 <div className={"app-body"}>
                     <Routes>
                         <Route element={<ProtectedRoutes user={user}/>}>
-                            <Route path={"/"} element={<LoanList loans={loans} items={items} persons={persons} myId={myId} user={user} onLogout={logout}/>}/>
+                            <Route path={"/"}
+                                   element={<LoanList loans={loans} items={items} persons={persons} myId={user.id}
+                                                      user={user} onLogout={logout}/>}/>
                             <Route path={"/addloan/:type"} element=
-                                {<LoanForm loans={loans} items={items} persons={persons} user={user} onSubmit={handleSubmitLoanForm} myId={myId}/>}/>
+                                {<LoanForm loans={loans} items={items} persons={persons} user={user}
+                                           onSubmit={handleSubmitLoanForm} myId={user.id}/>}/>
                             <Route path={"/:id"} element=
-                                {<LoanDetails loans={loans} items={items} persons={persons} myId={myId} user={user} onDelete={handleDeleteLoan}/>}/>
+                                {<LoanDetails loans={loans} items={items} persons={persons} myId={user.id} user={user}
+                                              onDelete={handleDeleteLoan}/>}/>
                             <Route path={"/updateloan/:id"} element=
-                                {<LoanForm loans={loans} items={items} persons={persons} user={user} onSubmit={handleSubmitLoanForm} myId={myId}/>}/>
+                                {<LoanForm loans={loans} items={items} persons={persons} user={user}
+                                           onSubmit={handleSubmitLoanForm} myId={user.id}/>}/>
                             <Route path={"/updateloan/:id/person/add"} element=
-                                {<PersonForm loans={loans} persons={persons} onSubmit={handleSubmitPersonForm} user={user} myId={myId}/>}/>
+                                {<PersonForm loans={loans} persons={persons} onSubmit={handleSubmitPersonForm}
+                                             user={user} myId={user.id}/>}/>
                             <Route path={"/addloan/:type/person/add"} element=
-                                {<PersonForm loans={loans} persons={persons} onSubmit={handleSubmitPersonForm} user={user} myId={myId}/>}/>
+                                {<PersonForm loans={loans} persons={persons} onSubmit={handleSubmitPersonForm}
+                                             user={user} myId={user.id}/>}/>
                             <Route path={"/updateloan/:id/person/:pid"} element=
-                                {<PersonForm loans={loans} persons={persons} onSubmit={handleSubmitPersonForm} user={user} myId={myId}/>}/>
+                                {<PersonForm loans={loans} persons={persons} onSubmit={handleSubmitPersonForm}
+                                             user={user} myId={user.id}/>}/>
                             <Route path={"/addloan/:type/person/:pid"} element=
-                                {<PersonForm loans={loans} persons={persons} onSubmit={handleSubmitPersonForm} user={user} myId={myId}/>}/>
+                                {<PersonForm loans={loans} persons={persons} onSubmit={handleSubmitPersonForm}
+                                             user={user} myId={user.id}/>}/>
                         </Route>
                         <Route path={"/login"} element={<LoginForm onLogin={handleLogin}/>}/>
                         <Route path={"/sign-up"} element={<SignUpForm onSignUp={handleSignUp}/>}/>

@@ -19,20 +19,21 @@ class MyLoansUserControllerTest {
 @Autowired
     MockMvc mockMvc;
     @Test
-    void getAnonymousUser_whenEndPointIsCalledWithoutLoggedInUser() throws Exception {
+    void getAnonymousUserObject_whenEndPointIsCalledWithoutLoggedInUser() throws Exception {
+        String anonymousUser= """
+                {"id": null, "username": "anonymousUser"}
+                """;
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/me"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(
-                        "anonymousUser"));
+                .andExpect(MockMvcResultMatchers.content().json(anonymousUser));
     }
 
     @Test
     @WithMockUser(username="saman")
-    void getUserName_whenEndPointIsCalledWithLoggedInUser() throws Exception {
+    void getUserName_whenMeEndPointIsCalledWithLoggedInUser() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/me"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(
-                        "saman"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.username").value("saman"));
     }
 
     @Test

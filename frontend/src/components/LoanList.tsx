@@ -1,5 +1,5 @@
 import {Link} from "react-router-dom";
-import {Item, Loan, Person} from "../model/DataModels.ts";
+import {Item, Loan, Person, UserWithoutPassword} from "../model/DataModels.ts";
 import React, {useEffect, useState} from "react";
 
 type Props = {
@@ -7,7 +7,7 @@ type Props = {
     items: Item[],
     persons: Person[],
     myId: string,
-    user?: string,
+    user?: UserWithoutPassword,
     onLogout: ()=>void
 }
 export default function LoanList(props: Props) {
@@ -15,7 +15,7 @@ export default function LoanList(props: Props) {
     const [filter, setFilter] = useState("-1");
     const [filteredLoans, setFilteredLoans] = useState(props.loans);
 
-    useEffect(calculation, [filteredLoans, props.myId]);
+    useEffect(calculation, [filteredLoans, props.user?.id]);
     useEffect(filterLoans, [filter, props.loans])
 
 
@@ -31,11 +31,11 @@ export default function LoanList(props: Props) {
         let lentSum = 0;
         let borrowedSum = 0;
         if (filteredLoans) {
-            filteredLoans.filter(loan => (loan.itemId === "1001" && loan.lenderId === props.myId)).forEach(loan => {
+            filteredLoans.filter(loan => (loan.itemId === "1001" && loan.lenderId === props.user?.id)).forEach(loan => {
                 lentSum += loan.amount;
             })
 
-            filteredLoans.filter(loan => (loan.itemId === "1001" && loan.borrowerId === props.myId)).forEach(loan => {
+            filteredLoans.filter(loan => (loan.itemId === "1001" && loan.borrowerId === props.user?.id)).forEach(loan => {
                 borrowedSum += loan.amount;
             })
             setLoanSum({lent: lentSum, borrowed: borrowedSum});
@@ -66,7 +66,7 @@ export default function LoanList(props: Props) {
                 </div>
                 <hr/>
                 <div className={"loan-table-div"}>
-                    {filteredLoans.filter(loan => loan[lenderOrBorrower] === props.myId).map((loan) => {
+                    {filteredLoans.filter(loan => loan[lenderOrBorrower] === props.user?.id).map((loan) => {
                         return <Link to={"/" + loan.id} key={loan.id}>
                             <div className={"loan-table-row-div"}>
                                 <div
@@ -93,11 +93,12 @@ export default function LoanList(props: Props) {
     if (filteredLoans) {
         return (
             <>
+                {/*console.log("filteredLoans=true")*/}
                 <div className={"app-title"}>
                     <div className={"back-div"}></div>
                     <img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/>
                     <div>
-                        {props.user}
+                        {props.user?.username}
                         <br/>
                         <button onClick={props.onLogout}>logout</button>
                     </div>

@@ -44,3 +44,8 @@ export type UserWithoutId={
     username: string,
     password: string
 }
+
+export type UserWithoutPassword={
+    id: string,
+    username: string
+}

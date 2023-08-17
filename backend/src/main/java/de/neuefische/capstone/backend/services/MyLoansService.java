@@ -13,22 +13,20 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MyLoansService {
     private final MyLoansRepository myLoansRepository;
-    String userId = "0001";
     String userNotFoundExceptionMessage = "User Data not found for id: ";
     String loanNotFoundExceptionMessage = "Loan not found for id: ";
     String personNotFoundExceptionMessage = "Person not found for id: ";
 
 
-    public UserData getUserData() {
+    public UserData getUserData(String userId) {
         Optional<UserData> userData = myLoansRepository.findById(userId);
         if (userData.isPresent()) {
             return userData.get();
         }
         throw new NoSuchElementException(userNotFoundExceptionMessage + userId);
-
     }
 
-    public LoanWithoutId addLoan(LoanWithoutId newLoanWithoutId) {
+    public LoanWithoutId addLoan(LoanWithoutId newLoanWithoutId, String userId) {
         Optional<UserData> userData = myLoansRepository.findById(userId);
         Loan newLoan = new Loan(newLoanWithoutId);
         if (userData.isPresent()) {
@@ -39,7 +37,7 @@ public class MyLoansService {
         throw new NoSuchElementException(userNotFoundExceptionMessage + userId);
     }
 
-    public Loan getLoanDetails(String loanId) {
+    public Loan getLoanDetails(String loanId, String userId) {
         Optional<UserData> userData = myLoansRepository.findById(userId);
         if (userData.isPresent()) {
             Optional<Loan> loan = userData.get().getLoans().stream().filter(l -> l.getId().equals(loanId)).findFirst();
@@ -51,7 +49,7 @@ public class MyLoansService {
 
     }
 
-    public LoanWithoutId updateLoan(LoanWithoutId updatedLoanWithoutId, String loanId) {
+    public LoanWithoutId updateLoan(LoanWithoutId updatedLoanWithoutId, String loanId, String userId) {
         Optional<UserData> userData = myLoansRepository.findById(userId);
         Loan updatedLoan = new Loan(updatedLoanWithoutId);
         updatedLoan.setId(loanId);
@@ -67,7 +65,7 @@ public class MyLoansService {
         throw new NoSuchElementException(userNotFoundExceptionMessage + userId);
     }
 
-    public boolean deleteLoan(String loanId) {
+    public boolean deleteLoan(String loanId, String userId) {
         Optional<UserData> userData = myLoansRepository.findById(userId);
         if (userData.isPresent()) {
             int index = getIndexByLoanId(userData.get().getLoans(), loanId);
@@ -81,7 +79,7 @@ public class MyLoansService {
         throw new NoSuchElementException(userNotFoundExceptionMessage + userId);
     }
 
-    public PersonWithoutId addPerson(PersonWithoutId newPersonWithoutId) {
+    public PersonWithoutId addPerson(PersonWithoutId newPersonWithoutId, String userId) {
         Optional<UserData> userData = myLoansRepository.findById(userId);
         Person newPerson = new Person(newPersonWithoutId);
         if (userData.isPresent()) {
@@ -92,7 +90,7 @@ public class MyLoansService {
         throw new NoSuchElementException(userNotFoundExceptionMessage + userId);
     }
 
-    public PersonWithoutId updatePerson(PersonWithoutId updatedPersonWithoutId, String personId) {
+    public PersonWithoutId updatePerson(PersonWithoutId updatedPersonWithoutId, String personId, String userId) {
         Optional<UserData> userData = myLoansRepository.findById(userId);
         Person updatedPerson = new Person(updatedPersonWithoutId);
         updatedPerson.setId(personId);
@@ -108,7 +106,7 @@ public class MyLoansService {
         throw new NoSuchElementException(userNotFoundExceptionMessage + userId);
     }
 
-    public boolean deletePerson(String personId) {
+    public boolean deletePerson(String personId, String userId) {
         Optional<UserData> userData = myLoansRepository.findById(userId);
         if (userData.isPresent()) {
             int index = getIndexByPersonId(userData.get().getPersons(), personId);
