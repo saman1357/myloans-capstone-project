@@ -9,7 +9,8 @@ type Props = {
     loans: Loan[],
     onSubmit: (person: Person, action: string) => void,
     myId: string,
-    user?: UserWithoutPassword
+    user?: UserWithoutPassword,
+    onLogout: ()=>void
 }
 
 export default function PersonForm(props: Props) {
@@ -19,6 +20,7 @@ export default function PersonForm(props: Props) {
     const [action, setAction] = useState<"add" | "update" | "delete">("add");
     const navigate = useNavigate();
     const [backLink, setBackLink] = useState("/");
+    const [validationMessage, setValidationMessage] = useState("Person's name must be at least 1 character!");
     const location = useLocation();
     const navigateState = location.state || {};
     const [stateData] = useState<LoanWithoutId>(navigateState.loanState);
@@ -27,10 +29,8 @@ export default function PersonForm(props: Props) {
     function initialState() {
         if (urlParams.pid && person) {
             setAction("update");
-            setPersonState({
-                name: person.name,
-                id: urlParams.pid
-            })
+            setPersonState(prevState => ({...prevState, name: person.name, id: urlParams.pid as string}))
+            setValidationMessage("");
         }
         if (urlParams.id) {
             setBackLink(("/updateloan/") + urlParams.id);
@@ -41,6 +41,11 @@ export default function PersonForm(props: Props) {
 
     function handleChangeInput(event: React.ChangeEvent<HTMLInputElement>) {
         setPersonState((prevState) => ({...prevState, name: event.target.value}));
+        if (event.target.value === "") {
+            setValidationMessage("Person's name must be at least 1 character!");
+        } else {
+            setValidationMessage("");
+        }
     }
 
     function handleBack() {
@@ -49,12 +54,17 @@ export default function PersonForm(props: Props) {
 
     function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        props.onSubmit(personState, action);
+        if (validationMessage === "") {
+            props.onSubmit(personState, action);
+        } else {
+            toast.warn("Person's name must be at least 1 character!");
+        }
     }
 
     function handleSelectPerson(name: string, id: string) {
         setPersonState({name: name, id: id});
         setAction("update");
+        setValidationMessage("");
     }
 
     function handleDeletePerson(name: string, id: string) {
@@ -94,7 +104,11 @@ export default function PersonForm(props: Props) {
             <div className={"app-title"}>
                 <div className={"back-div"} onClick={handleBack}><h1>⇦</h1></div>
                 <img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/>
-                <div>{props.user?.username}</div>
+                <div>
+                    {props.user?.username}
+                    <br/>
+                    <button onClick={props.onLogout}>logout</button>
+                </div>
             </div>
 
             <div className={"person-form-title"}>
@@ -105,6 +119,7 @@ export default function PersonForm(props: Props) {
                 <br/>
                 <input type={"text"} id={"person-name"} name={"person-name"} value={personState.name}
                        onChange={handleChangeInput}/>
+                <div className={"validation-message-person"}>{validationMessage}</div>
                 <br/>
                 <button>save</button>
 

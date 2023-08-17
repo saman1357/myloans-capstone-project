@@ -125,6 +125,7 @@ export default function App() {
     }
 
     function handleLogin(username: string, password: string) {
+        logout();
         axios.post("/api/user/login", null, {auth: {username, password}})
             .then((response) => {
                 setUser(prevState => ({...prevState, username: response.data.username}));
@@ -160,7 +161,7 @@ export default function App() {
     }
 
     if (!(loans && items && persons)) {
-        return <LoginForm onLogin={handleLogin}/>
+        return <LoginForm onLogin={handleLogin} onLogout={logout}/>
     }
 
     return (
@@ -174,28 +175,28 @@ export default function App() {
                                                       user={user} onLogout={logout}/>}/>
                             <Route path={"/addloan/:type"} element=
                                 {<LoanForm loans={loans} items={items} persons={persons} user={user}
-                                           onSubmit={handleSubmitLoanForm} myId={user.id}/>}/>
+                                           onSubmit={handleSubmitLoanForm} myId={user.id} onLogout={logout}/>}/>
                             <Route path={"/:id"} element=
                                 {<LoanDetails loans={loans} items={items} persons={persons} myId={user.id} user={user}
-                                              onDelete={handleDeleteLoan}/>}/>
+                                              onDelete={handleDeleteLoan} onLogout={logout}/>}/>
                             <Route path={"/updateloan/:id"} element=
                                 {<LoanForm loans={loans} items={items} persons={persons} user={user}
-                                           onSubmit={handleSubmitLoanForm} myId={user.id}/>}/>
+                                           onSubmit={handleSubmitLoanForm} myId={user.id} onLogout={logout}/>}/>
                             <Route path={"/updateloan/:id/person/add"} element=
                                 {<PersonForm loans={loans} persons={persons} onSubmit={handleSubmitPersonForm}
-                                             user={user} myId={user.id}/>}/>
+                                             user={user} myId={user.id} onLogout={logout}/>} />
                             <Route path={"/addloan/:type/person/add"} element=
                                 {<PersonForm loans={loans} persons={persons} onSubmit={handleSubmitPersonForm}
-                                             user={user} myId={user.id}/>}/>
+                                             user={user} myId={user.id} onLogout={logout}/>}/>
                             <Route path={"/updateloan/:id/person/:pid"} element=
                                 {<PersonForm loans={loans} persons={persons} onSubmit={handleSubmitPersonForm}
-                                             user={user} myId={user.id}/>}/>
+                                             user={user} myId={user.id} onLogout={logout}/>}/>
                             <Route path={"/addloan/:type/person/:pid"} element=
                                 {<PersonForm loans={loans} persons={persons} onSubmit={handleSubmitPersonForm}
-                                             user={user} myId={user.id}/>}/>
+                                             user={user} myId={user.id} onLogout={logout}/>}/>
                         </Route>
-                        <Route path={"/login"} element={<LoginForm onLogin={handleLogin}/>}/>
-                        <Route path={"/sign-up"} element={<SignUpForm onSignUp={handleSignUp}/>}/>
+                        <Route path={"/login"} element={<LoginForm onLogin={handleLogin} onLogout={logout}/>}/>
+                        <Route path={"/sign-up"} element={<SignUpForm onSignUp={handleSignUp} onLogout={logout} user={user}/>}/>
                     </Routes>
                 </div>
             </div>

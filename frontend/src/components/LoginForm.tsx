@@ -1,8 +1,11 @@
 import {FormEvent, useState} from "react";
 import {Link} from "react-router-dom";
+import {UserWithoutPassword} from "../model/DataModels.ts";
 
 type Props = {
     onLogin: (username: string, password: string) => void,
+    onLogout: () => void,
+    user?: UserWithoutPassword
 }
 
 export default function LoginForm(props: Props) {
@@ -19,7 +22,11 @@ export default function LoginForm(props: Props) {
             <div className={"app-title"}>
                 <div></div>
                 <img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/>
-                <div></div>
+                <div>
+                    {props.user?.username}
+                    <br/>
+                    {props.user? <button onClick={props.onLogout}>logout</button> : ""}
+                </div>
             </div>
             <div className={"login-div"}>
                 <form onSubmit={onLogin}>
@@ -27,7 +34,8 @@ export default function LoginForm(props: Props) {
                     <input id={"username-input"} value={username} onChange={event => setUsername(event.target.value)}
                            placeholder={"username"}/>
                     <br/>
-                    <input id={"password-input"} value={password} onChange={event => setPassword(event.target.value)} placeholder={"password"}
+                    <input id={"password-input"} value={password} onChange={event => setPassword(event.target.value)}
+                           placeholder={"password"}
                            type={"password"}/>
                     <br/>
                     <button>Login</button>

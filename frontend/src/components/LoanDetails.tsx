@@ -7,7 +7,8 @@ type Props = {
     items: Item[],
     persons: Person[],
     onDelete: (loanId: string) => void,
-    user?: UserWithoutPassword
+    user?: UserWithoutPassword,
+    onLogout: ()=>void
 }
 
 export default function LoanDetails(props: Props) {
@@ -37,7 +38,11 @@ export default function LoanDetails(props: Props) {
             <div className={"app-title"}>
                 <div className={"back-div"}><Link to={"/"}><h1>⇦</h1></Link></div>
                 <img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/>
-                <div>{props.user?.username}</div>
+                <div>
+                    {props.user?.username}
+                    <br/>
+                    <button onClick={props.onLogout}>logout</button>
+                </div>
             </div>
             <div className={"loan-details-container"}>
                 <div className={"loan-details-header"}><h3>I{lent ? " lent" : " borrowed"}</h3></div>

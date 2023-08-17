@@ -1,5 +1,6 @@
 body {
     font-family: Arial, Tahoma, sans-serif, serif;
+    font-size: large;
     margin: 0;
     background-color: #a0bdb3;
 }
@@ -16,6 +17,10 @@ body {
 
 .back-div {
     padding-left: 10px;
+}
+
+.loan-filter-div{
+    padding-left: 15px;
 }
 
 .loan-div {
@@ -57,7 +62,7 @@ hr {
 .loan-table-row-div {
     width: 100%;
     display: grid;
-    grid-template-columns: 25% 25% 25% 25%;
+    grid-template-columns: 30% 15% 10% 45%;
     margin-top: 2px;
     margin-bottom: 2px;
 }
@@ -162,7 +167,14 @@ hr {
 }
 
 .form-details {
-    margin: 25px 15px 25px 15px;
+    margin: 40px 15px 5px 15px;
+    display: grid;
+    grid-template-columns: 30% 70%;
+    text-align: left;
+}
+
+.form-details-sm {
+    margin: 15px 15px 5px 15px;
     display: grid;
     grid-template-columns: 30% 70%;
     text-align: left;
@@ -182,6 +194,7 @@ hr {
     height: 30px;
     border-radius: 8px;
     margin-bottom: 15px;
+    margin-top: 15px;
     font-size: 1.1em;
 }
 
@@ -249,4 +262,18 @@ button {
 
 #username-input, #password-input, #password2-input{
     margin-bottom: 5px;
+}
+
+.validation-message{
+    color: red;
+    text-align: left;
+    font-size: smaller;
+    margin: 0 15px 0 15px;
+}
+
+.validation-message-person{
+    color: red;
+    text-align: center;
+    font-size: smaller;
+    margin: 3px 15px 0 15px;
 }

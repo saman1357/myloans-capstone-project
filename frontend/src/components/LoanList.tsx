@@ -73,7 +73,7 @@ export default function LoanList(props: Props) {
                                     className={"loan-party-item"}>{props.persons.find(person => person.id === loan[otherLoanParty])?.name}</div>
                                 <div className={"amount-item"}>{loan.amount}</div>
                                 <div
-                                    className={"item-item"}>{props.items.find(item => item.id === loan.itemId)?.type}</div>
+                                    className={"item-item"}>{props.items.find(item => item.id === loan.itemId)?.type.charAt(0)==="€"? "€" : "-"}</div>
                                 <div className={"description-item"}>{loan.description}</div>
 
                             </div>
@@ -93,7 +93,6 @@ export default function LoanList(props: Props) {
     if (filteredLoans) {
         return (
             <>
-                {/*console.log("filteredLoans=true")*/}
                 <div className={"app-title"}>
                     <div className={"back-div"}></div>
                     <img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/>
@@ -103,7 +102,7 @@ export default function LoanList(props: Props) {
                         <button onClick={props.onLogout}>logout</button>
                     </div>
                 </div>
-                <div>
+                <div className={"loan-filter-div"}>
                     <label htmlFor={"person-filter"}>filter: </label>
                     <select id={"personId"} name={"personId"} value={filter}
                             onChange={handleChangeFilter}>
