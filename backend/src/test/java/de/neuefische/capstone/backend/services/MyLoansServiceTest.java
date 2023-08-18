@@ -29,12 +29,12 @@ class MyLoansServiceTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona")),
                 List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
-                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
+                        new Loan("3001", "lent", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "borrowed", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
         );
         //WHEN
         when(myLoansRepository.findById(userId)).thenReturn(Optional.of(expected));
-        UserData actual=myLoansService.getUserData(userId);
+        UserData actual = myLoansService.getUserData(userId);
         //THEN
         verify(myLoansRepository).findById(userId);
         assertEquals(expected, actual);
@@ -45,7 +45,7 @@ class MyLoansServiceTest {
     void expectNewLoan_whenAddNewLoan() {
         //GIVEN
         String userId = "0001";
-        LoanWithoutId newLoanWithoutId= new LoanWithoutId("2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023");
+        LoanWithoutId newLoanWithoutId = new LoanWithoutId("borrowed","2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023");
         UserData userDataToUpdate = new UserData("0001",
                 new ArrayList<>(List.of(
                         new Item("1001", "€ (money)"),
@@ -54,8 +54,8 @@ class MyLoansServiceTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona"))),
                 new ArrayList<>(List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", "")
-                        ))
+                        new Loan("3001", "lent", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", "")
+                ))
         );
         UserData userDataUpdated = new UserData("0001",
                 new ArrayList<>(List.of(
@@ -65,13 +65,13 @@ class MyLoansServiceTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona"))),
                 new ArrayList<>(List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
-                        new Loan("new uuid", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")))
+                        new Loan("3001", "lent", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("new uuid", "borrowed", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")))
         );
         //WHEN
         when(myLoansRepository.findById(userId)).thenReturn(Optional.of(userDataToUpdate));
         when(myLoansRepository.save(userDataToUpdate)).thenReturn(userDataUpdated);
-        LoanWithoutId actualLoan=myLoansService.addLoan(newLoanWithoutId, userId);
+        LoanWithoutId actualLoan = myLoansService.addLoan(newLoanWithoutId, userId);
 
 
         //THEN
@@ -85,8 +85,8 @@ class MyLoansServiceTest {
     void expectLoan_whenGetLoanDetailsIsCalled() {
         //GIVEN
         String userId = "0001";
-        String loanId="3001";
-        Loan expectedLoan = new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", "");
+        String loanId = "3001";
+        Loan expectedLoan = new Loan("3001", "lent", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", "");
         UserData expectedUserData = new UserData("0001",
                 (List.of(
                         new Item("1001", "€ (money)"),
@@ -96,11 +96,11 @@ class MyLoansServiceTest {
                         new Person("2002", "Mona")),
                 List.of(
                         expectedLoan,
-                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
+                        new Loan("3002", "borrowed", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
         );
         //WHEN
         when(myLoansRepository.findById(userId)).thenReturn(Optional.of(expectedUserData));
-        Loan actual=myLoansService.getLoanDetails(loanId, userId);
+        Loan actual = myLoansService.getLoanDetails(loanId, userId);
         //THEN
         verify(myLoansRepository).findById(userId);
         assertEquals(expectedLoan, actual);
@@ -111,8 +111,8 @@ class MyLoansServiceTest {
     void expectUpdatedLoan_whenUpdateLoan() {
         //GIVEN
         String userId = "0001";
-        String loanIdToUpdate="3002";
-        LoanWithoutId updatedLoanWithoutId= new LoanWithoutId("2002", "0001", "1001", "Handy", 200, "06.06.2023", "12.12.2023");
+        String loanIdToUpdate = "3002";
+        LoanWithoutId updatedLoanWithoutId = new LoanWithoutId("borrowed","2002", "0001", "1001", "Handy", 200, "06.06.2023", "12.12.2023");
         UserData userDataToUpdate = new UserData("0001",
                 new ArrayList<>(List.of(
                         new Item("1001", "€ (money)"),
@@ -121,8 +121,8 @@ class MyLoansServiceTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona"))),
                 new ArrayList<>(List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
-                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")
+                        new Loan("3001", "lent", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "borrowed", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")
 
                 ))
         );
@@ -134,13 +134,13 @@ class MyLoansServiceTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona"))),
                 new ArrayList<>(List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
-                        new Loan("3002", "2002", "0001", "1001", "Handy", 200, "06.06.2023", "12.12.2023")))
+                        new Loan("3001", "lent", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "borrowed", "2002", "0001", "1001", "Handy", 200, "06.06.2023", "12.12.2023")))
         );
         //WHEN
         when(myLoansRepository.findById(userId)).thenReturn(Optional.of(userDataToUpdate));
         when(myLoansRepository.save(userDataToUpdate)).thenReturn(userDataUpdated);
-        LoanWithoutId actualLoan=myLoansService.updateLoan(updatedLoanWithoutId, loanIdToUpdate, userId);
+        LoanWithoutId actualLoan = myLoansService.updateLoan(updatedLoanWithoutId, loanIdToUpdate, userId);
 
 
         //THEN
@@ -154,9 +154,9 @@ class MyLoansServiceTest {
     void expectLoanIdNotFoundException_whenUpdateLoanWithWrongId() {
         //GIVEN
         String userId = "0001";
-        String loanIdToUpdate="123";
+        String loanIdToUpdate = "123";
         String expectedMessage = "Loan not found for id: 123";
-        LoanWithoutId updatedLoanWithoutId= new LoanWithoutId("2002", "0001", "1001", "Handy", 200, "06.06.2023", "12.12.2023");
+        LoanWithoutId updatedLoanWithoutId = new LoanWithoutId("borrowed", "2002", "0001", "1001", "Handy", 200, "06.06.2023", "12.12.2023");
         UserData userDataToUpdate = new UserData("0001",
                 new ArrayList<>(List.of(
                         new Item("1001", "€ (money)"),
@@ -165,8 +165,8 @@ class MyLoansServiceTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona"))),
                 new ArrayList<>(List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
-                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")
+                        new Loan("3001", "lent", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "borrowed", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")
 
                 ))
         );
@@ -178,8 +178,8 @@ class MyLoansServiceTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona"))),
                 new ArrayList<>(List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
-                        new Loan("3002", "2002", "0001", "1001", "Handy", 200, "06.06.2023", "12.12.2023")))
+                        new Loan("3001", "lent", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "borrowed", "2002", "0001", "1001", "Handy", 200, "06.06.2023", "12.12.2023")))
         );
         //WHEN
         when(myLoansRepository.findById(userId)).thenReturn(Optional.of(userDataToUpdate));
@@ -197,7 +197,7 @@ class MyLoansServiceTest {
     void expectTrue_whenDeleteLoan() {
         //GIVEN
         String userId = "0001";
-        String loanIdToDelete="3002";
+        String loanIdToDelete = "3002";
         UserData userDataToUpdate = new UserData("0001",
                 new ArrayList<>(List.of(
                         new Item("1001", "€ (money)"),
@@ -206,8 +206,8 @@ class MyLoansServiceTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona"))),
                 new ArrayList<>(List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
-                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")
+                        new Loan("3001", "lent", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "borrowed", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")
 
                 ))
         );
@@ -219,12 +219,12 @@ class MyLoansServiceTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona"))),
                 new ArrayList<>(List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", "")))
+                        new Loan("3001", "lent", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", "")))
         );
         //WHEN
         when(myLoansRepository.findById(userId)).thenReturn(Optional.of(userDataToUpdate));
         when(myLoansRepository.save(userDataToUpdate)).thenReturn(userDataUpdated);
-        boolean successfulDeleted=myLoansService.deleteLoan(loanIdToDelete, userId);
+        boolean successfulDeleted = myLoansService.deleteLoan(loanIdToDelete, userId);
 
 
         //THEN
@@ -238,7 +238,7 @@ class MyLoansServiceTest {
     void expectLoanIdNotFoundException_whenDeleteLoanWithWrongId() {
         //GIVEN
         String userId = "0001";
-        String loanIdToDelete="123";
+        String loanIdToDelete = "123";
         String expectedMessage = "Loan not found for id: 123";
         UserData userDataBeforeDeleteLoan = new UserData("0001",
                 new ArrayList<>(List.of(
@@ -248,8 +248,8 @@ class MyLoansServiceTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona"))),
                 new ArrayList<>(List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
-                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")
+                        new Loan("3001", "lent", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "borrowed", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")
 
                 ))
         );
@@ -261,7 +261,7 @@ class MyLoansServiceTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona"))),
                 new ArrayList<>(List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", "")))
+                        new Loan("3001", "lent", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", "")))
         );
         //WHEN
         when(myLoansRepository.findById(userId)).thenReturn(Optional.of(userDataBeforeDeleteLoan));
@@ -279,7 +279,7 @@ class MyLoansServiceTest {
     void expectNewPerson_whenAddNewPerson() {
         //GIVEN
         String userId = "0001";
-        PersonWithoutId newPersonWithoutId= new PersonWithoutId("Mona");
+        PersonWithoutId newPersonWithoutId = new PersonWithoutId("Mona");
         UserData userDataToUpdate = new UserData("0001",
                 new ArrayList<>(List.of(
                         new Item("1001", "€ (money)"),
@@ -287,8 +287,8 @@ class MyLoansServiceTest {
                 new ArrayList<>(List.of(
                         new Person("2001", "Hanna"))),
                 new ArrayList<>(List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
-                        new Loan("3002","2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")
+                        new Loan("3001", "lent", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "borrowed", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")
                 ))
         );
         UserData userDataUpdated = new UserData("0001",
@@ -299,13 +299,13 @@ class MyLoansServiceTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona"))),
                 new ArrayList<>(List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
-                        new Loan("new uuid", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")))
+                        new Loan("3001", "lent", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("new uuid", "borrowed", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")))
         );
         //WHEN
         when(myLoansRepository.findById(userId)).thenReturn(Optional.of(userDataToUpdate));
         when(myLoansRepository.save(userDataToUpdate)).thenReturn(userDataUpdated);
-        PersonWithoutId actualPerson=myLoansService.addPerson(newPersonWithoutId, userId);
+        PersonWithoutId actualPerson = myLoansService.addPerson(newPersonWithoutId, userId);
 
 
         //THEN
@@ -319,8 +319,8 @@ class MyLoansServiceTest {
     void expectUpdatedPerson_whenUpdatePerson() {
         //GIVEN
         String userId = "0001";
-        String personIdToUpdate="2002";
-        PersonWithoutId updatedPersonWithoutId= new PersonWithoutId("Sandra");
+        String personIdToUpdate = "2002";
+        PersonWithoutId updatedPersonWithoutId = new PersonWithoutId("Sandra");
         UserData userDataToUpdate = new UserData("0001",
                 new ArrayList<>(List.of(
                         new Item("1001", "€ (money)"),
@@ -329,8 +329,8 @@ class MyLoansServiceTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona"))),
                 new ArrayList<>(List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
-                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")
+                        new Loan("3001", "lent", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "borrowed", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")
 
                 ))
         );
@@ -342,14 +342,14 @@ class MyLoansServiceTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Sandra"))),
                 new ArrayList<>(List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
-                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")
+                        new Loan("3001", "lent", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "borrowed", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")
                 ))
         );
         //WHEN
         when(myLoansRepository.findById(userId)).thenReturn(Optional.of(userDataToUpdate));
         when(myLoansRepository.save(userDataToUpdate)).thenReturn(userDataUpdated);
-        PersonWithoutId actualPerson=myLoansService.updatePerson(updatedPersonWithoutId, personIdToUpdate, userId);
+        PersonWithoutId actualPerson = myLoansService.updatePerson(updatedPersonWithoutId, personIdToUpdate, userId);
 
 
         //THEN
@@ -363,7 +363,7 @@ class MyLoansServiceTest {
     void expectTrue_whenDeletePerson() {
         //GIVEN
         String userId = "0001";
-        String personIdToDelete="2002";
+        String personIdToDelete = "2002";
         UserData userDataToUpdate = new UserData("0001",
                 new ArrayList<>(List.of(
                         new Item("1001", "€ (money)"),
@@ -372,8 +372,8 @@ class MyLoansServiceTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona"))),
                 new ArrayList<>(List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
-                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")
+                        new Loan("3001", "lent", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "borrowed", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")
 
                 ))
         );
@@ -383,16 +383,16 @@ class MyLoansServiceTest {
                         new Item("1002", "Book"))),
                 new ArrayList<>(List.of(
                         new Person("2001", "Hanna")
-                        )),
+                )),
                 new ArrayList<>(List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
-                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")
-                        ))
+                        new Loan("3001", "lent", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "borrowed", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")
+                ))
         );
         //WHEN
         when(myLoansRepository.findById(userId)).thenReturn(Optional.of(userDataToUpdate));
         when(myLoansRepository.save(userDataToUpdate)).thenReturn(userDataUpdated);
-        boolean successfulDeleted=myLoansService.deletePerson(personIdToDelete, userId);
+        boolean successfulDeleted = myLoansService.deletePerson(personIdToDelete, userId);
 
 
         //THEN
@@ -406,7 +406,7 @@ class MyLoansServiceTest {
     void expectPersonIdNotFoundException_whenDeletePersonWithWrongId() {
         //GIVEN
         String userId = "0001";
-        String personIdToDelete="123";
+        String personIdToDelete = "123";
         String expectedMessage = "Person not found for id: 123";
         UserData userDataBeforeDeletePerson = new UserData("0001",
                 new ArrayList<>(List.of(
@@ -416,8 +416,8 @@ class MyLoansServiceTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona"))),
                 new ArrayList<>(List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
-                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")
+                        new Loan("3001", "lent", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "borrowed", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")
 
                 ))
         );
@@ -427,11 +427,11 @@ class MyLoansServiceTest {
                         new Item("1002", "Book"))),
                 new ArrayList<>(List.of(
                         new Person("2001", "Hanna")
-                       )),
+                )),
                 new ArrayList<>(List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
-                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")
-                        ))
+                        new Loan("3001", "lent", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "borrowed", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")
+                ))
         );
         //WHEN
         when(myLoansRepository.findById(userId)).thenReturn(Optional.of(userDataBeforeDeletePerson));
