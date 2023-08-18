@@ -108,7 +108,23 @@ export default function LoanForm(props: Props) {
                 amount: stateData.amount,
                 loanDate: stateData.loanDate,
                 returnDate: stateData.returnDate
-            }))
+            }));
+            validate("itemId", stateData.itemId);
+            validate("description", stateData.description);
+            validate("amount", stateData.amount.toString());
+            validate("loanDate", stateData.loanDate);
+            if (stateData.returnDate === "") {
+                setValidationMessage(prevState => ({...prevState, returnDate: ""}));
+            } else {
+                validate("returnDate", stateData.returnDate);
+            }
+            if (stateData.lenderId === props.myId) {
+                validate("lenderOrBorrower", stateData.borrowerId);
+            } else {
+
+                validate("lenderOrBorrower", stateData.lenderId);
+            }
+
         }
 
     }
@@ -166,7 +182,7 @@ export default function LoanForm(props: Props) {
     }
 
     function validate(name: string, value: string) {
-        const dateRegEx = /^((19|20)\d{2}(-|\/|.)(0[1-9]|1[1,2])(-|\/|.)(0[1-9]|[12][0-9]|3[01]))|((19|20)\d{2}(-|\/|.)(0[1-9]|1[1,2])(-|\/|.)(0[1-9]|[12][0-9]|3[01]))/;
+        const dateRegEx = /^((19|20)\d{2}(-|\/|.)(0[1-9]|1[1,2])(-|\/|.)(0[1-9]|[12][0-9]|3[01]))|((0[1-9]|[12][0-9]|3[01])(-|\/|.)(0[1-9]|1[1,2])(-|\/|.)(19|20)\d{2})/;
         switch (name) {
             case "itemId": {
                 if (value === "1001" || value === "1002") {
