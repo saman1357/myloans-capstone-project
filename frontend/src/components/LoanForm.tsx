@@ -151,7 +151,7 @@ export default function LoanForm(props: Props) {
     }
 
     function validate(name: string, value: string) {
-        const dateRegEx = /^((19|2[0-9])[0-9]{2})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
+        const dateRegEx = /^((19|2\d)\d{2})-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])$/;
         switch (name) {
             case "itemId": {
                 if (value === "1001" || value === "1002") {
