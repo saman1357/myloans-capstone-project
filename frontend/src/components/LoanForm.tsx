@@ -45,7 +45,7 @@ export default function LoanForm(props: Props) {
     useEffect(initialState, [props.myId, urlParams.type, urlParams.id, loan, stateData]);
 
     function initialState() {
-        if (urlParams.id && loan) {
+        if (loan) {
             setLoanState((prevState) => ({
                 ...prevState,
                 lenderId: loan.lenderId,
@@ -65,21 +65,14 @@ export default function LoanForm(props: Props) {
                 setValidationMessage(prevState => ({...prevState, returnDate: ""}));
             } else {
                 validate("returnDate", loan.returnDate);
-            }
-            if (loan.lenderId === props.myId) {
-                validate("lenderOrBorrower", loan.borrowerId);
-            } else {
-
-                validate("lenderOrBorrower", loan.lenderId);
-            }
-
-            if (loan.returnDate !== "") {
                 setReturnDateIsActive(true);
             }
             if (loan.lenderId === props.myId) {
+                validate("lenderOrBorrower", loan.borrowerId);
                 setLenderOrBorrower("borrowerId");
                 setType("lent");
             } else {
+                validate("lenderOrBorrower", loan.lenderId);
                 setLenderOrBorrower("lenderId");
                 setType("borrowed");
             }
