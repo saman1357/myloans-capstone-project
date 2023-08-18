@@ -1,15 +1,15 @@
 import {Loan, LoanWithoutId, Person, UserWithoutPassword} from "../model/DataModels.ts";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 import React, {FormEvent, useEffect, useState} from "react";
-import {toast, ToastContainer} from "react-toastify";
+import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css'
 import AlertDialogButton from "./AlertDialogButton.tsx";
+import ToastifyContainer from "./ToastifyContainer.tsx";
 
 type Props = {
     persons: Person[],
     loans: Loan[],
     onSubmit: (person: Person, action: string) => void,
-    myId: string,
     user?: UserWithoutPassword,
     onLogout: ()=>void
 }
@@ -42,7 +42,7 @@ export default function PersonForm(props: Props) {
 
     function handleChangeInput(event: React.ChangeEvent<HTMLInputElement>) {
         setPersonState((prevState) => ({...prevState, name: event.target.value}));
-        if (event.target.value === "") {
+        if (event.target.value.length<1) {
             setValidationMessage("Person's name must be at least 1 character!");
         } else {
             setValidationMessage("");
@@ -87,21 +87,9 @@ export default function PersonForm(props: Props) {
         setAction("add")
         setPersonState(prevState => ({...prevState, id: "new id"}));
     }
-
     return (
         <>
-            <ToastContainer
-                position="top-center"
-                autoClose={3000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-            />
+            <ToastifyContainer/>
             <div className={"app-title"}>
                 <div className={"back-div"} onClick={handleBack}><h1>⇦</h1></div>
                 <img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/>
@@ -123,8 +111,6 @@ export default function PersonForm(props: Props) {
                 <div className={"validation-message-person"}>{validationMessage}</div>
                 <br/>
                 <button>save</button>
-
-
                 <div className={"person-div"}>
                     <div className={"person-header-div"}>
                         <div>persons:</div>

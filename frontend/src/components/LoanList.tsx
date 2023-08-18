@@ -6,7 +6,6 @@ type Props = {
     loans: Loan[],
     items: Item[],
     persons: Person[],
-    myId: string,
     user?: UserWithoutPassword,
     onLogout: ()=>void
 }

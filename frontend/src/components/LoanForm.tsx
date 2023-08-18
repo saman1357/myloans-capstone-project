@@ -2,15 +2,14 @@ import {Item, Loan, LoanWithoutId, Person, UserWithoutPassword} from "../model/D
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 import React, {FormEvent, useEffect, useState} from "react";
 import 'react-toastify/dist/ReactToastify.css'
-import {toast, ToastContainer} from "react-toastify";
-
+import {toast} from "react-toastify";
+import ToastifyContainer from "./ToastifyContainer.tsx";
 
 type Props = {
     loans: Loan[],
     items: Item[],
     persons: Person[],
     onSubmit: (submittedLoanWithoutId: LoanWithoutId, loanId: string, isNewLoan: boolean) => void,
-    myId: string,
     user?: UserWithoutPassword,
     onLogout: ()=>void
 }
@@ -20,8 +19,8 @@ export default function LoanForm(props: Props) {
     const loan = props.loans.find(loan => loan.id === urlParams.id);
     const [returnDateIsActive, setReturnDateIsActive] = useState<boolean>(false)
     const [lenderOrBorrower, setLenderOrBorrower] = useState<"lenderId" | "borrowerId">("lenderId");
-    const [type, setType] = useState(urlParams.type)
     const [loanState, setLoanState] = useState<LoanWithoutId>({
+        type: "",
         lenderId: "",
         borrowerId: "",
         itemId: "",
@@ -42,12 +41,13 @@ export default function LoanForm(props: Props) {
     const location = useLocation();
     const navigateState = location.state || {};
     const stateData = navigateState.stateData;
-    useEffect(initialState, [props.myId, urlParams.type, urlParams.id, loan, stateData]);
+    useEffect(initialState, [props.user, urlParams.type, urlParams.id, loan, stateData]);
 
     function initialState() {
         if (loan) {
             setLoanState((prevState) => ({
                 ...prevState,
+                type: loan.type,
                 lenderId: loan.lenderId,
                 borrowerId: loan.borrowerId,
                 itemId: loan.itemId,
@@ -56,36 +56,24 @@ export default function LoanForm(props: Props) {
                 loanDate: loan.loanDate,
                 returnDate: loan.returnDate
             }))
-
+            setLenderOrBorrower(loan.type==="lent"? "borrowerId" : "lenderId");
             validate("itemId", loan.itemId);
             validate("description", loan.description);
             validate("amount", loan.amount.toString());
             validate("loanDate", loan.loanDate);
-            if (loan.returnDate === "") {
-                setValidationMessage(prevState => ({...prevState, returnDate: ""}));
-            } else {
+            if (loan.returnDate && loan.returnDate !== "") {
                 validate("returnDate", loan.returnDate);
                 setReturnDateIsActive(true);
             }
-            if (loan.lenderId === props.myId) {
-                validate("lenderOrBorrower", loan.borrowerId);
-                setLenderOrBorrower("borrowerId");
-                setType("lent");
-            } else {
-                validate("lenderOrBorrower", loan.lenderId);
-                setLenderOrBorrower("lenderId");
-                setType("borrowed");
-            }
+            validate("lenderOrBorrower", loan.type==="lent"? loan.borrowerId : loan.lenderId);
         } else if (urlParams.type === "lent") {
-            setType("lent");
             setLoanState((prevState) => ({
-                ...prevState, lenderId: props.myId
+                ...prevState, lenderId: props.user?.id as string, type: "lent"
             }));
             setLenderOrBorrower("borrowerId");
         } else if (urlParams.type === "borrowed") {
-            setType("borrowed");
             setLoanState((prevState) => ({
-                ...prevState, borrowerId: props.myId
+                ...prevState, borrowerId: props.user?.id as string, type: "borrowed"
             }));
             setLenderOrBorrower("lenderId");
         } else {
@@ -94,6 +82,7 @@ export default function LoanForm(props: Props) {
         if (stateData) {
             setLoanState((prevState) => ({
                 ...prevState,
+                type: stateData.type,
                 lenderId: stateData.lenderId,
                 borrowerId: stateData.borrowerId,
                 itemId: stateData.itemId,
@@ -106,20 +95,11 @@ export default function LoanForm(props: Props) {
             validate("description", stateData.description);
             validate("amount", stateData.amount.toString());
             validate("loanDate", stateData.loanDate);
-            if (stateData.returnDate === "") {
-                setValidationMessage(prevState => ({...prevState, returnDate: ""}));
-            } else {
+            if (stateData.returnDate && stateData.returnDate !== "") {
                 validate("returnDate", stateData.returnDate);
             }
-            if (stateData.lenderId === props.myId) {
-                validate("lenderOrBorrower", stateData.borrowerId);
-            } else {
-
-                validate("lenderOrBorrower", stateData.lenderId);
-            }
-
+            validate("lenderOrBorrower", stateData.type==="lent"? stateData.borrowerId : stateData.lenderId);
         }
-
     }
 
     function handleReturnDateActivator() {
@@ -138,13 +118,9 @@ export default function LoanForm(props: Props) {
         if (urlParams.id) {
             editPersonLink = "/updateloan/" + urlParams.id + "/person/";
         } else {
-            editPersonLink = "/addloan/" + type + "/person/";
+            editPersonLink = "/addloan/" + loanState.type + "/person/";
         }
-        if (loanState[lenderOrBorrower]) {
-            editPersonLink += loanState[lenderOrBorrower];
-        } else {
-            editPersonLink += "add";
-        }
+            editPersonLink += (loanState[lenderOrBorrower] || "add");
         navigate(editPersonLink, {state: {loanState}});
     }
 
@@ -247,18 +223,7 @@ export default function LoanForm(props: Props) {
 
     return (
         <>
-            <ToastContainer
-                position="top-center"
-                autoClose={3000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-            />
+            <ToastifyContainer/>
             <div className={"app-title"}>
                 <div className={"back-div"} onClick={handleBack}><h1>⇦</h1></div>
                 <img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/>
@@ -272,7 +237,7 @@ export default function LoanForm(props: Props) {
             <form className={"loan-form"} onSubmit={handleSubmit}>
                 <h3>{urlParams.id ? "update loan" : "add new loan"}</h3>
                 <div className={"form-details"}>
-                    item {type}:
+                    item {loanState.type}:
                     <div>
                         <input type={"radio"} id={"money"} name={"itemId"} value={"1001"}
                                checked={(loanState.itemId) === "1001"} onChange={handleChangeInput}/>
@@ -303,7 +268,7 @@ export default function LoanForm(props: Props) {
 
                 <div className={"form-details"}>
                     <label htmlFor={"person"}>{lenderOrBorrower.slice(0, -2)} </label>
-                    <div className={"test"}>
+                    <div>
                         <select id="lenderOrBorrower" name={lenderOrBorrower} value={loanState[lenderOrBorrower]}
                                 onChange={handleChangeSelect}>
                             <option value={"-1"}>{"select " + lenderOrBorrower.slice(0, -2)}</option>
@@ -327,7 +292,7 @@ export default function LoanForm(props: Props) {
                 <div className={"validation-message"}>{validationMessage.loanDate}</div>
 
 
-                <div className={"form-details"}>
+                <div className={"form-details-merged"}>
                     <label htmlFor={"activate-return-date"}>activate return date: </label>
                     <input type={"checkbox"} id={"activate-return-date"} name={"activate-return-date"}
                            onChange={handleReturnDateActivator} checked={returnDateIsActive}/>

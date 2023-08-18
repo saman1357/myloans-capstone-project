@@ -18,9 +18,9 @@ export default function SignUpForm(props: Props) {
         password2: ""
     });
     const [validationMessage, setValidationMessage] = useState({
-        username: "Can't be blank",
-        password: "Should be a minimum of 8 characters in length and must contain at least one uppercase letter, one lowercase letter and one number",
-        password2: "Should be the same as above."
+        usernameInput: "Can't be blank",
+        passwordInput: "Should be a minimum of 8 characters in length and must contain at least one uppercase letter, one lowercase letter and one number",
+        password2Input: "Should be the same as above."
     });
 
 
@@ -43,35 +43,35 @@ export default function SignUpForm(props: Props) {
         const passwordRegEx = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
 
         switch (name) {
-            case "username": {
+            case "usernameInput": {
                 if (value && value.length > 0) {
-                    setValidationMessage(prevState => ({...prevState, username: ""}));
+                    setValidationMessage(prevState => ({...prevState, usernameInput: ""}));
                 } else {
                     setValidationMessage({
                         ...validationMessage,
-                        username: "Can't be blank"
+                        usernameInput: "Can't be blank"
                     });
                 }
                 break;
             }
-            case "password": {
+            case "passwordInput": {
                 if (passwordRegEx.test(value)) {
-                    setValidationMessage(prevState => ({...prevState, password: ""}));
+                    setValidationMessage(prevState => ({...prevState, passwordInput: ""}));
                 } else {
                     setValidationMessage({
                         ...validationMessage,
-                        password: "Should be a minimum of 8 characters in length and must contain at least one uppercase letter, one lowercase letter and one number."
+                        passwordInput: "Should be a minimum of 8 characters in length and must contain at least one uppercase letter, one lowercase letter and one number."
                     });
                 }
                 break;
             }
-            case "password2": {
+            case "password2Input": {
                 if (value === signUpData.password) {
-                    setValidationMessage(prevState => ({...prevState, password2: ""}));
+                    setValidationMessage(prevState => ({...prevState, password2Input: ""}));
                 } else {
                     setValidationMessage({
                         ...validationMessage,
-                        password2: "Should be the same as above."
+                        password2Input: "Should be the same as above."
                     });
                 }
                 break;
@@ -96,19 +96,19 @@ export default function SignUpForm(props: Props) {
             <div className={"login-div"}>
                 <form onSubmit={onSignUp}>
                     <p id={"login-title"}>Login</p>
-                    <input id={"username"} value={signUpData.username} onChange={handleChangeInput}
+                    <input id={"usernameInput"} value={signUpData.username} onChange={handleChangeInput}
                            placeholder={"username"}/>
-                    <div className={"validation-message"}>{validationMessage.username}</div>
+                    <div className={"validation-message"}>{validationMessage.usernameInput}</div>
                     <br/>
-                    <input id={"password"} value={signUpData.password} onChange={handleChangeInput}
+                    <input id={"passwordInput"} value={signUpData.password} onChange={handleChangeInput}
                            placeholder={"password"}
                            type={"password"}/>
-                    <div className={"validation-message"}>{validationMessage.password}</div>
+                    <div className={"validation-message"}>{validationMessage.passwordInput}</div>
                     <br/>
-                    <input id={"password2"} value={signUpData.password2} onChange={handleChangeInput}
+                    <input id={"password2Input"} value={signUpData.password2} onChange={handleChangeInput}
                            placeholder={"confirm password"}
                            type={"password"}/>
-                    <div className={"validation-message"}>{validationMessage.password2}</div>
+                    <div className={"validation-message"}>{validationMessage.password2Input}</div>
                     <br/>
                     <button>sign up</button>
                     <br/>

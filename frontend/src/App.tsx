@@ -171,29 +171,28 @@ export default function App() {
                     <Routes>
                         <Route element={<ProtectedRoutes user={user}/>}>
                             <Route path={"/"}
-                                   element={<LoanList loans={loans} items={items} persons={persons} myId={user.id}
-                                                      user={user} onLogout={logout}/>}/>
+                                   element={<LoanList loans={loans} items={items} persons={persons}                                                       user={user} onLogout={logout}/>}/>
                             <Route path={"/addloan/:type"} element=
                                 {<LoanForm loans={loans} items={items} persons={persons} user={user}
-                                           onSubmit={handleSubmitLoanForm} myId={user.id} onLogout={logout}/>}/>
+                                           onSubmit={handleSubmitLoanForm} onLogout={logout}/>}/>
                             <Route path={"/:id"} element=
                                 {<LoanDetails loans={loans} items={items} persons={persons} myId={user.id} user={user}
                                               onDelete={handleDeleteLoan} onLogout={logout}/>}/>
                             <Route path={"/updateloan/:id"} element=
                                 {<LoanForm loans={loans} items={items} persons={persons} user={user}
-                                           onSubmit={handleSubmitLoanForm} myId={user.id} onLogout={logout}/>}/>
+                                           onSubmit={handleSubmitLoanForm} onLogout={logout}/>}/>
                             <Route path={"/updateloan/:id/person/add"} element=
                                 {<PersonForm loans={loans} persons={persons} onSubmit={handleSubmitPersonForm}
-                                             user={user} myId={user.id} onLogout={logout}/>} />
+                                             user={user} onLogout={logout}/>} />
                             <Route path={"/addloan/:type/person/add"} element=
                                 {<PersonForm loans={loans} persons={persons} onSubmit={handleSubmitPersonForm}
-                                             user={user} myId={user.id} onLogout={logout}/>}/>
+                                             user={user} onLogout={logout}/>}/>
                             <Route path={"/updateloan/:id/person/:pid"} element=
                                 {<PersonForm loans={loans} persons={persons} onSubmit={handleSubmitPersonForm}
-                                             user={user} myId={user.id} onLogout={logout}/>}/>
+                                             user={user} onLogout={logout}/>}/>
                             <Route path={"/addloan/:type/person/:pid"} element=
                                 {<PersonForm loans={loans} persons={persons} onSubmit={handleSubmitPersonForm}
-                                             user={user} myId={user.id} onLogout={logout}/>}/>
+                                             user={user} onLogout={logout}/>}/>
                         </Route>
                         <Route path={"/login"} element={<LoginForm onLogin={handleLogin} onLogout={logout} user={user}/>}/>
                         <Route path={"/sign-up"} element={<SignUpForm onSignUp={handleSignUp} onLogout={logout} user={user}/>}/>
