@@ -1,5 +1,6 @@
 import {Link, useParams} from "react-router-dom";
 import {Item, Loan, Person, UserWithoutPassword} from "../model/DataModels.ts";
+import AlertDialogButton from "./AlertDialogButton.tsx";
 
 type Props = {
     myId: string,
@@ -8,7 +9,7 @@ type Props = {
     persons: Person[],
     onDelete: (loanId: string) => void,
     user?: UserWithoutPassword,
-    onLogout: ()=>void
+    onLogout: () => void
 }
 
 export default function LoanDetails(props: Props) {
@@ -16,10 +17,13 @@ export default function LoanDetails(props: Props) {
     const loan: Loan | undefined = props.loans.find(loan => loan.id === urlParams.id)
     let lent = false;
 
-    function handleDeleteButton() {
+    function handleDelete() {
+        console.log("handleDelete triggered")
         if (urlParams.id) {
+            console.log("urlParams.id = " + urlParams.id + " is true")
             props.onDelete(urlParams.id);
         } else {
+            console.log("urlParams.id = " + urlParams.id + " is false")
             throw new Error('no id given!');
         }
 
@@ -52,7 +56,7 @@ export default function LoanDetails(props: Props) {
                     <div className={"loan-details-label"}>item-type:</div>
                     <div className={"loan-details"}>{props.items.find(item => item.id === loan.itemId)?.type}</div>
                     <div className={"loan-details-label"}>description:</div>
-                    <div className={"loan-details"}>({loan.description})</div>
+                    <div className={"loan-details"}>{loan.description}</div>
                     <div className={"loan-details-label"}>other party:</div>
                     <div className={"loan-details"}>{lent ?
                         "to " + props.persons.find(person => person.id === loan.borrowerId)?.name
@@ -63,10 +67,12 @@ export default function LoanDetails(props: Props) {
                     <div className={"loan-details"}>until {loan.returnDate ? loan.returnDate : "undefined"}</div>
                 </div>
             </div>
-            <Link to={"/updateloan/" + urlParams.id}>
-                <button>Edit</button>
-            </Link>
-            <button onClick={handleDeleteButton}>Delete</button>
+            <div className={"loan-delete-button-div"}>
+                <Link to={"/updateloan/" + urlParams.id}>
+                    <button>Edit</button>
+                </Link>
+                <AlertDialogButton buttonText={"delete"} onYes={handleDelete}/>
+            </div>
         </div>
     )
 }

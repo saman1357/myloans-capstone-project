@@ -33,6 +33,7 @@ export default function App() {
     useEffect(()=>{
         if (user.username !== undefined && user.username !== 'anonymousUser') {
             getMyLoansData();
+            navigate("/");
         }
     }, [user])
 
@@ -42,7 +43,6 @@ export default function App() {
                 setLoans(response.data.loans);
                 setItems(response.data.items);
                 setPersons(response.data.persons);
-                navigate("/")
             })
             .catch(function (error) {
                 console.log(error)
@@ -161,7 +161,7 @@ export default function App() {
     }
 
     if (!(loans && items && persons)) {
-        return <LoginForm onLogin={handleLogin} onLogout={logout}/>
+        return <LoginForm onLogin={handleLogin} onLogout={logout} user={user}/>
     }
 
     return (
@@ -195,7 +195,7 @@ export default function App() {
                                 {<PersonForm loans={loans} persons={persons} onSubmit={handleSubmitPersonForm}
                                              user={user} myId={user.id} onLogout={logout}/>}/>
                         </Route>
-                        <Route path={"/login"} element={<LoginForm onLogin={handleLogin} onLogout={logout}/>}/>
+                        <Route path={"/login"} element={<LoginForm onLogin={handleLogin} onLogout={logout} user={user}/>}/>
                         <Route path={"/sign-up"} element={<SignUpForm onSignUp={handleSignUp} onLogout={logout} user={user}/>}/>
                     </Routes>
                 </div>

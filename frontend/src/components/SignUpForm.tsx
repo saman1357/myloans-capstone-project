@@ -23,9 +23,9 @@ export default function SignUpForm(props: Props) {
                 <div></div>
                 <img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/>
                 <div>
-                    {props.user?.username}
+                    {(props.user && props.user.username!=="anonymousUser")? props.user?.username : ""}
                     <br/>
-                    {props.user? <button onClick={props.onLogout}>logout</button> : ""}
+                    {(props.user && props.user.username!=="anonymousUser")? <button onClick={props.onLogout}>logout</button> : ""}
                 </div>
             </div>
             <div className={"login-div"}>

@@ -3,6 +3,7 @@ import {useLocation, useNavigate, useParams} from "react-router-dom";
 import React, {FormEvent, useEffect, useState} from "react";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css'
+import AlertDialogButton from "./AlertDialogButton.tsx";
 
 type Props = {
     persons: Person[],
@@ -128,7 +129,7 @@ export default function PersonForm(props: Props) {
                     <div className={"person-header-div"}>
                         <div>persons:</div>
                         <div className={"person-button-item"}>
-                            <button type={"button"} onClick={handleAddButton}>Add</button>
+                            <button type={"button"} onClick={handleAddButton}>add</button>
                         </div>
                     </div>
                     <hr/>
@@ -142,9 +143,7 @@ export default function PersonForm(props: Props) {
                                         {mapedPerson.name}
                                     </div>
                                     <div className={"person-button-item"}>
-                                        <button type={"button"}
-                                                onClick={() => handleDeletePerson(mapedPerson.name, mapedPerson.id)}>delete
-                                        </button>
+                                        <AlertDialogButton buttonText={"delete"} onYes={()=>handleDeletePerson(mapedPerson.name, mapedPerson.id)}/>
                                     </div>
                                 </div>
                             )

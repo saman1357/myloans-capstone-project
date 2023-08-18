@@ -5,6 +5,16 @@ body {
     background-color: #a0bdb3;
 }
 
+input {
+    font-size: large;
+    font-family: Arial, Tahoma, sans-serif, serif;
+}
+
+select{
+    font-size: large;
+    font-family: Arial, Tahoma, sans-serif, serif;
+}
+
 .app-title {
     display: grid;
     grid-template-columns: 25% 50% 25%;
@@ -200,7 +210,9 @@ hr {
 
 button {
     border-radius: 5px;
-    min-width: 55px;
+    min-width: 75px;
+    min-height: 28px;
+    font-size: large;
 }
 
 .loan-details-container {
@@ -227,6 +239,11 @@ button {
 .loan-details-label {
     margin: 15px 10px 15px 10px;
     color: #809a8f;
+}
+
+.loan-delete-button-div{
+    display: flex;
+    justify-content: space-evenly;
 }
 
 .person-form {
