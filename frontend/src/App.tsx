@@ -176,7 +176,7 @@ export default function App() {
                                 {<LoanForm loans={loans} items={items} persons={persons} user={user}
                                            onSubmit={handleSubmitLoanForm} onLogout={logout}/>}/>
                             <Route path={"/:id"} element=
-                                {<LoanDetails loans={loans} items={items} persons={persons} myId={user.id} user={user}
+                                {<LoanDetails loans={loans} items={items} persons={persons} user={user}
                                               onDelete={handleDeleteLoan} onLogout={logout}/>}/>
                             <Route path={"/updateloan/:id"} element=
                                 {<LoanForm loans={loans} items={items} persons={persons} user={user}

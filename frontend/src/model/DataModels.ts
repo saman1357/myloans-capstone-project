@@ -1,8 +1,7 @@
 export type Loan={
     id: string,
     type: string,
-    lenderId: string,
-    borrowerId: string,
+    otherPartyId: string,
     itemId: string,
     description: string,
     amount: number,
@@ -12,8 +11,7 @@ export type Loan={
 
 export type LoanWithoutId={
     type: string,
-    lenderId: string,
-    borrowerId: string,
+    otherPartyId: string,
     itemId: string,
     description: string,
     amount: number,

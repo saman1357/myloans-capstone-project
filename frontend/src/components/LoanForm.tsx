@@ -18,11 +18,10 @@ export default function LoanForm(props: Props) {
     const urlParams = useParams();
     const loan = props.loans.find(loan => loan.id === urlParams.id);
     const [returnDateIsActive, setReturnDateIsActive] = useState<boolean>(false)
-    const [lenderOrBorrower, setLenderOrBorrower] = useState<"lenderId" | "borrowerId">("lenderId");
+    //const [lenderOrBorrower, setLenderOrBorrower] = useState<"lenderId" | "borrowerId">("lenderId");
     const [loanState, setLoanState] = useState<LoanWithoutId>({
         type: "",
-        lenderId: "",
-        borrowerId: "",
+        otherPartyId: "",
         itemId: "",
         description: "",
         amount: 1,
@@ -30,7 +29,7 @@ export default function LoanForm(props: Props) {
         returnDate: ""
     })
     const [validationMessage, setValidationMessage] = useState({
-        lenderOrBorrower: "Please choose a person as other party of the loan. You can also add new persons",
+        otherParty: "Please choose a person as other party of the loan. You can also add new persons",
         itemId: "Please choose whether the item is of type money or nonmoney.",
         description: "",
         amount: "",
@@ -48,15 +47,14 @@ export default function LoanForm(props: Props) {
             setLoanState((prevState) => ({
                 ...prevState,
                 type: loan.type,
-                lenderId: loan.lenderId,
-                borrowerId: loan.borrowerId,
+                otherPartyId: loan.otherPartyId,
                 itemId: loan.itemId,
                 description: loan.description,
                 amount: loan.amount,
                 loanDate: loan.loanDate,
                 returnDate: loan.returnDate
             }))
-            setLenderOrBorrower(loan.type==="lent"? "borrowerId" : "lenderId");
+            //setLenderOrBorrower(loan.type==="lent"? "borrowerId" : "lenderId");
             validate("itemId", loan.itemId);
             validate("description", loan.description);
             validate("amount", loan.amount.toString());
@@ -65,17 +63,11 @@ export default function LoanForm(props: Props) {
                 validate("returnDate", loan.returnDate);
                 setReturnDateIsActive(true);
             }
-            validate("lenderOrBorrower", loan.type==="lent"? loan.borrowerId : loan.lenderId);
-        } else if (urlParams.type === "lent") {
+            validate("otherParty", loan.otherPartyId);
+        } else if (urlParams.type) {
             setLoanState((prevState) => ({
-                ...prevState, lenderId: props.user?.id as string, type: "lent"
+                ...prevState, type: urlParams.type as string
             }));
-            setLenderOrBorrower("borrowerId");
-        } else if (urlParams.type === "borrowed") {
-            setLoanState((prevState) => ({
-                ...prevState, borrowerId: props.user?.id as string, type: "borrowed"
-            }));
-            setLenderOrBorrower("lenderId");
         } else {
             throw new Error('Something went wrong! It seems that either no ID was given or it was not specified whether you are lending or borrowing.');
         }
@@ -83,8 +75,7 @@ export default function LoanForm(props: Props) {
             setLoanState((prevState) => ({
                 ...prevState,
                 type: stateData.type,
-                lenderId: stateData.lenderId,
-                borrowerId: stateData.borrowerId,
+                otherPartyId: stateData.lenderId,
                 itemId: stateData.itemId,
                 description: stateData.description,
                 amount: stateData.amount,
@@ -98,7 +89,7 @@ export default function LoanForm(props: Props) {
             if (stateData.returnDate && stateData.returnDate !== "") {
                 validate("returnDate", stateData.returnDate);
             }
-            validate("lenderOrBorrower", stateData.type==="lent"? stateData.borrowerId : stateData.lenderId);
+            validate("otherPartyId", stateData.otherPartyId);
         }
     }
 
@@ -120,7 +111,7 @@ export default function LoanForm(props: Props) {
         } else {
             editPersonLink = "/addloan/" + loanState.type + "/person/";
         }
-            editPersonLink += (loanState[lenderOrBorrower] || "add");
+            editPersonLink += (loanState["otherPartyId"] || "add");
         navigate(editPersonLink, {state: {loanState}});
     }
 
@@ -176,9 +167,9 @@ export default function LoanForm(props: Props) {
                 }
                 break;
             }
-            case "lenderOrBorrower": {
+            case "otherParty": {
                 if (value !== "-1" && value.length > 0) {
-                    setValidationMessage(prevState => ({...prevState, lenderOrBorrower: ""}));
+                    setValidationMessage(prevState => ({...prevState, otherParty: ""}));
                 } else {
                     setValidationMessage(prevState => ({
                         ...prevState,
@@ -267,11 +258,11 @@ export default function LoanForm(props: Props) {
 
 
                 <div className={"form-details"}>
-                    <label htmlFor={"person"}>{lenderOrBorrower.slice(0, -2)} </label>
+                    <label htmlFor={"person"}>{loanState.type==="lent"? "lender" : "borrower"} </label>
                     <div>
-                        <select id="lenderOrBorrower" name={lenderOrBorrower} value={loanState[lenderOrBorrower]}
+                        <select id="otherPartyId" name={"otherPartyId"} value={loanState.otherPartyId}
                                 onChange={handleChangeSelect}>
-                            <option value={"-1"}>{"select " + lenderOrBorrower.slice(0, -2)}</option>
+                            <option value={"-1"}>{"select " + loanState.type==="lent"? "lender" : "borrower"}</option>
                             {props.persons.map(person => {
                                 return (<option key={person.id} value={person.id}>{person.name}</option>)
                             })}
@@ -281,7 +272,7 @@ export default function LoanForm(props: Props) {
                         </button>
                     </div>
                 </div>
-                <div className={"validation-message"}>{validationMessage.lenderOrBorrower}</div>
+                <div className={"validation-message"}>{validationMessage.otherParty}</div>
 
 
                 <div className={"form-details"}>

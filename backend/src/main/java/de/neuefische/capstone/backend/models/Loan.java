@@ -11,8 +11,7 @@ import lombok.NoArgsConstructor;
 public class Loan {
     private String id;
     private String type;
-    private String lenderId;
-    private String borrowerId;
+    private String otherPartyId;
     private String itemId;
     private String description;
     private int amount;
@@ -23,8 +22,7 @@ public class Loan {
     public Loan(LoanWithoutId loanWithoutId) {
         this.id = RandomIdService.uuid();
         this.type=loanWithoutId.getType();
-        this.lenderId = loanWithoutId.getLenderId();
-        this.borrowerId = loanWithoutId.getBorrowerId();
+        this.otherPartyId = loanWithoutId.getOtherPartyId();
         this.itemId = loanWithoutId.getItemId();
         this.description = loanWithoutId.getDescription();
         this.amount = loanWithoutId.getAmount();

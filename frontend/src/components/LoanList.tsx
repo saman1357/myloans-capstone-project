@@ -22,7 +22,7 @@ export default function LoanList(props: Props) {
         if (filter === "-1") {
             setFilteredLoans(props.loans);
         } else {
-            setFilteredLoans(props.loans.filter(loan => (loan.lenderId === filter || loan.borrowerId === filter)));
+            setFilteredLoans(props.loans.filter(loan => loan.otherPartyId === filter));
         }
     }
 
@@ -30,11 +30,11 @@ export default function LoanList(props: Props) {
         let lentSum = 0;
         let borrowedSum = 0;
         if (filteredLoans) {
-            filteredLoans.filter(loan => (loan.itemId === "1001" && loan.lenderId === props.user?.id)).forEach(loan => {
+            filteredLoans.filter(loan => (loan.itemId === "1001" && loan.type === "lent")).forEach(loan => {
                 lentSum += loan.amount;
             })
 
-            filteredLoans.filter(loan => (loan.itemId === "1001" && loan.borrowerId === props.user?.id)).forEach(loan => {
+            filteredLoans.filter(loan => (loan.itemId === "1001" && loan.type === "borrowed")).forEach(loan => {
                 borrowedSum += loan.amount;
             })
             setLoanSum({lent: lentSum, borrowed: borrowedSum});
@@ -46,15 +46,6 @@ export default function LoanList(props: Props) {
     }
 
     function loanWindow(loanType: "lent" | "borrowed") {
-        let lenderOrBorrower: "lenderId" | "borrowerId";
-        let otherLoanParty: "borrowerId" | "lenderId";
-        if (loanType === "lent") {
-            lenderOrBorrower = "lenderId";
-            otherLoanParty = "borrowerId";
-        } else {
-            lenderOrBorrower = "borrowerId";
-            otherLoanParty = "lenderId";
-        }
         return (
             <div className={"loan-div"}>
                 <div className={"loan-header-div"}>
@@ -65,11 +56,11 @@ export default function LoanList(props: Props) {
                 </div>
                 <hr/>
                 <div className={"loan-table-div"}>
-                    {filteredLoans.filter(loan => loan[lenderOrBorrower] === props.user?.id).map((loan) => {
+                    {filteredLoans.filter(loan => loan.type === loanType).map((loan) => {
                         return <Link to={"/" + loan.id} key={loan.id}>
                             <div className={"loan-table-row-div"}>
                                 <div
-                                    className={"loan-party-item"}>{props.persons.find(person => person.id === loan[otherLoanParty])?.name}</div>
+                                    className={"loan-party-item"}>{props.persons.find(person => person.id === loan.otherPartyId)?.name}</div>
                                 <div className={"amount-item"}>{loan.amount}</div>
                                 <div
                                     className={"item-item"}>{props.items.find(item => item.id === loan.itemId)?.type.charAt(0)==="€"? "€" : "-"}</div>
@@ -83,7 +74,7 @@ export default function LoanList(props: Props) {
                 <div className={"loan-footer-div"}>
                     <hr/>
                     sum of
-                    monetary {lenderOrBorrower.slice(0, -4)}ings: {loanSum[loanType]} {props.items.find(item => item.id === "1001")?.type.charAt(0)}
+                    monetary {loanType==="lent"? "lendings" : "borrowings"}: {loanSum[loanType]} {props.items.find(item => item.id === "1001")?.type.charAt(0)}
                 </div>
             </div>
         )

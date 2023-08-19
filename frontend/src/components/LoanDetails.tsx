@@ -3,7 +3,6 @@ import {Item, Loan, Person, UserWithoutPassword} from "../model/DataModels.ts";
 import AlertDialogButton from "./AlertDialogButton.tsx";
 
 type Props = {
-    myId: string,
     loans: Loan[],
     items: Item[],
     persons: Person[],
@@ -15,28 +14,20 @@ type Props = {
 export default function LoanDetails(props: Props) {
     const urlParams = useParams();
     const loan: Loan | undefined = props.loans.find(loan => loan.id === urlParams.id)
-    let lent = false;
 
     function handleDelete() {
-        console.log("handleDelete triggered")
         if (urlParams.id) {
-            console.log("urlParams.id = " + urlParams.id + " is true")
             props.onDelete(urlParams.id);
         } else {
-            console.log("urlParams.id = " + urlParams.id + " is false")
             throw new Error('no id given!');
         }
 
     }
 
     if (!loan) {
-        return <div>loan with id:
-            <br/>
-            {urlParams.id}
-            <br/>
-            not found.</div>
+        throw new Error('loan with id: '+urlParams.id+' not found.');
     }
-    if (loan.lenderId === props.myId) lent = true;
+
     return (
         <div>
             <div className={"app-title"}>
@@ -49,7 +40,7 @@ export default function LoanDetails(props: Props) {
                 </div>
             </div>
             <div className={"loan-details-container"}>
-                <div className={"loan-details-header"}><h3>I{lent ? " lent" : " borrowed"}</h3></div>
+                <div className={"loan-details-header"}><h3>I{loan.type}</h3></div>
                 <div className={"loan-details-body"}>
                     <div className={"loan-details-label"}>amount:</div>
                     <div className={"loan-details"}>{loan.amount}</div>
@@ -58,9 +49,8 @@ export default function LoanDetails(props: Props) {
                     <div className={"loan-details-label"}>description:</div>
                     <div className={"loan-details"}>{loan.description}</div>
                     <div className={"loan-details-label"}>other party:</div>
-                    <div className={"loan-details"}>{lent ?
-                        "to " + props.persons.find(person => person.id === loan.borrowerId)?.name
-                        : "from " + props.persons.find(person => person.id === loan.lenderId)?.name}</div>
+                    <div className={"loan-details"}>{loan.type==="lent" ?
+                        "to " : "from "+ props.persons.find(person => person.id === loan.otherPartyId)?.name}</div>
                     <div className={"loan-details-label"}>loan date:</div>
                     <div className={"loan-details"}>on {loan.loanDate}</div>
                     <div className={"loan-details-label"}>return date:</div>

@@ -71,7 +71,7 @@ export default function PersonForm(props: Props) {
     function handleDeletePerson(name: string, id: string) {
         let possible = true;
         props.loans.forEach(loan => {
-            if (loan.lenderId === id || loan.borrowerId === id) possible = false;
+            if (loan.otherPartyId === id) possible = false;
         })
         if (possible) {
             setPersonState({name: name, id: id})
