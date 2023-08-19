@@ -18,7 +18,6 @@ export default function LoanForm(props: Props) {
     const urlParams = useParams();
     const loan = props.loans.find(loan => loan.id === urlParams.id);
     const [returnDateIsActive, setReturnDateIsActive] = useState<boolean>(false)
-    //const [lenderOrBorrower, setLenderOrBorrower] = useState<"lenderId" | "borrowerId">("lenderId");
     const [loanState, setLoanState] = useState<LoanWithoutId>({
         type: "",
         otherPartyId: "",
@@ -54,7 +53,6 @@ export default function LoanForm(props: Props) {
                 loanDate: loan.loanDate,
                 returnDate: loan.returnDate
             }))
-            //setLenderOrBorrower(loan.type==="lent"? "borrowerId" : "lenderId");
             validate("itemId", loan.itemId);
             validate("description", loan.description);
             validate("amount", loan.amount.toString());
