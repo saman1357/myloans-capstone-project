@@ -85,7 +85,7 @@ export default function LoanList(props: Props) {
             <>
                 <div className={"app-title"}>
                     <div className={"back-div"}></div>
-                    <img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/>
+                    <Link to={"/"}><img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/></Link>
                     <div>
                         {props.user?.username}
                         <br/>

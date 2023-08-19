@@ -86,7 +86,7 @@ export default function SignUpForm(props: Props) {
         <div>
             <div className={"app-title"}>
                 <div></div>
-                <img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/>
+                <Link to={"/"}><img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/></Link>
                 <div>
                     {(props.user && props.user.username !== "anonymousUser") ? props.user?.username : ""}
                     <br/>

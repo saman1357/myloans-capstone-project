@@ -32,7 +32,7 @@ export default function LoanDetails(props: Props) {
         <div>
             <div className={"app-title"}>
                 <div className={"back-div"}><Link to={"/"}><h1>⇦</h1></Link></div>
-                <img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/>
+                <Link to={"/"}><img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/></Link>
                 <div>
                     {props.user?.username}
                     <br/>

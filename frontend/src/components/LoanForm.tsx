@@ -1,5 +1,5 @@
 import {Item, Loan, LoanWithoutId, Person, UserWithoutPassword} from "../model/DataModels.ts";
-import {useLocation, useNavigate, useParams} from "react-router-dom";
+import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
 import React, {FormEvent, useEffect, useState} from "react";
 import 'react-toastify/dist/ReactToastify.css'
 import {toast} from "react-toastify";
@@ -217,7 +217,7 @@ export default function LoanForm(props: Props) {
             <ToastifyContainer/>
             <div className={"app-title"}>
                 <div className={"back-div"} onClick={handleBack}><h1>⇦</h1></div>
-                <img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/>
+                <Link to={"/"}><img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/></Link>
                 <div>
                     {props.user?.username}
                     <br/>
