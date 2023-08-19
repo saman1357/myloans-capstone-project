@@ -40,7 +40,7 @@ export default function LoanDetails(props: Props) {
                 </div>
             </div>
             <div className={"loan-details-container"}>
-                <div className={"loan-details-header"}><h3>I{loan.type}</h3></div>
+                <div className={"loan-details-header"}><h3>I {loan.type}</h3></div>
                 <div className={"loan-details-body"}>
                     <div className={"loan-details-label"}>amount:</div>
                     <div className={"loan-details"}>{loan.amount}</div>
@@ -48,9 +48,8 @@ export default function LoanDetails(props: Props) {
                     <div className={"loan-details"}>{props.items.find(item => item.id === loan.itemId)?.type}</div>
                     <div className={"loan-details-label"}>description:</div>
                     <div className={"loan-details"}>{loan.description}</div>
-                    <div className={"loan-details-label"}>other party:</div>
-                    <div className={"loan-details"}>{loan.type==="lent" ?
-                        "to " : "from "+ props.persons.find(person => person.id === loan.otherPartyId)?.name}</div>
+                    <div className={"loan-details-label"}>other party: </div>
+                    <div className={"loan-details"}>{(loan.type==="lent" ? "to " : "from ")+ props.persons.find(person => person.id === loan.otherPartyId)?.name}</div>
                     <div className={"loan-details-label"}>loan date:</div>
                     <div className={"loan-details"}>on {loan.loanDate}</div>
                     <div className={"loan-details-label"}>return date:</div>

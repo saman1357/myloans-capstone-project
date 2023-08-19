@@ -137,7 +137,7 @@ export default function LoanForm(props: Props) {
 
     function handleChangeSelect(event: React.ChangeEvent<HTMLSelectElement>) {
         setLoanState({...loanState, [event.target.name]: event.target.value});
-        validate("lenderOrBorrower", event.target.value);
+        validate("otherParty", event.target.value);
 
     }
 
@@ -262,11 +262,12 @@ export default function LoanForm(props: Props) {
                     <div>
                         <select id="otherPartyId" name={"otherPartyId"} value={loanState.otherPartyId}
                                 onChange={handleChangeSelect}>
-                            <option value={"-1"}>{"select " + loanState.type==="lent"? "lender" : "borrower"}</option>
+                            <option value={"-1"}>{"select " + (loanState.type==="lent"? "lender" : "borrower")}</option>
                             {props.persons.map(person => {
                                 return (<option key={person.id} value={person.id}>{person.name}</option>)
                             })}
                         </select>
+                        <br/>
                         <button type={"button"} id={"edit-persons-button"} onClick={handleEditPersons}>edit persons
                             list
                         </button>

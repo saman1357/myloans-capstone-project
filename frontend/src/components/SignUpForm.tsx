@@ -1,8 +1,9 @@
 import React, {FormEvent, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {UserWithoutPassword} from "../model/DataModels.ts";
-import {toast, ToastContainer} from "react-toastify";
+import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css'
+import ToastifyContainer from "./ToastifyContainer.tsx";
 
 
 type Props = {
@@ -18,9 +19,9 @@ export default function SignUpForm(props: Props) {
         password2: ""
     });
     const [validationMessage, setValidationMessage] = useState({
-        usernameInput: "Can't be blank",
-        passwordInput: "Should be a minimum of 8 characters in length and must contain at least one uppercase letter, one lowercase letter and one number",
-        password2Input: "Should be the same as above."
+        uInput: "Can't be blank",
+        pInput: "Should be a minimum of 8 characters in length and must contain at least one uppercase letter, one lowercase letter and one number",
+        p2Input: "Should be the same as above."
     });
 
 
@@ -43,35 +44,35 @@ export default function SignUpForm(props: Props) {
         const passwordRegEx = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
 
         switch (name) {
-            case "usernameInput": {
+            case "username": {
                 if (value && value.length > 0) {
-                    setValidationMessage(prevState => ({...prevState, usernameInput: ""}));
+                    setValidationMessage(prevState => ({...prevState, uInput: ""}));
                 } else {
                     setValidationMessage({
                         ...validationMessage,
-                        usernameInput: "Can't be blank"
+                        uInput: "Can't be blank"
                     });
                 }
                 break;
             }
-            case "passwordInput": {
+            case "password": {
                 if (passwordRegEx.test(value)) {
-                    setValidationMessage(prevState => ({...prevState, passwordInput: ""}));
+                    setValidationMessage(prevState => ({...prevState, pInput: ""}));
                 } else {
                     setValidationMessage({
                         ...validationMessage,
-                        passwordInput: "Should be a minimum of 8 characters in length and must contain at least one uppercase letter, one lowercase letter and one number."
+                        pInput: "Should be a minimum of 8 characters in length and must contain at least one uppercase letter, one lowercase letter and one number."
                     });
                 }
                 break;
             }
-            case "password2Input": {
+            case "password2": {
                 if (value === signUpData.password) {
-                    setValidationMessage(prevState => ({...prevState, password2Input: ""}));
+                    setValidationMessage(prevState => ({...prevState, p2Input: ""}));
                 } else {
                     setValidationMessage({
                         ...validationMessage,
-                        password2Input: "Should be the same as above."
+                        p2Input: "Should be the same as above."
                     });
                 }
                 break;
@@ -93,22 +94,22 @@ export default function SignUpForm(props: Props) {
                         <button onClick={props.onLogout}>logout</button> : ""}
                 </div>
             </div>
-            <div className={"login-div"}>
+            <div className={"sign-up-div"}>
                 <form onSubmit={onSignUp}>
                     <p id={"login-title"}>Login</p>
-                    <input id={"usernameInput"} value={signUpData.username} onChange={handleChangeInput}
+                    <input id={"username"} value={signUpData.username} onChange={handleChangeInput}
                            placeholder={"username"}/>
-                    <div className={"validation-message"}>{validationMessage.usernameInput}</div>
+                    <div className={"validation-message"}>{validationMessage.uInput}</div>
                     <br/>
-                    <input id={"passwordInput"} value={signUpData.password} onChange={handleChangeInput}
+                    <input id={"password"} value={signUpData.password} onChange={handleChangeInput}
                            placeholder={"password"}
                            type={"password"}/>
-                    <div className={"validation-message"}>{validationMessage.passwordInput}</div>
+                    <div className={"validation-message"}>{validationMessage.pInput}</div>
                     <br/>
-                    <input id={"password2Input"} value={signUpData.password2} onChange={handleChangeInput}
+                    <input id={"password2"} value={signUpData.password2} onChange={handleChangeInput}
                            placeholder={"confirm password"}
                            type={"password"}/>
-                    <div className={"validation-message"}>{validationMessage.password2Input}</div>
+                    <div className={"validation-message"}>{validationMessage.p2Input}</div>
                     <br/>
                     <button>sign up</button>
                     <br/>
@@ -117,18 +118,7 @@ export default function SignUpForm(props: Props) {
                     <p>Already signed up? <Link to={"/login"}>Login</Link> to use myLoans!</p>
                 </form>
             </div>
-            <ToastContainer
-                position="top-center"
-                autoClose={3000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-            />
+            <ToastifyContainer/>
         </div>
     )
 }

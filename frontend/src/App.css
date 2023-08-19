@@ -278,6 +278,17 @@ button {
     grid-template-rows: 7% 5% 73% 10%;
 }
 
+.sign-up-div {
+    border: #888888 solid 1px;
+    border-radius: 10px;
+    padding: 3px;
+    height: 47vh;
+    margin: 5px;
+    background-color: #d9e3df;
+    display: grid;
+    grid-template-rows: 7% 5% 73% 10%;
+}
+
 #login-title{
     text-align: center;
 }
