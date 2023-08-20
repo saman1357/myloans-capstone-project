@@ -11,11 +11,12 @@ type Props = {
     persons: Person[],
     onSubmit: (submittedLoanWithoutId: LoanWithoutId, loanId: string, isNewLoan: boolean) => void,
     user?: UserWithoutPassword,
-    onLogout: ()=>void
+    onLogout: () => void
 }
 
 export default function LoanForm(props: Props) {
     const urlParams = useParams();
+    const dateRegEx = /^((19|2\d)\d{2})-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])$/;
     const loan = props.loans.find(loan => loan.id === urlParams.id);
     const [returnDateIsActive, setReturnDateIsActive] = useState<boolean>(false)
     const [loanState, setLoanState] = useState<LoanWithoutId>({
@@ -39,6 +40,35 @@ export default function LoanForm(props: Props) {
     const location = useLocation();
     const navigateState = location.state || {};
     const stateData = navigateState.stateData;
+
+    const validationRules = [
+        {
+            name: "itemId",
+            isValid: (value: string) => (value === "1001" || value === "1002"),
+            message: "Please choose whether the item is of type money or nonmoney.",
+        },
+        {
+            name: "amount",
+            isValid: (value: string) => parseFloat(value) > 0,
+            message: "Should be an number greater than 0.",
+        },
+        {
+            name: "otherParty",
+            isValid: (value: string) => (value !== "-1" && value.length > 0),
+            message: "Please choose a person as other party of the loan. You can also add new persons.",
+        },
+        {
+            name: "loanDate",
+            isValid: (value: string) => (dateRegEx.test(value)),
+            message: "Should be a valid date.",
+        },
+        {
+            name: "returnDate",
+            isValid: (value: string) => (dateRegEx.test(value)),
+            message: "Should be a valid date or deactivated.",
+        }
+    ];
+
     useEffect(initialState, [props.user, urlParams.type, urlParams.id, loan, stateData]);
 
     function initialState() {
@@ -56,12 +86,12 @@ export default function LoanForm(props: Props) {
             validate("itemId", loan.itemId);
             validate("description", loan.description);
             validate("amount", loan.amount.toString());
+            validate("otherParty", loan.otherPartyId);
             validate("loanDate", loan.loanDate);
             if (loan.returnDate && loan.returnDate !== "") {
                 validate("returnDate", loan.returnDate);
                 setReturnDateIsActive(true);
             }
-            validate("otherParty", loan.otherPartyId);
         } else if (urlParams.type) {
             setLoanState((prevState) => ({
                 ...prevState, type: urlParams.type as string
@@ -83,11 +113,11 @@ export default function LoanForm(props: Props) {
             validate("itemId", stateData.itemId);
             validate("description", stateData.description);
             validate("amount", stateData.amount.toString());
+            validate("otherPartyId", stateData.otherPartyId);
             validate("loanDate", stateData.loanDate);
             if (stateData.returnDate && stateData.returnDate !== "") {
                 validate("returnDate", stateData.returnDate);
             }
-            validate("otherPartyId", stateData.otherPartyId);
         }
     }
 
@@ -109,13 +139,15 @@ export default function LoanForm(props: Props) {
         } else {
             editPersonLink = "/addloan/" + loanState.type + "/person/";
         }
-            editPersonLink += (loanState["otherPartyId"] || "add");
+        editPersonLink += (loanState["otherPartyId"] || "add");
         navigate(editPersonLink, {state: {loanState}});
     }
 
     function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        if (Object.values(validationMessage).every(message => {return message === "";})) {
+        if (Object.values(validationMessage).every(message => {
+            return message === "";
+        })) {
             if (urlParams.id) {
                 props.onSubmit(loanState, urlParams.id, false);
                 navigate("/" + urlParams.id);
@@ -140,65 +172,12 @@ export default function LoanForm(props: Props) {
     }
 
     function validate(name: string, value: string) {
-        const dateRegEx = /^((19|2\d)\d{2})-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])$/;
-        switch (name) {
-            case "itemId": {
-                if (value === "1001" || value === "1002") {
-                    setValidationMessage(prevState => ({...prevState, itemId: ""}));
-                } else {
-                    setValidationMessage({
-                        ...validationMessage,
-                        itemId: "Please choose whether the item is of type money or nonmoney."
-                    });
-                }
-                break;
-            }
-            case "amount": {
-                if (parseFloat(value) > 0) {
-                    setValidationMessage(prevState => ({...prevState, amount: ""}));
-                } else {
-
-                    setValidationMessage(prevState => ({
-                        ...prevState,
-                        amount: "Should be an number greater than 0."
-                    }));
-                }
-                break;
-            }
-            case "otherParty": {
-                if (value !== "-1" && value.length > 0) {
-                    setValidationMessage(prevState => ({...prevState, otherParty: ""}));
-                } else {
-                    setValidationMessage(prevState => ({
-                        ...prevState,
-                        lenderOrBorrower: "Please choose a person as other party of the loan. You can also add new persons."
-                    }));
-                }
-                break;
-            }
-            case "loanDate": {
-                if (dateRegEx.test(value)) {
-                    setValidationMessage(prevState => ({...prevState, loanDate: ""}));
-                } else {
-                    setValidationMessage(prevState => ({
-                        ...prevState,
-                        loanDate: "Should be a valid date."
-                    }));
-                }
-                break;
-            }
-            case "returnDate": {
-                if (dateRegEx.test(value)) {
-                    setValidationMessage(prevState => ({...prevState, returnDate: ""}));
-                } else {
-                    setValidationMessage(prevState => ({
-                        ...prevState,
-                        returnDate: "Should be a valid date or deactivated."
-                    }));
-                }
-
-                break;
-            }
+        const rule = validationRules.find(rule => rule.name === name);
+        if (rule && rule.isValid(value)) {
+            setValidationMessage(prevState => ({...prevState, [name]: ""}));
+        } else if (rule) {
+            setValidationMessage({...validationMessage, [name]: rule.message});
+        } else {
         }
     }
 
@@ -256,11 +235,12 @@ export default function LoanForm(props: Props) {
 
 
                 <div className={"form-details"}>
-                    <label htmlFor={"person"}>{loanState.type==="lent"? "lender" : "borrower"} </label>
+                    <label htmlFor={"otherPartyId"}>{loanState.type === "lent" ? "lender" : "borrower"} </label>
                     <div>
                         <select id="otherPartyId" name={"otherPartyId"} value={loanState.otherPartyId}
                                 onChange={handleChangeSelect}>
-                            <option value={"-1"}>{"select " + (loanState.type==="lent"? "lender" : "borrower")}</option>
+                            <option
+                                value={"-1"}>{"select " + (loanState.type === "lent" ? "lender" : "borrower")}</option>
                             {props.persons.map(person => {
                                 return (<option key={person.id} value={person.id}>{person.name}</option>)
                             })}
@@ -275,7 +255,7 @@ export default function LoanForm(props: Props) {
 
 
                 <div className={"form-details"}>
-                    <label htmlFor={"loan-date"}>loan date: </label>
+                    <label htmlFor={"loanDate"}>loan date: </label>
                     <input type={"date"} id={"loanDate"} name={"loanDate"} value={loanState.loanDate}
                            onChange={handleChangeInput}/>
                 </div>
@@ -289,7 +269,7 @@ export default function LoanForm(props: Props) {
                 </div>
 
                 <div className={"form-details-sm"}>
-                    <label htmlFor={"return-date"}>return date: </label>
+                    <label htmlFor={"returnDate"}>return date: </label>
                     <input type={"date"} id={"returnDate"} name={"returnDate"} value={loanState.returnDate}
                            onChange={handleChangeInput} disabled={!returnDateIsActive}/>
                 </div>

@@ -93,7 +93,7 @@ export default function LoanList(props: Props) {
                     </div>
                 </div>
                 <div className={"loan-filter-div"}>
-                    <label htmlFor={"person-filter"}>filter: </label>
+                    <label htmlFor={"personId"}>filter: </label>
                     <select id={"personId"} name={"personId"} value={filter}
                             onChange={handleChangeFilter}>
                         <option value={"-1"}>{"show all"}</option>
