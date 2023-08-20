@@ -48,7 +48,7 @@ class MyLoansUserControllerTest {
 
     @Test
     void getUserName_whenSignUp() throws Exception {
-        MyLoansUserWithoutId newUserWithoutId = new MyLoansUserWithoutId( "saman", "123");
+        MyLoansUserWithoutId newUserWithoutId = new MyLoansUserWithoutId( "saman", "Saman123");
 
         ObjectMapper objectMapper = new ObjectMapper();
         String newUserWithoutIdJson = objectMapper.writeValueAsString(newUserWithoutId);

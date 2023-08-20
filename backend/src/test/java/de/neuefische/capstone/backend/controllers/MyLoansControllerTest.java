@@ -90,9 +90,9 @@ class MyLoansControllerTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona"))),
                 new ArrayList<>(List.of(
-                        new Loan("3001", "lent", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", "")))
+                        new Loan("3001", "lent", "2001", "1002", "Der kleine Prinz", 1, "2023-01-01", "")))
         );
-        LoanWithoutId newLoanWithoutId = new LoanWithoutId("borrowed", "2002",  "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023");
+        LoanWithoutId newLoanWithoutId = new LoanWithoutId("borrowed", "2002",  "1001", "Fahrschule", 500, "2023-06-06", "2023-12-12");
 
         myLoansRepository.save(userDataToUpdate);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -123,9 +123,9 @@ class MyLoansControllerTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona"))),
                 new ArrayList<>(List.of(
-                        new Loan("3001", "lent", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", "")))
+                        new Loan("3001", "lent", "2001", "1002", "Der kleine Prinz", 1, "2023-01-01", "")))
         );
-        LoanWithoutId newLoanWithoutId = new LoanWithoutId("borrowed", "2002",  "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023");
+        LoanWithoutId newLoanWithoutId = new LoanWithoutId("borrowed", "2002",  "1001", "Fahrschule", 500, "2023-06-06", "2023-12-12");
 
         myLoansRepository.save(userDataToUpdate);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -233,10 +233,10 @@ class MyLoansControllerTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona"))),
                 new ArrayList<>(List.of(
-                        new Loan("3001", "lent", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
-                        new Loan("3002", "borrowed", "2002", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")))
+                        new Loan("3001", "lent", "2001", "1002", "Der kleine Prinz", 1, "2023-01-01", ""),
+                        new Loan("3002", "borrowed", "2002", "1001", "Fahrschule", 500, "2023-06-06", "2023-12-12")))
         );
-        LoanWithoutId updatedLoanWithoutId = new LoanWithoutId("borrowed", "2002",  "1001", "Handy", 200, "06.06.2023", "12.12.2023");
+        LoanWithoutId updatedLoanWithoutId = new LoanWithoutId("borrowed", "2002",  "1001", "Handy", 200, "2023-06-06", "2023-12-12");
 
         myLoansRepository.save(userDataToUpdate);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -260,7 +260,7 @@ class MyLoansControllerTest {
                 }
                 """;
         String loanId = "3001";
-        LoanWithoutId updatedLoanWithoutId = new LoanWithoutId("lent",  "2001", "1002", "Pippi Langstrumpf", 1, "01.01.2023", "");
+        LoanWithoutId updatedLoanWithoutId = new LoanWithoutId("lent",  "2001", "1002", "Pippi Langstrumpf", 1, "2023-01-01", "");
         ObjectMapper objectMapper = new ObjectMapper();
         String updatedLoanWithoutIdJson = objectMapper.writeValueAsString(updatedLoanWithoutId);
         UserData testUserData = new UserData("123",
@@ -271,8 +271,8 @@ class MyLoansControllerTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona")),
                 List.of(
-                        new Loan("3001", "lent",  "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
-                        new Loan("3002", "borrowed", "2002", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
+                        new Loan("3001", "lent",  "2001", "1002", "Der kleine Prinz", 1, "2023-01-01", ""),
+                        new Loan("3002", "borrowed", "2002", "1001", "Fahrschule", 500, "2023-06-06", "2023-12-12"))
         );
         myLoansRepository.save(testUserData);
         mockMvc.perform(MockMvcRequestBuilders.put("/api/myloans/user/0001/loans/" + loanId)
