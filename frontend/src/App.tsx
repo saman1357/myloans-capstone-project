@@ -26,7 +26,6 @@ export default function App() {
     const [persons, setPersons] = useState<Person[]>();
     const [user, setUser] = useState<UserWithoutPassword>({id: "", username: "anonymousUser"});
     const navigate = useNavigate();
-
     useEffect(()=> {
         me()
     }, []);

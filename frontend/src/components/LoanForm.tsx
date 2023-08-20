@@ -172,7 +172,7 @@ export default function LoanForm(props: Props) {
 
     function validate(name: string, value: string) {
         const rule = validationRules.find(rule => rule.name === name);
-        if (rule && rule.isValid(value)) {
+        if (rule?.isValid(value)) {
             setValidationMessage(prevState => ({...prevState, [name]: ""}));
         } else if (rule) {
             setValidationMessage({...validationMessage, [name]: rule.message});
