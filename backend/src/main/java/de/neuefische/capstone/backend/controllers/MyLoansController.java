@@ -6,8 +6,10 @@ import de.neuefische.capstone.backend.models.LoanWithoutId;
 import de.neuefische.capstone.backend.models.PersonWithoutId;
 import de.neuefische.capstone.backend.models.UserData;
 import de.neuefische.capstone.backend.services.MyLoansService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.NoSuchElementException;
@@ -24,12 +26,12 @@ public class MyLoansController {
     }
 
     @PostMapping("user/{userId}/loans")
-    public LoanWithoutId addLoan(@RequestBody LoanWithoutId newLoanWithoutId, @PathVariable String userId) {
+    public LoanWithoutId addLoan(@Valid @RequestBody LoanWithoutId newLoanWithoutId, @PathVariable String userId) {
         return myLoansService.addLoan(newLoanWithoutId, userId);
     }
 
     @PutMapping("/user/{userId}/loans/{id}")
-    public LoanWithoutId updateLoan(@RequestBody LoanWithoutId updatedLoanWithoutId, @PathVariable String userId, @PathVariable String id) {
+    public LoanWithoutId updateLoan(@Valid @RequestBody LoanWithoutId updatedLoanWithoutId, @PathVariable String userId, @PathVariable String id) {
         return myLoansService.updateLoan(updatedLoanWithoutId, id, userId);
 
     }
@@ -45,12 +47,12 @@ public class MyLoansController {
     }
 
     @PostMapping("/user/{userId}/persons")
-    public PersonWithoutId addPerson(@RequestBody PersonWithoutId newPersonWithoutId, @PathVariable String userId) {
+    public PersonWithoutId addPerson(@Valid @RequestBody PersonWithoutId newPersonWithoutId, @PathVariable String userId) {
         return myLoansService.addPerson(newPersonWithoutId, userId);
     }
 
     @PutMapping("/user/{userId}/persons/{id}")
-    public PersonWithoutId updatePerson(@RequestBody PersonWithoutId updatedPersonWithoutId,@PathVariable String userId, @PathVariable String id) {
+    public PersonWithoutId updatePerson(@Valid @RequestBody PersonWithoutId updatedPersonWithoutId,@PathVariable String userId, @PathVariable String id) {
         return myLoansService.updatePerson(updatedPersonWithoutId, id, userId);
     }
 
@@ -62,6 +64,12 @@ public class MyLoansController {
     @ExceptionHandler(NoSuchElementException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorMessage handleNoSuchElementExceptions(NoSuchElementException exception) {
+        return new ErrorMessage(exception.getMessage());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorMessage handleArgumentNotValidExceptions(MethodArgumentNotValidException exception) {
         return new ErrorMessage(exception.getMessage());
     }
 

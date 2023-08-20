@@ -1,7 +1,11 @@
 package de.neuefische.capstone.backend.security;
 
+import de.neuefische.capstone.backend.exceptions.ErrorMessage;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -22,7 +26,13 @@ public class MyLoansUserController {
     }
 
     @PostMapping("/sign-up")
-    public String signUp(@RequestBody MyLoansUserWithoutId myLoansUserWithoutId){
+    public String signUp(@Valid @RequestBody MyLoansUserWithoutId myLoansUserWithoutId){
         return myLoansUserService.signUp(myLoansUserWithoutId);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorMessage handleArgumentNotValidExceptions(MethodArgumentNotValidException exception) {
+        return new ErrorMessage(exception.getMessage());
     }
 }
