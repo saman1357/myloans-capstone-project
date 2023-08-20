@@ -4,7 +4,6 @@ import React, {FormEvent, useEffect, useState} from "react";
 import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css'
 import AlertDialogButton from "./AlertDialogButton.tsx";
-import ToastifyContainer from "./ToastifyContainer.tsx";
 
 type Props = {
     persons: Person[],
@@ -89,7 +88,6 @@ export default function PersonForm(props: Props) {
     }
     return (
         <>
-            <ToastifyContainer/>
             <div className={"app-title"}>
                 <div className={"back-div"} onClick={handleBack}><h1>⇦</h1></div>
                 <Link to={"/"}><img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/></Link>

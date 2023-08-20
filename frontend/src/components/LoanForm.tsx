@@ -3,7 +3,6 @@ import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
 import React, {FormEvent, useEffect, useState} from "react";
 import 'react-toastify/dist/ReactToastify.css'
 import {toast} from "react-toastify";
-import ToastifyContainer from "./ToastifyContainer.tsx";
 
 type Props = {
     loans: Loan[],
@@ -190,7 +189,6 @@ export default function LoanForm(props: Props) {
 
     return (
         <>
-            <ToastifyContainer/>
             <div className={"app-title"}>
                 <div className={"back-div"} onClick={handleBack}><h1>⇦</h1></div>
                 <Link to={"/"}><img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/></Link>

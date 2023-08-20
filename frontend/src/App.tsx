@@ -18,6 +18,7 @@ import PersonForm from "./components/PersonForm.tsx";
 import LoginForm from "./components/LoginForm.tsx";
 import ProtectedRoutes from "./components/ProtectedRoutes.tsx";
 import SignUpForm from "./components/SignUpForm.tsx";
+import ToastifyContainer from "./components/ToastifyContainer.tsx";
 
 export default function App() {
     const [loans, setLoans] = useState<Loan[]>();
@@ -166,6 +167,7 @@ export default function App() {
 
     return (
         <>
+            <ToastifyContainer/>
             <div>
                 <div className={"app-body"}>
                     <Routes>
