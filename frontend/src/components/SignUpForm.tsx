@@ -4,6 +4,7 @@ import {UserWithoutPassword} from "../model/DataModels.ts";
 import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css'
 import ToastifyContainer from "./ToastifyContainer.tsx";
+import axios from "axios";
 
 
 type Props = {
@@ -24,12 +25,32 @@ export default function SignUpForm(props: Props) {
         p2Input: "Should be the same as above."
     });
 
+    async function checkUsername(user:{name: string}):Promise<boolean> {
+        return axios.post("/api/user/checkusername", user)
+            .then(response => {
+                return response.data;
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
+    }
 
     function onSignUp(event: FormEvent) {
         event.preventDefault();
-        if (Object.values(validationMessage).every(message => {return message === ""})) {
-            props.onSignUp(signUpData.username, signUpData.password);
-            navigate("/");
+        if (Object.values(validationMessage).every(message => {
+            return message === ""
+        })) {
+            const user = {name: signUpData.username};
+            checkUsername(user)
+                .then(result => {
+                    if (result) {
+                        toast.warn(("The username \"" + user.name + "\" is already taken! Please choose another one."));
+                    } else {
+                        props.onSignUp(signUpData.username, signUpData.password);
+                        navigate("/");
+                    }
+                });
+
         } else {
             toast.warn("Some data entry are not valid!");
         }

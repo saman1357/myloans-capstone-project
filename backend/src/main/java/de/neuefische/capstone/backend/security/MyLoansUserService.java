@@ -40,4 +40,9 @@ public class MyLoansUserService {
         }
         return null;
     }
+
+    public boolean existsByUsername(String userName) {
+        return myLoansUserRepository.existsByUsername(userName);
+
+    }
 }

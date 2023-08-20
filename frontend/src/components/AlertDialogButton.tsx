@@ -27,7 +27,7 @@ export default function AlertDialogButton(props: Props) {
     }
     return (
         <>
-            <button onClick={handleClickOpen}>{props.buttonText}</button>
+            <button type={"button"} onClick={handleClickOpen}>{props.buttonText}</button>
             <Dialog
                 open={open}
                 onClose={handleClose}

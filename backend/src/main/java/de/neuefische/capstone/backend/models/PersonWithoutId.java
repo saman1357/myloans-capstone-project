@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PersonWithoutId {
-    @NotBlank(message = "person's name can't beblank!")
+    @NotBlank(message = "person's name can't be blank!")
     private String name;
 }

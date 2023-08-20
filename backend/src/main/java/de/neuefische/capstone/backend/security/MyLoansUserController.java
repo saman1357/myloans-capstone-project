@@ -1,6 +1,7 @@
 package de.neuefische.capstone.backend.security;
 
 import de.neuefische.capstone.backend.exceptions.ErrorMessage;
+import de.neuefische.capstone.backend.models.PersonWithoutId;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,11 @@ public class MyLoansUserController {
     @PostMapping("/sign-up")
     public String signUp(@Valid @RequestBody MyLoansUserWithoutId myLoansUserWithoutId){
         return myLoansUserService.signUp(myLoansUserWithoutId);
+    }
+
+    @PostMapping("checkusername")
+    public boolean checkUsername(@RequestBody PersonWithoutId user){
+        return myLoansUserService.existsByUsername(user.getName());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

@@ -55,7 +55,11 @@ export default function PersonForm(props: Props) {
     function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         if (validationMessage === "") {
-            props.onSubmit(personState, action);
+            if(action==="add" && Object.values(props.persons).some(person=>person.name===personState.name)) {
+                toast.warn("You have already a person named \""+personState.name+"\". Take another name for the new person.");
+            }else{
+                props.onSubmit(personState, action);
+            }
         } else {
             toast.warn("Person's name must be at least 1 character!");
         }

@@ -8,4 +8,5 @@ import java.util.Optional;
 @Repository
 public interface MyLoansUserRepository extends MongoRepository<MyLoansUser, String> {
     Optional<MyLoansUser> findByUsername(String username);
+    boolean existsByUsername(String username);
 }
