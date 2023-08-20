@@ -177,7 +177,6 @@ export default function LoanForm(props: Props) {
             setValidationMessage(prevState => ({...prevState, [name]: ""}));
         } else if (rule) {
             setValidationMessage({...validationMessage, [name]: rule.message});
-        } else {
         }
     }
 
