@@ -232,12 +232,12 @@ export default function LoanForm(props: Props) {
 
 
                 <div className={"form-details"}>
-                    <label htmlFor={"otherPartyId"}>{loanState.type === "lent" ? "lender" : "borrower"} </label>
+                    <label htmlFor={"otherPartyId"}>{loanState.type === "lent" ? "borrower" : "lender"} </label>
                     <div>
                         <select id="otherPartyId" name={"otherPartyId"} value={loanState.otherPartyId}
                                 onChange={handleChangeSelect}>
                             <option
-                                value={"-1"}>{"select " + (loanState.type === "lent" ? "lender" : "borrower")}</option>
+                                value={"-1"}>{"select " + (loanState.type === "lent" ? "borrower" : "lender")}</option>
                             {props.persons.map(person => {
                                 return (<option key={person.id} value={person.id}>{person.name}</option>)
                             })}
