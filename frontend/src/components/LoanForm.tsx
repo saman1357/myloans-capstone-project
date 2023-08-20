@@ -1,91 +1,133 @@
 import {Item, Loan, LoanWithoutId, Person, UserWithoutPassword} from "../model/DataModels.ts";
-import {useLocation, useNavigate, useParams} from "react-router-dom";
+import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
 import React, {FormEvent, useEffect, useState} from "react";
+import 'react-toastify/dist/ReactToastify.css'
+import {toast} from "react-toastify";
 
 type Props = {
     loans: Loan[],
     items: Item[],
     persons: Person[],
     onSubmit: (submittedLoanWithoutId: LoanWithoutId, loanId: string, isNewLoan: boolean) => void,
-    myId: string,
-    user?: UserWithoutPassword
+    user?: UserWithoutPassword,
+    onLogout: () => void
 }
 
 export default function LoanForm(props: Props) {
     const urlParams = useParams();
+    const dateRegEx = /^((19|2\d)\d{2})-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])$/;
     const loan = props.loans.find(loan => loan.id === urlParams.id);
     const [returnDateIsActive, setReturnDateIsActive] = useState<boolean>(false)
-    const [lenderOrBorrower, setLenderOrBorrower] = useState<"lenderId" | "borrowerId">("lenderId");
-    const [type, setType] = useState(urlParams.type)
     const [loanState, setLoanState] = useState<LoanWithoutId>({
-        lenderId: "",
-        borrowerId: "",
+        type: "",
+        otherPartyId: "",
         itemId: "",
         description: "",
-        amount: 0,
+        amount: 1,
         loanDate: new Date().toJSON().slice(0, 10),
+        returnDate: ""
+    })
+    const [validationMessage, setValidationMessage] = useState({
+        otherParty: "Please choose a person as other party of the loan. You can also add new persons",
+        itemId: "Please choose whether the item is of type money or nonmoney.",
+        description: "",
+        amount: "",
+        loanDate: "",
         returnDate: ""
     })
     const navigate = useNavigate();
     const location = useLocation();
     const navigateState = location.state || {};
     const stateData = navigateState.stateData;
-    useEffect(initialState, [props.myId, urlParams.type, urlParams.id, loan, stateData]);
+
+    const validationRules = [
+        {
+            name: "itemId",
+            isValid: (value: string) => (value === "1001" || value === "1002"),
+            message: "Please choose whether the item is of type money or nonmoney.",
+        },
+        {
+            name: "amount",
+            isValid: (value: string) => parseFloat(value) > 0,
+            message: "Should be an number greater than 0.",
+        },
+        {
+            name: "otherParty",
+            isValid: (value: string) => (value !== "-1" && value.length > 0),
+            message: "Please choose a person as other party of the loan. You can also add new persons.",
+        },
+        {
+            name: "loanDate",
+            isValid: (value: string) => (dateRegEx.test(value)),
+            message: "Should be a valid date.",
+        },
+        {
+            name: "returnDate",
+            isValid: (value: string) => (dateRegEx.test(value)),
+            message: "Should be a valid date or deactivated.",
+        }
+    ];
+
+    useEffect(initialState, [props.user, urlParams.type, urlParams.id, loan, stateData]);
 
     function initialState() {
-        if (urlParams.id && loan) {
+        if (loan) {
             setLoanState((prevState) => ({
                 ...prevState,
-                lenderId: loan.lenderId,
-                borrowerId: loan.borrowerId,
+                type: loan.type,
+                otherPartyId: loan.otherPartyId,
                 itemId: loan.itemId,
                 description: loan.description,
                 amount: loan.amount,
                 loanDate: loan.loanDate,
                 returnDate: loan.returnDate
             }))
-
-            if (loan.returnDate !== "") {
+            validate("itemId", loan.itemId);
+            validate("description", loan.description);
+            validate("amount", loan.amount.toString());
+            validate("otherParty", loan.otherPartyId);
+            validate("loanDate", loan.loanDate);
+            if (loan.returnDate && loan.returnDate !== "") {
+                validate("returnDate", loan.returnDate);
                 setReturnDateIsActive(true);
             }
-            if (loan.lenderId === props.myId) {
-                setLenderOrBorrower("borrowerId");
-                setType("lent");
-            } else {
-                setLenderOrBorrower("lenderId");
-                setType("borrowed");
-            }
-        } else if (urlParams.type === "lent") {
-            setType("lent");
+        } else if (urlParams.type) {
             setLoanState((prevState) => ({
-                ...prevState, lenderId: props.myId
+                ...prevState, type: urlParams.type as string
             }));
-            setLenderOrBorrower("borrowerId");
-        } else if (urlParams.type === "borrowed") {
-            setType("borrowed");
-            setLoanState((prevState) => ({
-                ...prevState, borrowerId: props.myId
-            }));
-            setLenderOrBorrower("lenderId");
         } else {
             throw new Error('Something went wrong! It seems that either no ID was given or it was not specified whether you are lending or borrowing.');
         }
         if (stateData) {
             setLoanState((prevState) => ({
                 ...prevState,
-                lenderId: stateData.lenderId,
-                borrowerId: stateData.borrowerId,
+                type: stateData.type,
+                otherPartyId: stateData.lenderId,
                 itemId: stateData.itemId,
                 description: stateData.description,
                 amount: stateData.amount,
                 loanDate: stateData.loanDate,
                 returnDate: stateData.returnDate
-            }))
+            }));
+            validate("itemId", stateData.itemId);
+            validate("description", stateData.description);
+            validate("amount", stateData.amount.toString());
+            validate("otherPartyId", stateData.otherPartyId);
+            validate("loanDate", stateData.loanDate);
+            if (stateData.returnDate && stateData.returnDate !== "") {
+                validate("returnDate", stateData.returnDate);
+            }
         }
-
     }
 
     function handleReturnDateActivator() {
+
+        if (!returnDateIsActive) {
+            validate("returnDate", loanState.returnDate);
+        } else {
+            setLoanState({...loanState, returnDate: ""});
+            setValidationMessage(prevState => ({...prevState, returnDate: ""}));
+        }
         setReturnDateIsActive(!returnDateIsActive);
     }
 
@@ -94,38 +136,47 @@ export default function LoanForm(props: Props) {
         if (urlParams.id) {
             editPersonLink = "/updateloan/" + urlParams.id + "/person/";
         } else {
-            editPersonLink = "/addloan/" + type + "/person/";
+            editPersonLink = "/addloan/" + loanState.type + "/person/";
         }
-        if (loanState[lenderOrBorrower]) {
-            editPersonLink += loanState[lenderOrBorrower];
-        } else {
-            editPersonLink += "add";
-        }
+        editPersonLink += (loanState["otherPartyId"] || "add");
         navigate(editPersonLink, {state: {loanState}});
     }
 
     function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        if (lenderOrBorrower === "borrowerId") {
-            loanState.lenderId = props.myId
+        if (Object.values(validationMessage).every(message => {
+            return message === "";
+        })) {
+            if (urlParams.id) {
+                props.onSubmit(loanState, urlParams.id, false);
+                navigate("/" + urlParams.id);
+            } else {
+                props.onSubmit(loanState, "new id", true);
+                navigate("/");
+            }
         } else {
-            loanState.borrowerId = props.myId;
-        }
-        if (urlParams.id) {
-            props.onSubmit(loanState, urlParams.id, false);
-            navigate("/" + urlParams.id);
-        } else {
-            props.onSubmit(loanState, "new id", true);
-            navigate("/");
+            toast.warn("Some data entry are not valid!");
         }
     }
 
     function handleChangeInput(event: React.ChangeEvent<HTMLInputElement>) {
         setLoanState({...loanState, [event.target.name]: event.target.value});
+        validate(event.target.name, event.target.value);
     }
 
     function handleChangeSelect(event: React.ChangeEvent<HTMLSelectElement>) {
         setLoanState({...loanState, [event.target.name]: event.target.value});
+        validate("otherParty", event.target.value);
+
+    }
+
+    function validate(name: string, value: string) {
+        const rule = validationRules.find(rule => rule.name === name);
+        if (rule?.isValid(value)) {
+            setValidationMessage(prevState => ({...prevState, [name]: ""}));
+        } else if (rule) {
+            setValidationMessage({...validationMessage, [name]: rule.message});
+        }
     }
 
     function handleBack() {
@@ -140,14 +191,18 @@ export default function LoanForm(props: Props) {
         <>
             <div className={"app-title"}>
                 <div className={"back-div"} onClick={handleBack}><h1>⇦</h1></div>
-                <img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/>
-                <div>{props.user?.username}</div>
+                <Link to={"/"}><img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/></Link>
+                <div>
+                    {props.user?.username}
+                    <br/>
+                    <button onClick={props.onLogout}>logout</button>
+                </div>
             </div>
 
             <form className={"loan-form"} onSubmit={handleSubmit}>
                 <h3>{urlParams.id ? "update loan" : "add new loan"}</h3>
                 <div className={"form-details"}>
-                    item {type}:
+                    item {loanState.type}:
                     <div>
                         <input type={"radio"} id={"money"} name={"itemId"} value={"1001"}
                                checked={(loanState.itemId) === "1001"} onChange={handleChangeInput}/>
@@ -157,52 +212,66 @@ export default function LoanForm(props: Props) {
                         <label htmlFor={"nonmoney"}>nonmoney</label>
                     </div>
                 </div>
+                <div className={"validation-message"}>{validationMessage.itemId}</div>
+
 
                 <div className={"form-details"}>
                     <label htmlFor={"description"}>description: </label>
                     <input type={"text"} id={"description"} name={"description"} value={loanState.description}
                            onChange={handleChangeInput}/>
                 </div>
+                <div className={"validation-message"}>{validationMessage.description}</div>
+
 
                 <div className={"form-details"}>
                     <label htmlFor={"amount"}>amount: </label>
-                    <input type={"text"} id={"amount"} name={"amount"} value={loanState.amount}
+                    <input type={"number"} id={"amount"} name={"amount"} value={loanState.amount}
                            onChange={handleChangeInput}/>
                 </div>
+                <div className={"validation-message"}>{validationMessage.amount}</div>
+
 
                 <div className={"form-details"}>
-                    <label htmlFor={"person"}>{lenderOrBorrower.slice(0, -2)} </label>
-                    <div className={"test"}>
-                        <select id="lenderOrBorrower" name={lenderOrBorrower} value={loanState[lenderOrBorrower]}
+                    <label htmlFor={"otherPartyId"}>{loanState.type === "lent" ? "lender" : "borrower"} </label>
+                    <div>
+                        <select id="otherPartyId" name={"otherPartyId"} value={loanState.otherPartyId}
                                 onChange={handleChangeSelect}>
-                            <option value={"-1"}>{"select " + lenderOrBorrower.slice(0, -2)}</option>
+                            <option
+                                value={"-1"}>{"select " + (loanState.type === "lent" ? "lender" : "borrower")}</option>
                             {props.persons.map(person => {
                                 return (<option key={person.id} value={person.id}>{person.name}</option>)
                             })}
                         </select>
+                        <br/>
                         <button type={"button"} id={"edit-persons-button"} onClick={handleEditPersons}>edit persons
                             list
                         </button>
                     </div>
                 </div>
+                <div className={"validation-message"}>{validationMessage.otherParty}</div>
+
 
                 <div className={"form-details"}>
-                    <label htmlFor={"loan-date"}>loan date: </label>
+                    <label htmlFor={"loanDate"}>loan date: </label>
                     <input type={"date"} id={"loanDate"} name={"loanDate"} value={loanState.loanDate}
                            onChange={handleChangeInput}/>
                 </div>
+                <div className={"validation-message"}>{validationMessage.loanDate}</div>
 
-                <div className={"form-details"}>
+
+                <div className={"form-details-merged"}>
                     <label htmlFor={"activate-return-date"}>activate return date: </label>
                     <input type={"checkbox"} id={"activate-return-date"} name={"activate-return-date"}
-                           onClick={handleReturnDateActivator}/>
+                           onChange={handleReturnDateActivator} checked={returnDateIsActive}/>
                 </div>
 
-                <div className={"form-details"}>
-                    <label htmlFor={"return-date"}>return date: </label>
+                <div className={"form-details-sm"}>
+                    <label htmlFor={"returnDate"}>return date: </label>
                     <input type={"date"} id={"returnDate"} name={"returnDate"} value={loanState.returnDate}
                            onChange={handleChangeInput} disabled={!returnDateIsActive}/>
                 </div>
+                <div className={"validation-message"}>{validationMessage.returnDate}</div>
+
 
                 <button id={"loan-form-button"} type={"submit"}>save</button>
             </form>

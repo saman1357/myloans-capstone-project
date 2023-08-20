@@ -39,8 +39,8 @@ class MyLoansControllerTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona")),
                 List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
-                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
+                        new Loan("3001", "lent", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "borrowed", "2002", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
         );
         myLoansRepository.save(testUserData);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -68,8 +68,8 @@ class MyLoansControllerTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona")),
                 List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
-                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
+                        new Loan("3001", "lent", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "borrowed", "2002", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
         );
         myLoansRepository.save(testUserData);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/myloans/user/0001/loans")
@@ -90,9 +90,9 @@ class MyLoansControllerTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona"))),
                 new ArrayList<>(List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", "")))
+                        new Loan("3001", "lent", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", "")))
         );
-        LoanWithoutId newLoanWithoutId = new LoanWithoutId("2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023");
+        LoanWithoutId newLoanWithoutId = new LoanWithoutId("borrowed", "2002",  "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023");
 
         myLoansRepository.save(userDataToUpdate);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -123,9 +123,9 @@ class MyLoansControllerTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona"))),
                 new ArrayList<>(List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", "")))
+                        new Loan("3001", "lent", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", "")))
         );
-        LoanWithoutId newLoanWithoutId = new LoanWithoutId("2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023");
+        LoanWithoutId newLoanWithoutId = new LoanWithoutId("borrowed", "2002",  "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023");
 
         myLoansRepository.save(userDataToUpdate);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -144,7 +144,7 @@ class MyLoansControllerTest {
     @WithMockUser
     void expectLoan_whenGetLoanDetailsIsCalled() throws Exception {
         String loanId = "3001";
-        Loan expectedLoan = new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", "");
+        Loan expectedLoan = new Loan("3001", "lent", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", "");
         UserData testUserData = new UserData("0001",
                 (List.of(
                         new Item("1001", "€ (money)"),
@@ -154,7 +154,7 @@ class MyLoansControllerTest {
                         new Person("2002", "Mona")),
                 List.of(
                         expectedLoan,
-                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
+                        new Loan("3002", "borrowed", "2002", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
         );
         ObjectMapper objectMapper = new ObjectMapper();
         String expectedJson = objectMapper.writeValueAsString(expectedLoan);
@@ -175,7 +175,7 @@ class MyLoansControllerTest {
                 }
                 """;
         String loanId = "3001";
-        Loan expectedLoan = new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", "");
+        Loan expectedLoan = new Loan("3001", "lent", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", "");
         UserData testUserData = new UserData("0002",
                 (List.of(
                         new Item("1001", "€ (money)"),
@@ -185,7 +185,7 @@ class MyLoansControllerTest {
                         new Person("2002", "Mona")),
                 List.of(
                         expectedLoan,
-                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
+                        new Loan("3002", "borrowed", "2002", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
         );
         myLoansRepository.save(testUserData);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/myloans/user/0001/loans/" + loanId)
@@ -211,8 +211,8 @@ class MyLoansControllerTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona")),
                 List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
-                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
+                        new Loan("3001", "lent", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "borrowed", "2002", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
         );
         myLoansRepository.save(testUserData);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/myloans/user/0001/loans/123")
@@ -233,10 +233,10 @@ class MyLoansControllerTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona"))),
                 new ArrayList<>(List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
-                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")))
+                        new Loan("3001", "lent", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "borrowed", "2002", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")))
         );
-        LoanWithoutId updatedLoanWithoutId = new LoanWithoutId("2002", "0001", "1001", "Handy", 200, "06.06.2023", "12.12.2023");
+        LoanWithoutId updatedLoanWithoutId = new LoanWithoutId("borrowed", "2002",  "1001", "Handy", 200, "06.06.2023", "12.12.2023");
 
         myLoansRepository.save(userDataToUpdate);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -260,7 +260,7 @@ class MyLoansControllerTest {
                 }
                 """;
         String loanId = "3001";
-        LoanWithoutId updatedLoanWithoutId = new LoanWithoutId("0001", "2001", "1002", "Pippi Langstrumpf", 1, "01.01.2023", "");
+        LoanWithoutId updatedLoanWithoutId = new LoanWithoutId("lent",  "2001", "1002", "Pippi Langstrumpf", 1, "01.01.2023", "");
         ObjectMapper objectMapper = new ObjectMapper();
         String updatedLoanWithoutIdJson = objectMapper.writeValueAsString(updatedLoanWithoutId);
         UserData testUserData = new UserData("123",
@@ -271,8 +271,8 @@ class MyLoansControllerTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona")),
                 List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
-                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
+                        new Loan("3001", "lent",  "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "borrowed", "2002", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
         );
         myLoansRepository.save(testUserData);
         mockMvc.perform(MockMvcRequestBuilders.put("/api/myloans/user/0001/loans/" + loanId)
@@ -294,8 +294,8 @@ class MyLoansControllerTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona"))),
                 new ArrayList<>(List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
-                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")))
+                        new Loan("3001", "lent",  "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "borrowed", "2002", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")))
         );
         UserData updatedUserData = new UserData("0001",
                 new ArrayList<>(List.of(
@@ -305,15 +305,15 @@ class MyLoansControllerTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona"))),
                 new ArrayList<>(List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", "")))
+                        new Loan("3001", "lent",  "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", "")))
         );
-        String loanIdToDelete="3002";
+        String loanIdToDelete = "3002";
 
         myLoansRepository.save(userDataToUpdate);
         ObjectMapper objectMapper = new ObjectMapper();
         String updatedUserDataJson = objectMapper.writeValueAsString(updatedUserData);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/myloans/user/0001/loans/"+loanIdToDelete)
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/myloans/user/0001/loans/" + loanIdToDelete)
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
@@ -344,8 +344,8 @@ class MyLoansControllerTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona")),
                 List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
-                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
+                        new Loan("3001", "lent",  "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "borrowed", "2002", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
         );
         myLoansRepository.save(testUserData);
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/myloans/user/0001/loans/" + loanId)
@@ -365,10 +365,10 @@ class MyLoansControllerTest {
                 new ArrayList<>(List.of(
                         new Person("2001", "Hanna"))),
                 new ArrayList<>(List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
-                        new Loan("3002","2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")))
+                        new Loan("3001", "lent",  "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "borrowed", "2002", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")))
         );
-        PersonWithoutId newPersonWithoutId = new PersonWithoutId( "Mona");
+        PersonWithoutId newPersonWithoutId = new PersonWithoutId("Mona");
 
         myLoansRepository.save(userDataToUpdate);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -391,7 +391,7 @@ class MyLoansControllerTest {
                  "message":"User Data not found for id: 0001"
                 }
                 """;
-        PersonWithoutId newPersonWithoutId= new PersonWithoutId("Saman");
+        PersonWithoutId newPersonWithoutId = new PersonWithoutId("Saman");
         ObjectMapper objectMapper = new ObjectMapper();
         String newPersonWithoutIdJson = objectMapper.writeValueAsString(newPersonWithoutId);
 
@@ -402,12 +402,12 @@ class MyLoansControllerTest {
                 List.of(
                         new Person("2001", "Hanna")),
                 List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
-                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
+                        new Loan("3001", "lent",  "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "borrowed", "2002",  "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
         );
         myLoansRepository.save(testUserData);
         mockMvc.perform(MockMvcRequestBuilders.post("/api/myloans/user/0001/persons")
-                .contentType(MediaType.APPLICATION_JSON).content(newPersonWithoutIdJson)
+                        .contentType(MediaType.APPLICATION_JSON).content(newPersonWithoutIdJson)
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json(expectedMessage));
@@ -425,8 +425,8 @@ class MyLoansControllerTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona"))),
                 new ArrayList<>(List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
-                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")))
+                        new Loan("3001", "lent",  "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "borrowed", "2002", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")))
         );
         PersonWithoutId updatedPersonWithoutId = new PersonWithoutId("Sandra");
 
@@ -463,8 +463,8 @@ class MyLoansControllerTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona")),
                 List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
-                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
+                        new Loan("3001", "lent",  "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "borrowed", "2002", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
         );
         myLoansRepository.save(testUserData);
         mockMvc.perform(MockMvcRequestBuilders.put("/api/myloans/user/0001/persons/" + personId)
@@ -495,8 +495,8 @@ class MyLoansControllerTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona")),
                 List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
-                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
+                        new Loan("3001", "lent", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "borrowed", "2002", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
         );
         myLoansRepository.save(testUserData);
         mockMvc.perform(MockMvcRequestBuilders.put("/api/myloans/user/0001/persons/" + personId)
@@ -518,8 +518,8 @@ class MyLoansControllerTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona"))),
                 new ArrayList<>(List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
-                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")))
+                        new Loan("3001", "lent",  "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "borrowed", "2002", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")))
         );
         UserData updatedUserData = new UserData("0001",
                 new ArrayList<>(List.of(
@@ -527,19 +527,19 @@ class MyLoansControllerTest {
                         new Item("1002", "Book"))),
                 new ArrayList<>(List.of(
                         new Person("2001", "Hanna")
-                        )),
+                )),
                 new ArrayList<>(List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
-                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")
-                        ))
+                        new Loan("3001", "lent",  "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "borrowed", "2002", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023")
+                ))
         );
-        String personIdToDelete="2002";
+        String personIdToDelete = "2002";
 
         myLoansRepository.save(userDataToUpdate);
         ObjectMapper objectMapper = new ObjectMapper();
         String updatedUserDataJson = objectMapper.writeValueAsString(updatedUserData);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/myloans/user/0001/persons/"+personIdToDelete)
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/myloans/user/0001/persons/" + personIdToDelete)
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
@@ -570,8 +570,8 @@ class MyLoansControllerTest {
                         new Person("2001", "Hanna"),
                         new Person("2002", "Mona")),
                 List.of(
-                        new Loan("3001", "0001", "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
-                        new Loan("3002", "2002", "0001", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
+                        new Loan("3001", "lent",  "2001", "1002", "Der kleine Prinz", 1, "01.01.2023", ""),
+                        new Loan("3002", "borrowed", "2002", "1001", "Fahrschule", 500, "06.06.2023", "12.12.2023"))
         );
         myLoansRepository.save(testUserData);
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/myloans/user/0001/persons/" + personId)

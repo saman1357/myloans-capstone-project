@@ -6,8 +6,8 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class LoanWithoutId {
-    private String lenderId;
-    private String borrowerId;
+    private String type;
+    private String otherPartyId;
     private String itemId;
     private String description;
     private int amount;
