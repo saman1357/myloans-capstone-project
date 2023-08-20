@@ -13,7 +13,7 @@ public class LoanWithoutId {
     private String type;
     @NotBlank(message = "otherPartyId can't be blank!")
     private String otherPartyId;
-    @NotBlank(message ="otherPartyId can't be blank!")
+    @NotBlank(message ="itemId can't be blank!")
     private String itemId;
     private String description;
     @Positive(message = "amount should be greater than 0")

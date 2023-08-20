@@ -3,6 +3,7 @@ package de.neuefische.capstone.backend.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.neuefische.capstone.backend.models.*;
 import de.neuefische.capstone.backend.repositories.MyLoansRepository;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -578,6 +579,36 @@ class MyLoansControllerTest {
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().json(expectedMessage));
+    }
+
+    @Test
+    @DirtiesContext
+    @WithMockUser
+    void expectValidationException_whenAddNewLoanWithInvalidOtherPartId() throws Exception {
+        String expectedMessage = "itemId can't be blank!";
+        UserData userDataToUpdate = new UserData("0002",
+                new ArrayList<>(List.of(
+                        new Item("1001", "€ (money)"),
+                        new Item("1002", "Book"))),
+                new ArrayList<>(List.of(
+                        new Person("2001", "Hanna"),
+                        new Person("2002", "Mona"))),
+                new ArrayList<>(List.of(
+                        new Loan("3001", "lent", "2001", "1002", "Der kleine Prinz", 1, "2023-01-01", "")))
+        );
+        LoanWithoutId newLoanWithoutId = new LoanWithoutId("borrowed", "2002",  "", "Fahrschule", 500, "2023-06-06", "2023-12-12");
+
+        myLoansRepository.save(userDataToUpdate);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String newLoanWithoutIdJson = objectMapper.writeValueAsString(newLoanWithoutId);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/myloans/user/0001/loans")
+                        .contentType(MediaType.APPLICATION_JSON).content(newLoanWithoutIdJson)
+                        .with(csrf()))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+        .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString(expectedMessage)));
+
+
     }
 
 }
