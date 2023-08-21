@@ -1,5 +1,6 @@
 package de.neuefische.capstone.backend.models;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,5 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PersonWithoutId {
+    @NotBlank(message = "person's name can't be blank!")
     private String name;
 }
