@@ -3,9 +3,9 @@ import {Item, Loan, Person, UserWithoutPassword} from "../model/DataModels.ts";
 import React, {useEffect, useState} from "react";
 
 type Props = {
-    loans: Loan[],
-    items: Item[],
-    persons: Person[],
+    loans?: Loan[],
+    items?: Item[],
+    persons?: Person[],
     user?: UserWithoutPassword,
     onLogout: ()=>void
 }
@@ -22,7 +22,7 @@ export default function LoanList(props: Props) {
         if (filter === "-1") {
             setFilteredLoans(props.loans);
         } else {
-            setFilteredLoans(props.loans.filter(loan => loan.otherPartyId === filter));
+            setFilteredLoans(props.loans?.filter(loan => loan.otherPartyId === filter));
         }
     }
 
@@ -56,14 +56,14 @@ export default function LoanList(props: Props) {
                 </div>
                 <hr/>
                 <div className={"loan-table-div"}>
-                    {filteredLoans.filter(loan => loan.type === loanType).map((loan) => {
+                    {filteredLoans?.filter(loan => loan.type === loanType).map((loan) => {
                         return <Link to={"/" + loan.id} key={loan.id}>
                             <div className={"loan-table-row-div"}>
                                 <div
-                                    className={"loan-party-item"}>{props.persons.find(person => person.id === loan.otherPartyId)?.name}</div>
+                                    className={"loan-party-item"}>{props.persons?.find(person => person.id === loan.otherPartyId)?.name}</div>
                                 <div className={"amount-item"}>{loan.amount}</div>
                                 <div
-                                    className={"item-item"}>{props.items.find(item => item.id === loan.itemId)?.type.charAt(0)==="€"? "€" : "-"}</div>
+                                    className={"item-item"}>{props.items?.find(item => item.id === loan.itemId)?.type.charAt(0)==="€"? "€" : "-"}</div>
                                 <div className={"description-item"}>{loan.description}</div>
 
                             </div>
@@ -74,20 +74,20 @@ export default function LoanList(props: Props) {
                 <div className={"loan-footer-div"}>
                     <hr/>
                     sum of
-                    monetary {loanType==="lent"? "lendings" : "borrowings"}: {loanSum[loanType]} {props.items.find(item => item.id === "1001")?.type.charAt(0)}
+                    monetary {loanType==="lent"? "lendings" : "borrowings"}: {loanSum[loanType]} {props.items?.find(item => item.id === "1001")?.type.charAt(0)}
                 </div>
             </div>
         )
     }
 
-    if (filteredLoans) {
+    if (props.loans && props.user && props.items && props.persons) {
         return (
             <>
                 <div className={"app-title"}>
                     <div className={"back-div"}></div>
                     <Link to={"/"}><img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/></Link>
                     <div>
-                        {props.user?.username}
+                        {props.user.username}
                         <br/>
                         <button onClick={props.onLogout}>logout</button>
                     </div>
