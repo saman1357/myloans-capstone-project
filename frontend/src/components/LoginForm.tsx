@@ -11,6 +11,7 @@ type Props = {
 export default function LoginForm(props: Props) {
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+    const [showPassword, setShowPassword]=useState(false);
 
     function onLogin(event: FormEvent) {
         event.preventDefault();
@@ -36,7 +37,8 @@ export default function LoginForm(props: Props) {
                     <br/>
                     <input id={"password-input"} value={password} onChange={event => setPassword(event.target.value)}
                            placeholder={"password"}
-                           type={"password"}/>
+                           type={showPassword? "text" : "password"}/>
+                    <div className={"show-password-div"} onClick={()=>setShowPassword(!showPassword)}>{showPassword? "hide" : "show"}</div>
                     <br/>
                     <button>Login</button>
                     <br/>

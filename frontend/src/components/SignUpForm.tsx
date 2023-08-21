@@ -14,6 +14,8 @@ type Props = {
 }
 export default function SignUpForm(props: Props) {
     const navigate = useNavigate();
+    const [showPassword1, setShowPassword1]=useState(false);
+    const [showPassword2, setShowPassword2]=useState(false);
     const [signUpData, setSignUpData] = useState({
         username: "",
         password: "",
@@ -124,12 +126,14 @@ export default function SignUpForm(props: Props) {
                     <br/>
                     <input id={"password"} value={signUpData.password} onChange={handleChangeInput}
                            placeholder={"password"}
-                           type={"password"}/>
+                           type={showPassword1? "text" : "password"}/>
+                    <div className={"show-password-div"} onClick={()=>setShowPassword1(!showPassword1)}>{showPassword1? "hide" : "show"}</div>
                     <div className={"validation-message"}>{validationMessage.pInput}</div>
                     <br/>
                     <input id={"password2"} value={signUpData.password2} onChange={handleChangeInput}
                            placeholder={"confirm password"}
-                           type={"password"}/>
+                           type={showPassword2? "text" : "password"}/>
+                    <div className={"show-password-div"} onClick={()=>setShowPassword2(!showPassword2)}>{showPassword2? "hide" : "show"}</div>
                     <div className={"validation-message"}>{validationMessage.p2Input}</div>
                     <br/>
                     <button>sign up</button>
