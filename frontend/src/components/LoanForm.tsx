@@ -5,9 +5,9 @@ import 'react-toastify/dist/ReactToastify.css'
 import {toast} from "react-toastify";
 
 type Props = {
-    loans: Loan[],
-    items: Item[],
-    persons: Person[],
+    loans?: Loan[],
+    items?: Item[],
+    persons?: Person[],
     onSubmit: (submittedLoanWithoutId: LoanWithoutId, loanId: string, isNewLoan: boolean) => void,
     user?: UserWithoutPassword,
     onLogout: () => void
@@ -16,7 +16,7 @@ type Props = {
 export default function LoanForm(props: Props) {
     const urlParams = useParams();
     const dateRegEx = /^((19|2\d)\d{2})-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])$/;
-    const loan = props.loans.find(loan => loan.id === urlParams.id);
+    const loan = props.loans?.find(loan => loan.id === urlParams.id);
     const [returnDateIsActive, setReturnDateIsActive] = useState<boolean>(false)
     const [loanState, setLoanState] = useState<LoanWithoutId>({
         type: "",
@@ -186,14 +186,14 @@ export default function LoanForm(props: Props) {
             navigate("/");
         }
     }
-
+if (props.loans && props.items && props.persons && props.user) {
     return (
         <>
             <div className={"app-title"}>
                 <div className={"back-div"} onClick={handleBack}><h1>⇦</h1></div>
                 <Link to={"/"}><img src={"/myLoans.png"} alt={"myLoans Logo"} width={"100"}/></Link>
                 <div>
-                    {props.user?.username}
+                    {props.user.username}
                     <br/>
                     <button onClick={props.onLogout}>logout</button>
                 </div>
@@ -277,4 +277,7 @@ export default function LoanForm(props: Props) {
             </form>
         </>
     )
+} else {
+    return <h1>loading...</h1>
+}
 }

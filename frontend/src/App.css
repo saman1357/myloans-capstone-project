@@ -27,6 +27,7 @@ select{
 
 .back-div {
     padding-left: 10px;
+    cursor: pointer;
 }
 
 .loan-filter-div{
@@ -310,3 +311,10 @@ button {
     font-size: smaller;
     margin: 3px 15px 0 15px;
 }
+
+.show-password-div{
+    display: inline;
+    font-size: small;
+    cursor: pointer;
+}
+

@@ -160,9 +160,9 @@ export default function App() {
             });
     }
 
-    if (!(loans && items && persons)) {
+    /*if (!(loans && items && persons)) {
         return <LoginForm onLogin={handleLogin} onLogout={logout} user={user}/>
-    }
+    }*/
 
     return (
         <>
