@@ -25,6 +25,7 @@ jobs:
         with:
           name: frontend-build
           path: frontend/dist/
+
   build-backend:
     runs-on: ubuntu-latest
     needs: build-frontend
@@ -49,7 +50,7 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: amyloans.jar
+          name: myloans.jar
           path: backend/target/myloans.jar
 
   push-to-docker-hub:
@@ -57,6 +58,7 @@ jobs:
     needs: build-backend
     steps:
       - uses: actions/checkout@v2
+
       - uses: actions/download-artifact@v2
         with:
           name: myloans.jar
@@ -73,7 +75,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          #Set dockerhub project (replace "bartfastiel/deploy-to-aws-with-github-actions")
+          #Set dockerhub project (replace "bartfastiel/java-capstone-project.de-example-app")
           tags: saman1357/myloans:latest
           context: .
 
@@ -84,24 +86,25 @@ jobs:
       - name: Restart docker container
         uses: appleboy/ssh-action@master
         with:
-          #Set hostname of your AWS EC2 instance
-          host: ec2-3-76-9-170.eu-central-1.compute.amazonaws.com
-          #Set App Name ("myapp" - "tango")
-          username: saman1357
-          password: ${{ secrets.SSH_PASSWORD2 }}
-          #Set App Name ("myapp" - "tango")
-          #Set dockerhub project (replace "bartfastiel/deploy-to-aws-with-github-actions")
+          host: capstone-project.de
+          #Set App Name (replace "example" with your ssh user name)
+          username: cgn-java-23-2-saman
+          password: ${{ secrets.SSH_PASSWORD }}
+          #Set App Name (replace "example" with your ssh user name)
+          #Set dockerhub project (replace "bartfastiel/java-capstone-project.de-example-app")
+          #Set IP (replace "10.0.1.99" with your ip address)
           script: |
-            sudo docker stop saman1357
-            sudo docker rm saman1357
-            sudo docker run --pull=always --name saman1357 --publish 80:8080 --detach --env MONGO_DB_URI=${{ secrets.MONGO_DB_URI }} saman1357/myloans:latest
+            sudo docker stop cgn-java-23-2-saman
+            sudo docker rm cgn-java-23-2-saman
+            sudo docker run --pull=always --name cgn-java-23-2-saman --network capstones --ip 10.0.5.18 --restart always --detach --env MONGO_DB_URI=${{ secrets.MONGO_DB_URI }} saman1357/myloans:latest
             sleep 15s
-            docker logs saman1357
+            sudo docker logs cgn-java-23-2-saman
+
       - name: Check the deployed service URL
         uses: jtalk/url-health-check-action@v3
         with:
-          #Set URL of your AWS EC2 instance
-          url: http://ec2-3-76-9-170.eu-central-1.compute.amazonaws.com
+          #Set App Name (replace "example" with your ssh user name)
+          url: http://cgn-java-23-2-saman.capstone-project.de
           max-attempts: 3
           retry-delay: 5s
           retry-all: true
