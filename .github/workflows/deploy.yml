@@ -49,7 +49,7 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: amyloans.jar
+          name: myloans.jar
           path: backend/target/myloans.jar
 
   push-to-docker-hub:
