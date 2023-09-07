@@ -148,7 +148,6 @@ export default function App() {
                 setUser(prevState => ({...prevState, id: response.data.id, username: response.data.username}));
             });
     }
-
     function handleSignUp(username: string, password: string) {
         const userWithoutId: UserWithoutId = {username, password};
         axios.post("/api/user/sign-up", userWithoutId)
