@@ -92,11 +92,11 @@ jobs:
           #Set App Name ("myapp" - "tango")
           #Set dockerhub project (replace "bartfastiel/deploy-to-aws-with-github-actions")
           script: |
-            sudo docker stop saman1357
-            sudo docker rm saman1357
-            sudo docker run --pull=always --name saman1357 --publish 80:8080 --detach --env MONGO_DB_URI=${{ secrets.MONGO_DB_URI }} saman1357/myloans:latest
+            sudo docker stop myloans
+            sudo docker rm myloans
+            sudo docker run --pull=always --name myloans --publish 80:8080 --detach --env MONGO_DB_URI=${{ secrets.MONGO_DB_URI2 }} saman1357/myloans:latest
             sleep 15s
-            docker logs saman1357
+            docker logs myloans
       - name: Check the deployed service URL
         uses: jtalk/url-health-check-action@v3
         with:
