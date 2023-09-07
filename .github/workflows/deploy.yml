@@ -87,7 +87,7 @@ jobs:
           #Set hostname of your AWS EC2 instance
           host: ec2-3-76-9-170.eu-central-1.compute.amazonaws.com
           #Set App Name ("myapp" - "tango")
-          username: ec2-user
+          username: app-user
           password: ${{ secrets.SSH_PASSWORD2 }}
           #Set App Name ("myapp" - "tango")
           #Set dockerhub project (replace "bartfastiel/deploy-to-aws-with-github-actions")
