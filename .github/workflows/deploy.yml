@@ -92,9 +92,9 @@ jobs:
           #Set App Name ("myapp" - "tango")
           #Set dockerhub project (replace "bartfastiel/deploy-to-aws-with-github-actions")
           script: |
-            sudo docker stop myloans
-            sudo docker rm myloans
-            sudo docker run --pull=always --name myloans --publish 80:8080 --detach --env MONGO_DB_URI=${{ secrets.MONGO_DB_URI2 }} saman1357/myloans:latest
+            docker stop myloans
+            docker rm myloans
+            docker run --pull=always --name myloans --publish 80:8080 --detach --env MONGO_DB_URI=${{ secrets.MONGO_DB_URI2 }} saman1357/myloans:latest
             sleep 15s
             docker logs myloans
       - name: Check the deployed service URL
